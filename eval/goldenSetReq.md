@@ -1,0 +1,3 @@
+Thước đo chất lượng của sản phẩm được cụ thể hóa bằng bộ kiểm thử mẫu (Golden set). Golden set phải bao gồm tối thiểu 20 trường hợp kiểm thử độc lập do nhóm tự xây dựng, phản ánh đa dạng các tình huống sử dụng: tối thiểu 2 trường hợp cho mỗi lớp trong 4 lớp chỗ khó (① Nguồn sự thật, ② Mơ hồ/thiếu thông tin, ③ Ngoài phạm vi/thẩm quyền, ④ Đặc thù nghiệp vụ), 8 đến 10 trường hợp phổ biến hàng ngày, và 2 đến 4 trường hợp hiếm gặp (edge cases). Trong đó, ít nhất 10 trường hợp phải được trích xuất trực tiếp từ các cuộc hội thoại hoặc dữ liệu thực tế đã được cung cấp. Tỷ lệ kiểm thử đạt chuẩn được tính bằng số trường hợp đầu ra đáp ứng tiêu chí nghiệm thu chia cho tổng số trường hợp thử nghiệm.
+
+Output: file @golden_set.json

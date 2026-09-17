@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>D2 - Hoc tu loi truoc</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f0f4ff; color: #1a1a2e;
+      min-height: 100vh; display: flex;
+      align-items: center; justify-content: center; padding: 24px;
+    }
+    .card {
+      background: #fff; border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      max-width: 680px; width: 100%; padding: 40px 36px;
+    }
+    .lesson-label { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #6c63ff; margin-bottom: 6px; }
+    h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .subtitle { font-size: 14px; color: #666; margin-bottom: 28px; }
+    .progress-wrap { margin-bottom: 28px; }
+    .progress-label { font-size: 12px; color: #888; margin-bottom: 6px; }
+    .progress-bar { height: 6px; background: #e8e8f0; border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; background: #6c63ff; border-radius: 99px; transition: width 0.4s ease; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+    .intro-box {
+      background: #f5f3ff; border-left: 4px solid #6c63ff;
+      border-radius: 8px; padding: 16px 20px; margin-bottom: 24px;
+      font-size: 15px; line-height: 1.6;
+    }
+    .intro-box strong { color: #6c63ff; }
+    .question-text { font-size: 17px; font-weight: 600; line-height: 1.55; margin-bottom: 20px; }
+    .question-hint { font-size: 13px; color: #888; margin-bottom: 16px; font-style: italic; }
+    textarea {
+      width: 100%; border: 2px solid #e0e0ef; border-radius: 10px;
+      padding: 14px 16px; font-size: 15px; font-family: inherit;
+      resize: vertical; min-height: 110px; outline: none; transition: border-color 0.2s;
+    }
+    textarea:focus { border-color: #6c63ff; }
+    .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+    .option {
+      border: 2px solid #e0e0ef; border-radius: 10px; padding: 13px 16px;
+      cursor: pointer; font-size: 15px; transition: all 0.18s;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .option:hover { border-color: #6c63ff; background: #f5f3ff; }
+    .option.selected { border-color: #6c63ff; background: #f0edff; font-weight: 600; }
+    .option .opt-key {
+      width: 26px; height: 26px; border-radius: 50%; border: 2px solid #c8c8e0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; flex-shrink: 0; color: #888;
+    }
+    .option.selected .opt-key { background: #6c63ff; border-color: #6c63ff; color: #fff; }
+    .feedback-wrong { background: #fff4f4; border-left: 4px solid #f04848; border-radius: 12px; padding: 18px 20px; margin-bottom: 20px; font-size: 15px; line-height: 1.6; }
+    .feedback-wrong .fb-title { color: #c0392b; font-weight: 700; margin-bottom: 6px; }
+    .feedback-right { background: #f0fff4; border-left: 4px solid #27ae60; border-radius: 12px; padding: 18px 20px; margin-bottom: 20px; font-size: 15px; line-height: 1.6; }
+    .feedback-right .fb-title { color: #1e8449; font-weight: 700; margin-bottom: 6px; }
+    .feedback-neutral { background: #fffbf0; border-left: 4px solid #f39c12; border-radius: 12px; padding: 18px 20px; margin-bottom: 20px; font-size: 15px; line-height: 1.6; }
+    .feedback-neutral .fb-title { color: #b7770d; font-weight: 700; margin-bottom: 6px; }
+    .source-block { background: #f8f8ff; border: 1.5px solid #d0ccff; border-radius: 10px; padding: 16px 18px; margin-bottom: 20px; }
+    .source-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #6c63ff; margin-bottom: 8px; }
+    .source-text { font-size: 14px; line-height: 1.65; color: #333; font-style: italic; }
+    .source-cite { font-size: 12px; color: #888; margin-top: 8px; }
+    .summary-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; font-size: 14px; line-height: 1.5; }
+    .summary-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .score-badge { display: inline-block; background: #6c63ff; color: #fff; font-size: 28px; font-weight: 800; padding: 10px 24px; border-radius: 12px; margin: 16px 0; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px; border-radius: 10px; border: none;
+      cursor: pointer; font-size: 15px; font-weight: 600;
+      transition: all 0.18s; text-decoration: none;
+    }
+    .btn-primary { background: #6c63ff; color: #fff; }
+    .btn-primary:hover { background: #574fd6; transform: translateY(-1px); }
+    .btn-primary:disabled { background: #c5c0f5; cursor: not-allowed; transform: none; }
+    .btn-secondary { background: #f0edff; color: #6c63ff; }
+    .btn-secondary:hover { background: #e0d9ff; }
+    .btn-row { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+    .step-pill { display: inline-block; background: #f0edff; color: #6c63ff; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 99px; margin-bottom: 20px; }
+    .warn-note { font-size: 13px; color: #888; margin-top: 10px; font-style: italic; }
+    hr.divider { border: none; border-top: 1px solid #ebebf5; margin: 24px 0; }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <!-- SCREEN 0 - Intro -->
+  <div class="screen active" id="s0">
+    <div class="lesson-label">Day 4 · LLM Foundation</div>
+    <h1>Tokenization &amp; LLM</h1>
+    <div class="subtitle" style="background:#6c63ff;color:#fff;padding:8px 14px;border-radius:8px;display:inline-block;font-weight:600;">Trước khi xem bài giảng, hãy thử trả lời 3 câu hỏi ngắn.</div>
+    <div style="margin-top:8px;margin-bottom:4px;font-size:13px;color:#888;font-style:italic;">Bài này không chấm điểm - chỉ để kiểm tra kiến thức nền trước khi học.</div>
+
+    <div class="intro-box">
+      <strong>Cách học hôm nay khác một chút.</strong><br/>
+      Thay vì học lý thuyết trước, bạn sẽ <strong>thử trả lời trước</strong> - dù chưa biết gì.
+      Sau khi trả lời, AI sẽ chỉ ra bạn đang hiểu đúng hay sai ở đâu,
+      rồi dẫn thẳng đến đoạn bài giảng liên quan.<br/><br/>
+      Không có điểm số ở bước này. Sai là bình thường - sai rồi học mới nhớ lâu.
+    </div>
+
+    <div class="summary-row">
+      <span class="summary-icon">&#9203;</span>
+      <span>~5 phút để trả lời 3 câu hỏi trước khi xem bài giảng</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-icon">&#127919;</span>
+      <span>AI sẽ chỉ ra bạn đang hiểu đúng hay còn nhầm chỗ nào - để bạn biết cần chú ý gì khi xem bài giảng, không phải để chấm điểm</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-icon">&#128214;</span>
+      <span>Sau mỗi câu, bạn được chỉ đúng đoạn transcript cần đọc</span>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="go('s1')">Bắt đầu thử &#8594;</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 1 - Câu 1 MCQ -->
+  <div class="screen" id="s1">
+    <div class="step-pill">Câu 1 / 3</div>
+    <div class="progress-wrap">
+      <div class="progress-label">Tiến độ</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
+    </div>
+    <div class="question-text">
+      Khi bạn gõ câu "Xin chào, tôi là học viên AI20k" vào một LLM -
+      model đó xử lý chuỗi ký tự đó như thế nào ở bước đầu tiên?
+    </div>
+    <div class="question-hint">Chọn câu trả lời bạn thấy hợp lý nhất (dù chưa chắc)</div>
+    <div class="options" id="q1-options">
+      <div class="option" onclick="selectOpt(this,'q1','A')">
+        <div class="opt-key">A</div>
+        Model đọc từng ký tự một (X, i, n, space, c, h, à, o...)
+      </div>
+      <div class="option" onclick="selectOpt(this,'q1','B')">
+        <div class="opt-key">B</div>
+        Model tách câu thành các từ theo dấu cách ("Xin", "chào", "tôi"...)
+      </div>
+      <div class="option" onclick="selectOpt(this,'q1','C')">
+        <div class="opt-key">C</div>
+        Model tách câu thành các <em>token</em> - có thể là từ, mảnh từ, hoặc ký tự đặc biệt
+      </div>
+      <div class="option" onclick="selectOpt(this,'q1','D')">
+        <div class="opt-key">D</div>
+        Model hiểu ý nghĩa câu ngay lập tức, không cần tách
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btn-q1" disabled onclick="go('s1-fb')">Xem phân tích &#8594;</button>
+    </div>
+    <p class="warn-note">Chọn một đáp án để tiếp tục</p>
+  </div>
+
+  <!-- SCREEN 1-FB - Feedback câu 1 -->
+  <div class="screen" id="s1-fb">
+    <div class="step-pill">Phân tích · Câu 1</div>
+
+    <div class="feedback-wrong" id="fb1-wrong" style="display:none">
+      <div class="fb-title">&#10007; Sai - Đáp án đúng là C</div>
+      Nhiều người nghĩ LLM tách theo <strong>từ</strong> vì đó là cách con người đọc.
+      Thực tế model không biết "từ" là gì - nó chỉ thấy <strong>token</strong>,
+      và một token không nhất thiết là một từ.
+      "tokenization" có thể bị tách thành "token" + "ization" hoặc thậm chí hơn tùy model.
+      <div style="margin-top:10px;font-weight:700;color:#c0392b;">Giải thích</div>
+    </div>
+    <div class="feedback-right" id="fb1-right" style="display:none">
+      <div class="fb-title">&#10003; Đúng - Đáp án C</div>
+      Bạn đã nhận ra khái niệm token. Phần tiếp theo sẽ giúp bạn hiểu
+      <em>tại sao</em> token không phải là từ - và điều đó ảnh hưởng đến giới hạn
+      context window như thế nào.
+      <div style="margin-top:10px;font-weight:700;color:#1e8449;">Giải thích</div>
+    </div>
+
+    <hr class="divider"/>
+    <div style="font-size:12px;color:#888;margin-bottom:10px;font-style:italic;">Dù đúng hay sai đều có giải thích và trích dẫn từ bài giảng</div>
+    <div class="source-block">
+      <div class="source-tag">Trích dẫn</div>
+      <div class="source-text">
+        "...token là ngôn ngữ của máy. Con người chúng ta nói chuyện với nhau bằng ngôn ngữ
+        của từ ngữ, nhưng máy nói chuyện với nhau bằng ngôn ngữ của token. Nó sẽ chẻ nhỏ
+        những cái từ đấy ra thành token - nó không phải là từ, không phải là chữ cái,
+        mà nó là token... tiếng Việt thì sẽ tốn hơn tiếng Anh, bởi vì tiếng Việt nó có dấu."
+      </div>
+      <div class="source-cite">Tại trang [T04-049] · Transcript 04 · Mổ xẻ mô hình ngôn ngữ lớn: dự đoán token và context</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="go('s2')">Câu tiếp theo &#8594;</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 2 - Câu 2 MCQ -->
+  <div class="screen" id="s2">
+    <div class="step-pill">Câu 2 / 3</div>
+    <div class="progress-wrap">
+      <div class="progress-label">Tiến độ</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:33%"></div></div>
+    </div>
+    <div class="question-text">
+      GPT-4 có context window 128.000 token. Điều đó có nghĩa là gì trong thực tế?
+    </div>
+    <div class="question-hint">Chọn mô tả đúng nhất</div>
+    <div class="options" id="q2-options">
+      <div class="option" onclick="selectOpt(this,'q2','A')">
+        <div class="opt-key">A</div>
+        Model có thể "nhớ" tối đa 128.000 từ trong một cuộc hội thoại
+      </div>
+      <div class="option" onclick="selectOpt(this,'q2','B')">
+        <div class="opt-key">B</div>
+        Model xử lý tối đa 128.000 token (input + output) mỗi lần gọi API
+      </div>
+      <div class="option" onclick="selectOpt(this,'q2','C')">
+        <div class="opt-key">C</div>
+        Model được huấn luyện trên 128.000 trang tài liệu
+      </div>
+      <div class="option" onclick="selectOpt(this,'q2','D')">
+        <div class="opt-key">D</div>
+        Model có thể sinh ra tối đa 128.000 từ trong một lần trả lời
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btn-q2" disabled onclick="go('s2-fb')">Xem phân tích &#8594;</button>
+    </div>
+    <p class="warn-note">Chọn một đáp án để tiếp tục</p>
+  </div>
+
+  <!-- SCREEN 2-FB - Feedback câu 2 -->
+  <div class="screen" id="s2-fb">
+    <div class="step-pill">Phân tích · Câu 2</div>
+
+    <div class="feedback-wrong" id="fb2-wrong" style="display:none">
+      <div class="fb-title">&#10007; Sai - Đáp án đúng là B</div>
+      Context window <strong>không phải bộ nhớ dài hạn</strong>.
+      Model không "nhớ" cuộc hội thoại - mỗi lần gọi API, toàn bộ lịch sử
+      chat phải được gửi lại trong context. Khi context đầy,
+      các tin nhắn cũ bị cắt đi - model thực sự "quên".
+      Ngoài ra context tính bằng <strong>token</strong>, không phải từ.
+      <div style="margin-top:10px;font-weight:700;color:#c0392b;">Giải thích</div>
+    </div>
+    <div class="feedback-right" id="fb2-right" style="display:none">
+      <div class="fb-title">&#10003; Đúng - Đáp án B</div>
+      Context window là giới hạn kích thước của "cửa sổ" input+output mỗi lần gọi.
+      Đoạn tiếp theo sẽ giải thích tại sao điều này ảnh hưởng đến
+      cách thiết kế ứng dụng AI thực tế.
+      <div style="margin-top:10px;font-weight:700;color:#1e8449;">Giải thích</div>
+    </div>
+
+    <hr class="divider"/>
+    <div style="font-size:12px;color:#888;margin-bottom:10px;font-style:italic;">Dù đúng hay sai đều có giải thích và trích dẫn từ bài giảng</div>
+    <div class="source-block">
+      <div class="source-tag">Trích dẫn</div>
+      <div class="source-text">
+        "...Context window - cửa sổ ngữ cảnh - là một mô hình một lúc nó chỉ tiếp nhận được
+        một số lượng nhất định... Khi bạn càng đưa nhiều thông tin, càng đưa nhiều ngữ cảnh,
+        thì cái mô hình càng ngày về sau nó sẽ càng kém đi, và nó sẽ thường quên những
+        thông tin ở lúc đầu - đấy gọi là context rot."
+      </div>
+      <div class="source-cite">Tại trang [T04-051], [T04-052] · Transcript 04 · Mổ xẻ mô hình ngôn ngữ lớn: dự đoán token và context</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="go('s3')">Câu tiếp theo &#8594;</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3 - Câu 3 open-ended -->
+  <div class="screen" id="s3">
+    <div class="step-pill">Câu 3 / 3</div>
+    <div class="progress-wrap">
+      <div class="progress-label">Tiến độ</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:66%"></div></div>
+    </div>
+    <div class="question-text">
+      Tại sao cùng một câu hỏi, ChatGPT đôi khi trả lời rất dài còn Gemini thì ngắn hơn
+      - dù cả hai đều "hiểu" câu hỏi?
+    </div>
+    <div class="question-hint">Viết suy nghĩ của bạn - không cần đúng hoàn toàn, viết những gì bạn đang nghĩ</div>
+    <textarea id="q3-text" placeholder="Ví dụ: Có thể do cách mỗi model được huấn luyện khác nhau, hoặc do giới hạn kỹ thuật nào đó..." oninput="checkQ3()"></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btn-q3" disabled onclick="go('s3-fb')">Xem phân tích &#8594;</button>
+    </div>
+    <p class="warn-note">Viết ít nhất một câu để tiếp tục</p>
+  </div>
+
+  <!-- SCREEN 3-FB - Feedback câu 3 -->
+  <div class="screen" id="s3-fb">
+    <div class="step-pill">Phân tích · Câu 3</div>
+
+    <div class="feedback-neutral">
+      <div class="fb-title">Có nhiều yếu tố ảnh hưởng</div>
+      Không có câu trả lời "sai" ở đây. Một số nguyên nhân thật sự:
+      <ul style="margin-top:10px; padding-left:20px; line-height:1.8">
+        <li><strong>System prompt</strong> khác nhau - mỗi sản phẩm có hướng dẫn riêng về độ dài</li>
+        <li><strong>RLHF / fine-tuning</strong> khác nhau - model học từ phản hồi của người dùng có xu hướng khác nhau</li>
+        <li><strong>Temperature &amp; sampling</strong> - tham số sinh văn bản ảnh hưởng đến độ "lan man"</li>
+        <li><strong>Giới hạn output token</strong> - có thể được cài mặc định khác nhau</li>
+      </ul>
+    </div>
+
+    <hr class="divider"/>
+    <div style="font-size:12px;color:#888;margin-bottom:10px;font-style:italic;">Dù đúng hay sai đều có giải thích và trích dẫn từ bài giảng</div>
+    <div class="source-block">
+      <div class="source-tag">Trích dẫn</div>
+      <div class="source-text">
+        "...Bản chất của hệ thống Transformer là nó dự đoán. Nó không phải là nó biết
+        cái tri thức đấy, mà là nó đang dự đoán những từ tiếp theo - những token...
+        Văn bản AI sinh ra nhìn trông rất là có lý, trông rất là thuận mắt,
+        nhưng mà thực ra nó có thể sai - đấy sẽ là hiện tượng ảo giác, hallucination."
+      </div>
+      <div class="source-cite">Tại trang [T04-047], [T04-048] · Transcript 04 · Mổ xẻ mô hình ngôn ngữ lớn: dự đoán token và context</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="go('s4')">Xem tổng kết &#8594;</button>
+    </div>
+  </div>
+
+  <!-- SCREEN 4 - Summary -->
+  <div class="screen" id="s4">
+    <div class="step-pill">Hoàn thành</div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+
+    <h1 style="margin-bottom:8px;margin-top:0">Bạn đã thử xong 3 câu! &#127881;</h1>
+    <p style="color:#666; margin-bottom:24px; font-size:15px"></p>
+
+    <div id="summary-content"></div>
+
+    <hr class="divider"/>
+
+    <div style="background:#f5f3ff; border-radius:12px; padding:18px 20px; margin-bottom:24px;">
+      <div style="font-weight:700; margin-bottom:8px; color:#6c63ff">&#128250; Tiếp theo: xem bài giảng</div>
+      <div style="font-size:14px; color:#444; line-height:1.6">
+        Trong lúc xem, chú ý đặc biệt vào:<br/>
+        <strong>[T04-049]</strong> - Tokenization là gì<br/>
+        <strong>[T04-051]</strong> - Context window hoạt động thế nào<br/>
+        <strong>[T04-047]</strong> - Bản chất dự đoán của LLM và hallucination
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <a href="https://vlearn.dev/dashboard" target="_blank" class="btn btn-primary">
+        Xem bài giảng &#8594;
+      </a>
+      <button class="btn btn-secondary" onclick="go('s5')">
+        Kiểm tra lại sau bài &#8594;
+      </button>
+    </div>
+  </div>
+
+  <!-- SCREEN 5 - Post-lesson check -->
+  <div class="screen" id="s5">
+    <div class="step-pill">Kiểm tra sau bài giảng</div>
+
+    <div class="intro-box">
+      <strong>Bạn đã xem xong bài giảng chưa?</strong><br/>
+      Trang này dành để làm <em>sau</em> khi xem xong. Nếu chưa xem, hãy quay lại
+      và xem bài giảng trước - đặc biệt các đoạn <strong>[T04-047]</strong>,
+      <strong>[T04-049]</strong>, <strong>[T04-051]</strong> đã được chỉ ra ở trang trước.<br/><br/>
+      Khi đã xem xong, nhập câu trả lời của bạn rồi bấm <strong>"Kiểm tra"</strong> -
+      AI sẽ so sánh với những gì bạn đã trả lời trước khi xem để thấy bạn hiểu thêm được gì.
+    </div>
+
+    <div class="question-text">
+      Bây giờ hãy giải thích: <em>token</em> là gì và tại sao LLM không đọc theo "từ"?
+    </div>
+    <div class="question-hint">Viết bằng lời của bạn, không cần copy từ bài giảng</div>
+
+    <textarea id="q-post" placeholder="Token là..." oninput="checkPost()"></textarea>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btn-post" disabled onclick="go('s5-fb')">
+        Kiểm tra &#8594;
+      </button>
+    </div>
+    <p class="warn-note">Viết ít nhất một câu để kiểm tra</p>
+  </div>
+
+  <!-- SCREEN 5-FB - Post feedback -->
+  <div class="screen" id="s5-fb">
+    <div class="step-pill">Kết quả · Sau bài giảng</div>
+
+    <div class="feedback-right">
+      <div class="fb-title">&#10003; Phân tích câu trả lời của bạn</div>
+      <div id="post-analysis">
+        AI đang so sánh câu trả lời của bạn với câu trả lời trước bài giảng...<br/><br/>
+        <em>(Trong bản thật: AI sẽ highlight chỗ bạn hiểu thêm được,
+        chỗ còn chưa chính xác, và gợi ý đọc thêm nếu cần.
+        Ở prototype này, đây là mock output.)</em>
+      </div>
+    </div>
+
+    <div class="feedback-neutral" style="margin-top:16px">
+      <div class="fb-title">&#128202; So sánh trước / sau</div>
+      <div style="font-size:14px; line-height:1.7">
+        <strong>Trước bài giảng:</strong> Bạn chọn "model tách theo từ" - giả định phổ biến<br/>
+        <strong>Sau bài giảng:</strong> Bạn đề cập đến token và cách tách sub-word<br/>
+        <strong>Tiến bộ:</strong> Hiểu thêm được cơ chế tokenization &#10003;
+      </div>
+    </div>
+
+    <hr class="divider"/>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="go('s0'); resetAll()">
+        Bắt đầu lại (demo) &#8635;
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const answers = { q1: null, q2: null };
+  const CORRECT  = { q1: 'C', q2: 'B' };
+
+  function go(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (id === 's1-fb') renderFeedback1();
+    if (id === 's2-fb') renderFeedback2();
+    if (id === 's4')    renderSummary();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function selectOpt(el, qid, key) {
+    el.closest('.options').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    answers[qid] = key;
+    const btn = document.getElementById('btn-' + qid);
+    if (btn) btn.disabled = false;
+  }
+
+  function checkQ3()  { document.getElementById('btn-q3').disabled  = document.getElementById('q3-text').value.trim().length < 5; }
+  function checkPost() { document.getElementById('btn-post').disabled = document.getElementById('q-post').value.trim().length  < 5; }
+
+  function renderFeedback1() {
+    const a = answers.q1;
+    document.getElementById('fb1-wrong').style.display = (a !== 'C') ? 'block' : 'none';
+    document.getElementById('fb1-right').style.display = (a === 'C') ? 'block' : 'none';
+  }
+  function renderFeedback2() {
+    const a = answers.q2;
+    document.getElementById('fb2-wrong').style.display = (a !== 'B') ? 'block' : 'none';
+    document.getElementById('fb2-right').style.display = (a === 'B') ? 'block' : 'none';
+  }
+
+  function renderSummary() {
+    const q1ok  = answers.q1 === CORRECT.q1;
+    const q2ok  = answers.q2 === CORRECT.q2;
+    const score = (q1ok ? 1 : 0) + (q2ok ? 1 : 0);
+    const rows  = [
+      { q: 'Tokenization - cách LLM tách input',       ok: q1ok, hint: q1ok ? 'Hiểu đúng cơ chế token'       : 'Cần đọc kỹ [T04-049]' },
+      { q: 'Context window - giới hạn và ý nghĩa',     ok: q2ok, hint: q2ok ? 'Phân biệt được token vs từ'   : 'Cần đọc kỹ [T04-051]' },
+      { q: 'Hành vi LLM - nhiều yếu tố ảnh hưởng',    ok: true, hint: 'Câu mở - không có đúng/sai' },
+    ];
+    let html = `<div class="score-badge">${score}/2 câu MCQ đúng</div>`;
+    rows.forEach(r => {
+      html += `<div class="summary-row">
+        <span class="summary-icon">${r.ok ? '&#9989;' : '&#10007;'}</span>
+        <div><strong>${r.q}</strong><br/><span style="color:#666;font-size:13px">${r.hint}</span></div>
+      </div>`;
+    });
+    document.getElementById('summary-content').innerHTML = html;
+  }
+
+  function resetAll() {
+    answers.q1 = null; answers.q2 = null;
+    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    document.querySelectorAll('textarea').forEach(t => t.value = '');
+    ['btn-q1','btn-q2','btn-q3','btn-post'].forEach(id => {
+      const b = document.getElementById(id);
+      if (b) b.disabled = true;
+    });
+  }
+</script>
+</body>
+</html>
