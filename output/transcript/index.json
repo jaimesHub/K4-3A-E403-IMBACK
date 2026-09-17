@@ -1,0 +1,16 @@
+{
+  "1": {
+    "transcript_file": "output/transcript/transcript-01-clean.md",
+    "code_prefix": "T01",
+    "num_segments": 37,
+    "source_slide": "da_co_san_trong_output_transcript",
+    "ingested_at": "2026-09-17T15:09:03"
+  },
+  "2": {
+    "transcript_file": "output/transcript/transcript-02-clean.md",
+    "code_prefix": "T02",
+    "num_segments": 33,
+    "source_slide": "data/slides/d2-slide-hackathon.pdf",
+    "ingested_at": "2026-09-17T15:08:06"
+  }
+}

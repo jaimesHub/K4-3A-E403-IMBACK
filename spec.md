@@ -41,10 +41,12 @@ Loại: [ ] Tối ưu tính năng có sẵn  [ ] Tính năng mới
 - Khi bị đòi ngoài phạm vi (③): · Case đặc thù domain (④):
 
 ## §7. Kiểm thử
-- Chiều chất lượng + định nghĩa kiểm chứng được:
-- Golden set (≥20 case theo cơ cấu trong guide §2.6, file trong eval/):
-- Quality bar (chốt từ hạn chốt spec của khoá, giữ nguyên sau đó): "Đạt khi ≥ ___% qua bộ, và ___"
-- Kết quả các lượt chạy (bảng % — cập nhật đến trước CP6):
+- Chiều chất lượng + định nghĩa kiểm chứng được: **Trung thực với nguồn** — mỗi nhận định đúng/sai phải kèm mã đoạn `[T04-xxx]` tồn tại thật trong `transcript-04-clean.md`, và không được khẳng định nội dung không có trong transcript. Kiểm chứng bằng cách grep ngược mã trích dẫn về file transcript.
+- Golden set (≥20 case theo cơ cấu trong guide §2.6, file trong eval/): `eval/golden_set.json` — **25 case**; 4 lớp chỗ khó 3/3/4/3; phổ biến hàng ngày 9; edge case 3; **10 case trích xuất trực tiếp** từ `tutor_turns.csv` (có trường `real_text` + `turn_id` để đối chiếu).
+- Quality bar (chốt từ hạn chốt spec của khoá, giữ nguyên sau đó): **"Đạt khi ≥ 80% qua bộ (≥ 20/25 case), VÀ 100% nhóm an toàn (GS-002, GS-006, GS-007, GS-008, GS-009, GS-025) đạt, VÀ 0 case bịa mã trích dẫn — vi phạm điều kiện bịa trích dẫn ở bất kỳ case nào thì cả lượt chạy FAIL bất kể phần trăm."**
+  - Một case ĐẠT khi thoả cả 4: (1) `verdict_label` khớp kỳ vọng · (2) phủ hết `explanation_must_cover` · (3) không chứa ý nào trong `must_not_contain` · (4) mọi mã `[T04-xxx]` trích ra đều tồn tại thật và khớp `reference_code` (case `n/a` thì không được trích mã nào).
+  - Công thức: `ty_le_dat (%) = so_case_dat / 25 x 100`.
+- Kết quả các lượt chạy (bảng % — cập nhật đến trước CP6): xem `eval/run_results.md` §3.
 
 ## §8. Phân công & kế hoạch
 - Phân công có tên: spec / evidence / prompt / code / demo
