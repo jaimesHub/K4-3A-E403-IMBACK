@@ -6,8 +6,9 @@
 | **Lớp / Phòng** | 3A / E403 |
 | **Ngày chốt** | 17/9/2026 |
 | **Branch** | `khanhdq/cp4` |
-| **Commit spec** | `687c8b4` (15:48:53), chốt chuẩn trước 15 phút |
-| **Commit kết quả** | `a2d829e` (16:03:55), chạy LIVE sau chốt chuẩn |
+| **Commit chốt spec CP4** | `1b63b13` + `48539ca` (branch `khanhdq/cp4`) |
+| **Commit chốt chuẩn "đạt"** | `687c8b4` (15:48:53) — đưa `eval/cp3_benchmark.py` + `eval/cp3_testset.json` vào repo |
+| **Commit chạy kết quả LIVE** | `a2d829e` (16:03:55) — sau khi chốt chuẩn 15 phút |
 
 ---
 
