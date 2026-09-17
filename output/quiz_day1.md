@@ -1,48 +1,176 @@
-# Bộ câu hỏi Day 1 (3 câu)
+# Bộ câu hỏi Day 1 (10 câu)
 
-## Câu 1 · MCQ · `96c87733d1fc41808502a6289e017a2a`
+## Câu 1 · MCQ · `6d09c09f16034e389f8ede59232b79db`
 
-**Câu hỏi:** Theo bài giảng Day 1, nội dung nào sau đây mô tả ĐÚNG nhất phần được trích tại [T01-001]?
+**Câu hỏi:** AI thực sự đang làm gì trong cuộc sống hàng ngày của chúng ta?
 
-- **A.** Lịch sử AI 70 năm
-- **B.** AI & LLM Foundation Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì? (ĐÚNG)
-- **C.** 2017: Transformer Transformer là bước ngoặt vì nó cho mô hình hiểu ngôn ngữ theo cách linh hoạt hơn: mỗi từ có thể nhìn sang những từ quan trọng khác trong cả…
-- **D.** 2022: ChatGPT ChatGPT xuất hiện như một trải nghiệm đại chúng Lần đầu tiên rất đông người dùng phổ thông có thể trực tiếp chạm vào một mô hình ngôn ngữ mạnh,…
+- **A.** Phân loại dữ liệu
+- **B.** Tạo ra nội dung mới
+- **C.** Hỗ trợ ra quyết định
+- **D.** Tất cả các ý trên (ĐÚNG)
 
-**Đáp án:** AI & LLM Foundation Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?
+**Đáp án:** Tất cả các ý trên
 
-**Giải thích:** Đáp án đúng là phương án B, trích trực tiếp từ [T01-001] trong transcript.
+**Giải thích:** AI có thể thực hiện nhiều tác vụ khác nhau, bao gồm phân loại, tạo nội dung và hỗ trợ ra quyết định.
 
-**Trích dẫn:** [T01-001] — AI & LLM Foundation Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?
+**Trích dẫn:** [T01-001] — Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?
 
 **Nguồn:** `output/transcript/transcript-01-clean.md#T01-001`
 
 ---
 
-## Câu 2 · TEXT · `ec219a13b93e44569709572c491dfc0a`
+## Câu 2 · TEXT · `368f725f06cc45f3befb345ebf34b00e`
 
-**Câu hỏi:** Hãy trình bày lại bằng lời của bạn nội dung được giảng ở Day 1 (gợi ý, đoạn liên quan bắt đầu bằng: "Lịch sử AI 70 năm Khai sinh, lời hứa đầu..."):
+**Câu hỏi:** Hãy giải thích về cơ chế hoạt động của LLM.
 
-**Đáp án:** Lịch sử AI 70 năm Khai sinh, lời hứa đầu tiên 2 lần mùa đông, cách tiếp cận chạm trần Từ model đơn lẻ sang system có khả năng hành động như agent
+**Đáp án:** LLM hoạt động thông qua việc đọc nhiều dữ liệu, học từ ví dụ và được uốn nắn qua phản hồi của con người.
 
-**Giải thích:** Đáp án mẫu được trích trực tiếp từ transcript tại [T01-013].
+**Giải thích:** Cơ chế hoạt động của LLM bao gồm việc học từ nhiều nguồn dữ liệu và cải thiện qua phản hồi.
 
-**Trích dẫn:** [T01-013] — Lịch sử AI 70 năm Khai sinh, lời hứa đầu tiên 2 lần mùa đông, cách tiếp cận chạm trần Từ model đơn lẻ sang system có khả năng hành động như agent
+**Trích dẫn:** [T01-004] — Bên trong LLM: cơ chế vận hành
 
-**Nguồn:** `output/transcript/transcript-01-clean.md#T01-013`
+**Nguồn:** `output/transcript/transcript-01-clean.md#T01-004`
 
 ---
 
-## Câu 3 · TEXT · `d595c22b265a448bac3341b804b454c7`
+## Câu 3 · MCQ · `0dd4e16a736343639f5874069dd91048`
 
-**Câu hỏi:** Hãy trình bày lại bằng lời của bạn nội dung được giảng ở Day 1 (gợi ý, đoạn liên quan bắt đầu bằng: "2020  GPT3 175 tỷ một "bác sĩ đa năng"..."):
+**Câu hỏi:** Khi gọi API lần đầu, điều gì là quan trọng nhất?
 
-**Đáp án:** 2020  GPT3 175 tỷ một "bác sĩ đa năng" — mọi token đều đi qua toàn bộ khớp nối (dense) 2026  Kimi K3 2.800 tỷ một "bệnh viện đa khoa" — mỗi token chỉ gọi vài chuyên gia MoE compute / dữ liệu (thang log) → test loss ↓ Luật chơi 20202024: cứ thêm compute + dữ liệu là model khôn lên một cách dự đoán được (scaling law, Kaplan et al. 2020 Tham số (parameter): những "khớp nối" model học được Sau…
+- **A.** Chọn đúng endpoint (ĐÚNG)
+- **B.** Xác thực thông tin
+- **C.** Kiểm tra tốc độ phản hồi
+- **D.** Tất cả các ý trên
 
-**Giải thích:** Đáp án mẫu được trích trực tiếp từ transcript tại [T01-025].
+**Đáp án:** Chọn đúng endpoint
 
-**Trích dẫn:** [T01-025] — 2020  GPT3 175 tỷ một "bác sĩ đa năng" — mọi token đều đi qua toàn bộ khớp nối (dense) 2026  Kimi K3 2.800 tỷ một "bệnh viện đa khoa" — mỗi token chỉ gọi vài chuyên gia MoE compute / dữ liệu (thang log) → test loss ↓ Luật chơi 20202024: cứ thêm compute + dữ liệu là model khôn lên một cách dự đoán được (scaling law, Kaplan et al. 2020 Tham số (parameter): những "khớp nối" model học được Sau khi luyện xong, những gì model "biết" nằm trong các con số cố định bên trong gọi là tham số — hãy hình dung như khớp nối thần kinh: luyện càng kỹ, các khớp nối càng được siết đúng. Tham số không phải thứ bạn chỉnh khi dùng model — nó được đóng gói sẵn trong "bộ não" (file weights). Bạn chỉ chỉnh được context và các núm vặn lúc gọi (như temperature). Nhiều tham số ≠ tốn hơn tuyến tính — nhờ MoE, bệnh viện lớn gấp 16 lần mà chi phí mỗi ca khám gần như không đổi MoE Shazeer et al. 2017 — arxiv.org/abs/1701.06538 · Kimi K3 16/7/2026 2.8 nghìn tỷ tham số MoE — k3-kimi.com
+**Giải thích:** Chọn đúng endpoint là bước đầu tiên và quan trọng nhất khi gọi API.
 
-**Nguồn:** `output/transcript/transcript-01-clean.md#T01-025`
+**Trích dẫn:** [T01-008] — Gọi API lần đầu
+
+**Nguồn:** `output/transcript/transcript-01-clean.md#T01-008`
+
+---
+
+## Câu 4 · MCQ · `9c49b54dcc86497782357a8be9915104`
+
+**Câu hỏi:** AI có thể được phân loại thành những nhóm nào?
+
+- **A.** Phân loại, sinh nội dung, hành động (ĐÚNG)
+- **B.** Dữ liệu, thuật toán, mô hình
+- **C.** Học máy, học sâu, học tăng cường
+- **D.** Phân tích, dự đoán, tối ưu hóa
+
+**Đáp án:** Phân loại, sinh nội dung, hành động
+
+**Giải thích:** AI được chia thành ba nhóm chính: phân loại, sinh nội dung và hành động.
+
+**Trích dẫn:** [T01-012] — Ba nhóm AI chính: phân loại · sinh nội dung · hành động
+
+**Nguồn:** `output/transcript/transcript-01-clean.md#T01-012`
+
+---
+
+## Câu 5 · MCQ · `64a7f04ecd00480dad0b7f36f982992d`
+
+**Câu hỏi:** Bài học nào được rút ra từ cuộc cách mạng dữ liệu của Fei-Fei Li?
+
+- **A.** Dữ liệu tốt hơn đánh bại thuật toán khôn hơn (ĐÚNG)
+- **B.** Thuật toán là yếu tố quyết định
+- **C.** Dữ liệu không quan trọng
+- **D.** Cần nhiều thuật toán phức tạp
+
+**Đáp án:** Dữ liệu tốt hơn đánh bại thuật toán khôn hơn
+
+**Giải thích:** Bài học từ cuộc cách mạng dữ liệu là đôi khi dữ liệu tốt hơn có thể đánh bại thuật toán thông minh hơn.
+
+**Trích dẫn:** [T01-015] — đôi khi dữ liệu tốt hơn đánh bại thuật toán khôn hơn
+
+**Nguồn:** `output/transcript/transcript-01-clean.md#T01-015`
+
+---
+
+## Câu 6 · MCQ · `81b2b3b9a47b47bdb346c2c5dda3be9b`
+
+**Câu hỏi:** Cơ chế nào cho phép model LLM chọn từ dựa trên xác suất?
+
+- **A.** Attention (ĐÚNG)
+- **B.** Pre-training
+- **C.** Discriminative AI
+- **D.** Generative AI
+
+**Đáp án:** Attention
+
+**Giải thích:** Cơ chế attention cho phép model chấm điểm mức độ liên quan của từng từ trong ngữ cảnh.
+
+**Trích dẫn:** [T01-019] — Với mọi ngữ cảnh, model chấm điểm MỌI từ trong từ vựng — “landˮ 22%, “forestˮ 9%… — rồi chọn theo xác suất đó
+
+**Nguồn:** `output/transcript/transcript-01-clean.md#T01-019`
+
+---
+
+## Câu 7 · MCQ · `c9191d0f93b6480abed2377422035e43`
+
+**Câu hỏi:** Mô hình Transformer hoạt động như thế nào?
+
+- **A.** Chỉ đọc tuần tự từng từ
+- **B.** Chấm điểm mức độ liên quan của từng từ (ĐÚNG)
+- **C.** Chỉ sử dụng một từ để dự đoán
+- **D.** Không sử dụng xác suất
+
+**Đáp án:** Chấm điểm mức độ liên quan của từng từ
+
+**Giải thích:** Mô hình Transformer sử dụng cơ chế attention để chấm điểm mức độ liên quan của từng token đối với nghĩa của mình.
+
+**Trích dẫn:** [T01-023] — Chấm điểm mức độ liên quan của từng token đối với nghĩa của mình
+
+**Nguồn:** `output/transcript/transcript-01-clean.md#T01-023`
+
+---
+
+## Câu 8 · MCQ · `915ddee830684d948e1f4160f3b1d3d4`
+
+**Câu hỏi:** Quá trình nào không phải là một phần trong việc tạo ra LLM?
+
+- **A.** Pre-training
+- **B.** SFT
+- **C.** RLHF/DPO
+- **D.** Tối ưu hóa thuật toán (ĐÚNG)
+
+**Đáp án:** Tối ưu hóa thuật toán
+
+**Giải thích:** Quá trình tạo ra LLM bao gồm Pre-training, SFT và RLHF/DPO, không bao gồm tối ưu hóa thuật toán.
+
+**Trích dẫn:** [T01-026] — LLM được tạo ra như thế nào? — đọc nhiều, được chỉ, được uốn nắn, luyện đề
+
+**Nguồn:** `output/transcript/transcript-01-clean.md#T01-026`
+
+---
+
+## Câu 9 · TEXT · `b3a60eca32df4c848fe81d0571aaefbc`
+
+**Câu hỏi:** Giải thích về khái niệm Chain-of-Thought trong LLM.
+
+**Đáp án:** Chain-of-Thought là phương pháp cho phép mô hình suy luận từng bước, từ đó cải thiện độ chính xác trong câu trả lời.
+
+**Giải thích:** Phương pháp này giúp mô hình không chỉ đưa ra đáp án mà còn giải thích quá trình suy luận.
+
+**Trích dẫn:** [T01-030] — Cùng một model, cùng một câu hỏi — cho nó được viết nháp từng bước
+
+**Nguồn:** `output/transcript/transcript-01-clean.md#T01-030`
+
+---
+
+## Câu 10 · TEXT · `a629959f7c724362923db5483dea4cdb`
+
+**Câu hỏi:** Tại sao việc chọn model theo tầng lại quan trọng?
+
+**Đáp án:** Việc chọn model theo tầng giúp tối ưu hóa chi phí và hiệu suất cho từng loại công việc cụ thể.
+
+**Giải thích:** Chọn model theo tầng giúp tránh việc sử dụng model đắt cho các tác vụ đơn giản và ngược lại.
+
+**Trích dẫn:** [T01-034] — Chọn model theo TẦNG, không chọn theo tên
+
+**Nguồn:** `output/transcript/transcript-01-clean.md#T01-034`
 
 ---

@@ -82,3 +82,104 @@ Ký hiệu: `P` = đạt · `F1/F2/F3/F4` = trượt điều kiện tương ứn
 | Trích xuất trực tiếp từ dữ liệu thật | ≥ 10 | 10 (GS-002, 005, 006, 007, 008, 009, 020, 021, 022, 025) |
 
 `extraction = "verbatim"` (nguyên văn học viên làm câu trả lời) hoặc `"verbatim_question"` (nguyên văn học viên làm đề bài); mỗi case kèm trường `real_text` để đối chiếu 1-1 với `turn_id` trong `tutor_turns.csv`. GS-023 lấy pattern từ turn thật T10366 nhưng ở dạng `adapted` nên **không** tính vào 10 case này.
+
+---
+
+## CP3 — Số đo "thử bao nhiêu, đúng bao nhiêu" — 2026-09-17T15:47:31
+
+> ⚠️ **CHẾ ĐỘ OFFLINE (MOCK) — ĐÂY KHÔNG PHẢI SỐ NỘP CP3.**
+> `.env` chưa có API key nên toàn bộ chấm bài tự luận ở lượt chạy này dùng heuristic so khớp
+> từ khoá (`vlearn/grader.py::_mock_grade`), KHÔNG phải LLM thật. CP3 yêu cầu ≥1 lời gọi AI
+> chạy thật — con số dưới đây CHỈ để kiểm tra pipeline/testset chạy đúng end-to-end qua HTTP API,
+> KHÔNG được dùng để báo cáo độ chính xác AI cho CP3.
+
+- Script: `eval/cp3_benchmark.py` · Testset: `eval/cp3_testset.json` (24 case) · Base URL: `http://127.0.0.1:8000`
+- Chế độ AI lúc chạy (`GET /api/health`): **OFFLINE (MOCK)**
+
+**Thử 24 câu, 18 câu trả đúng có dẫn nguồn, 6 câu sai hoặc bịa.**
+
+- Tỉ lệ đạt: 75.0% (18/24)
+- Trong đó nhóm câu tự luận có AI chấm thật (`qtype=text`): 10/16 đạt
+- Số case bị phát hiện mã trích dẫn bịa (`validation.invalid_codes` không rỗng): 0
+
+> Định nghĩa ĐẠT: (1) `verdict_label` khớp `expected_verdict` trong testset, VÀ (2) không có mã `[Txx-NNN]` bịa (`validation.invalid_codes` rỗng). Xem chi tiết trong docstring đầu file `eval/cp3_benchmark.py`.
+
+| Case | Nhóm | Kỳ vọng | AI trả về | C1 khớp verdict | C2 không bịa mã | Đạt |
+|---|---|---|---|---|---|---|
+| CP3-001 | MCQ dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-002 | MCQ dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-003 | MCQ dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-004 | MCQ dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-005 | MCQ sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-006 | MCQ sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-007 | MCQ sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-008 | MCQ sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-009 | Text dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-010 | Text dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-011 | Text dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-012 | Text dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-013 | Text mot_phan | mot_phan | sai | ✗ | ✓ | TRƯỢT |
+| CP3-014 | Text mot_phan | mot_phan | mot_phan | ✓ | ✓ | ĐẠT |
+| CP3-015 | Text mot_phan | mot_phan | sai | ✗ | ✓ | TRƯỢT |
+| CP3-016 | Text sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-017 | Text sai | sai | mot_phan | ✗ | ✓ | TRƯỢT |
+| CP3-018 | Text sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-019 | Text khong_du_thong_tin | khong_du_thong_tin | ngoai_nguon_du_lieu | ✗ | ✓ | TRƯỢT |
+| CP3-020 | Text khong_du_thong_tin | khong_du_thong_tin | sai | ✗ | ✓ | TRƯỢT |
+| CP3-021 | Text ngoai_pham_vi | ngoai_pham_vi | ngoai_pham_vi | ✓ | ✓ | ĐẠT |
+| CP3-022 | Text ngoai_pham_vi | ngoai_pham_vi | ngoai_pham_vi | ✓ | ✓ | ĐẠT |
+| CP3-023 | Text ngoai_nguon_du_lieu | ngoai_nguon_du_lieu | sai | ✗ | ✓ | TRƯỢT |
+| CP3-024 | Text ngoai_nguon_du_lieu | ngoai_nguon_du_lieu | ngoai_nguon_du_lieu | ✓ | ✓ | ĐẠT |
+
+### CP3 — Lượt chạy LIVE (đã thực hiện — xem mục ngay bên dưới)
+
+> **Đã chạy.** Ngày 2026-09-17, `.env` đã có `OPENAI_API_KEY` thật, server chạy
+> `mode: live` (`provider=openai`, `model=gpt-4o-mini`). Bộ câu hỏi Day 1 + Day 2
+> đã được sinh lại bằng LLM thật (`POST /api/generate {regenerate:true}`), testset
+> `eval/cp3_testset.json` đã được dựng lại khớp với `question_id` mới, và
+> `eval/cp3_benchmark.py` đã chạy LIVE thật. Kết quả — **21/24 (87.5%)** — nằm ở
+> mục "CP3 — Số đo … — 2026-09-17T16:02:17" ngay phía dưới đây (script tự append,
+> không sửa tay). Đây là mục giữ chỗ cũ, giữ nguyên nội dung lịch sử để đối chiếu
+> thời điểm trước khi có API key; số nộp CP3 chính thức là mục LIVE bên dưới.
+
+---
+
+## CP3 — Số đo "thử bao nhiêu, đúng bao nhiêu" — 2026-09-17T16:02:17
+
+- Script: `eval/cp3_benchmark.py` · Testset: `eval/cp3_testset.json` (24 case) · Base URL: `http://127.0.0.1:8000`
+- Chế độ AI lúc chạy (`GET /api/health`): **LIVE** — provider=`openai`, model=`gpt-4o-mini`
+
+**Thử 24 câu, 21 câu trả đúng có dẫn nguồn, 3 câu sai hoặc bịa.**
+
+- Tỉ lệ đạt: 87.5% (21/24)
+- Trong đó nhóm câu tự luận có AI chấm thật (`qtype=text`): 13/16 đạt
+- Số case bị phát hiện mã trích dẫn bịa (`validation.invalid_codes` không rỗng): 0
+
+> Định nghĩa ĐẠT: (1) `verdict_label` khớp `expected_verdict` trong testset, VÀ (2) không có mã `[Txx-NNN]` bịa (`validation.invalid_codes` rỗng). Xem chi tiết trong docstring đầu file `eval/cp3_benchmark.py`.
+
+| Case | Nhóm | Kỳ vọng | AI trả về | C1 khớp verdict | C2 không bịa mã | Đạt |
+|---|---|---|---|---|---|---|
+| CP3-001 | MCQ dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-002 | MCQ dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-003 | MCQ dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-004 | MCQ dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-005 | MCQ sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-006 | MCQ sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-007 | MCQ sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-008 | MCQ sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-009 | Text dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-010 | Text dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-011 | Text dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-012 | Text dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-013 | Text mot_phan | mot_phan | dung | ✗ | ✓ | TRƯỢT |
+| CP3-014 | Text mot_phan | mot_phan | mot_phan | ✓ | ✓ | ĐẠT |
+| CP3-015 | Text mot_phan | mot_phan | mot_phan | ✓ | ✓ | ĐẠT |
+| CP3-016 | Text sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-017 | Text sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-018 | Text sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-019 | Text khong_du_thong_tin | khong_du_thong_tin | khong_du_thong_tin | ✓ | ✓ | ĐẠT |
+| CP3-020 | Text khong_du_thong_tin | khong_du_thong_tin | khong_du_thong_tin | ✓ | ✓ | ĐẠT |
+| CP3-021 | Text ngoai_pham_vi | ngoai_pham_vi | ngoai_pham_vi | ✓ | ✓ | ĐẠT |
+| CP3-022 | Text ngoai_pham_vi | ngoai_pham_vi | ngoai_pham_vi | ✓ | ✓ | ĐẠT |
+| CP3-023 | Text ngoai_nguon_du_lieu | ngoai_nguon_du_lieu | khong_du_thong_tin | ✗ | ✓ | TRƯỢT |
+| CP3-024 | Text ngoai_nguon_du_lieu | ngoai_nguon_du_lieu | khong_du_thong_tin | ✗ | ✓ | TRƯỢT |

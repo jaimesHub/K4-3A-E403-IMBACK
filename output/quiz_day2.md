@@ -1,67 +1,176 @@
-# Bộ câu hỏi Day 2 (4 câu)
+# Bộ câu hỏi Day 2 (10 câu)
 
-## Câu 1 · MCQ · `c8b381ee41e34dbba89f15c2d0044314`
+## Câu 1 · TEXT · `b8186b28890d40e5912969e15bd483c9`
 
-**Câu hỏi:** Theo bài giảng Day 2, nội dung nào sau đây mô tả ĐÚNG nhất phần được trích tại [T02-001]?
+**Câu hỏi:** Hãy giải thích tầm quan trọng của việc xác định rõ Problem Statement trong quy trình phát triển AI.
 
-- **A.** Xác định bài toán cho AI. Từ yêu cầu mơ hồ đến Problem Statement rõ ràng. (ĐÚNG)
-- **B.** CURSOR "Lệch năng lực cốt lõi" Từ bỏ mảng AI thiết kế cơ khí CAD) để tập trung vào AI code editor — nơi đội ngũ am hiểu sâu sắc quy trình nghiệp vụ. ARTIFACT…
-- **C.** MODEL Tư duy & Sáng tạo Xử lý đọc hiểu, soạn thảo, tổng hợp, phân loại và đưa ra gợi ý. CONTEXT Tri thức chuyên biệt Cơ sở dữ liệu, tài liệu nghiệp vụ, hồ sơ…
-- **D.** CẤP ĐỘ 1 Rule / Script · Đầu vào ổn định, ít thay đổi · Logic viết được thành if/else · Cần kết quả luôn đúng 100% · Quy định pháp lý / tuân thủ chặt Ví dụ:…
+**Đáp án:** Problem Statement rõ ràng giúp định hình các tiêu chí kiểm thử và hướng đi cho dự án AI.
 
-**Đáp án:** Xác định bài toán cho AI. Từ yêu cầu mơ hồ đến Problem Statement rõ ràng.
+**Giải thích:** Một Problem Statement rõ ràng là nền tảng để phát triển các giải pháp AI hiệu quả.
 
-**Giải thích:** Đáp án đúng là phương án A, trích trực tiếp từ [T02-001] trong transcript.
-
-**Trích dẫn:** [T02-001] — Xác định bài toán cho AI. Từ yêu cầu mơ hồ đến Problem Statement rõ ràng.
+**Trích dẫn:** [T02-001] — Từ yêu cầu mơ hồ đến Problem Statement rõ ràng.
 
 **Nguồn:** `output/transcript/transcript-02-clean.md#T02-001`
 
 ---
 
-## Câu 2 · MCQ · `d08322a192bc4fd1bedee54f56bf9030`
+## Câu 2 · MCQ · `4e826dce0f0b420b8b6c46d969e84909`
 
-**Câu hỏi:** Theo bài giảng Day 2, nội dung nào sau đây mô tả ĐÚNG nhất phần được trích tại [T02-009]?
+**Câu hỏi:** Quá trình nào được mô tả là 'Phân kỳ để thấu hiểu sâu sắc, hội tụ để lựa chọn chính xác' trong việc xác định bài toán cho AI?
 
-- **A.** Bài toán 1 câu problem Vấn đề cụ thể cần giải quyết (không bao gồm giải pháp). Đối tượng ảnh hưởng actor Cá nhân hoặc bộ phận chịu tác động trực tiếp từ vấn… (ĐÚNG)
-- **B.** In → LLM Call 1 LLM Call 2 LLM Call 3 → Aggregator → Out Chạy song song rồi tổng hợp (sectioning), hoặc chạy nhiều lần lấy vote. VD Guardrail + response đồng…
-- **C.** OUTPUT METRIC Kết quả cuối cùng / what we optimize · Thời lượng hoàn tất quy trình giảm bao nhiêu? · Tỷ lệ sai sót / chất lượng đầu ra thay đổi thế nào? · Giá…
-- **D.** Parallelization
+- **A.** DEFINE
+- **B.** DISCOVER (ĐÚNG)
+- **C.** EVALUATE
+- **D.** IMPLEMENT
 
-**Đáp án:** Bài toán 1 câu problem Vấn đề cụ thể cần giải quyết (không bao gồm giải pháp). Đối tượng ảnh hưởng actor Cá nhân hoặc bộ phận chịu tác động trực tiếp từ vấn…
+**Đáp án:** DISCOVER
 
-**Giải thích:** Đáp án đúng là phương án A, trích trực tiếp từ [T02-009] trong transcript.
+**Giải thích:** Quá trình DISCOVER liên quan đến việc khám phá và mở rộng góc nhìn để hiểu rõ vấn đề.
 
-**Trích dẫn:** [T02-009] — Bài toán 1 câu  problem Vấn đề cụ thể cần giải quyết (không bao gồm giải pháp). Đối tượng ảnh hưởng  actor Cá nhân hoặc bộ phận chịu tác động trực tiếp từ vấn đề. Quy trình hiện tại  workflow Các bước vận hành thủ công hoặc tự động hiện tại (gồm 37 bước). Nút thắt & Tác động  bottleneck + impact Khâu gây chậm trễ, sai sót hoặc lặp lại; hệ quả hay tổn thất cụ thể. Chỉ số đo thành công  success metric Chỉ số định lượng cụ thể dùng để chứng minh hiệu quả cải tiến. Định hướng giải pháp  direction No AI / Rule / Workflow / Agent / Chưa xác định. Quick Problem Card — Khung định hình bài toán PROBLEM STATEMENT · QUICK CARD DAY 02 · 28 / 83
+**Trích dẫn:** [T02-004] — Diamond 1 — Tìm đúng vấn đề — Phân kỳ để thấu hiểu sâu sắc, hội tụ để lựa chọn chính xác
 
-**Nguồn:** `output/transcript/transcript-02-clean.md#T02-009`
+**Nguồn:** `output/transcript/transcript-02-clean.md#T02-004`
 
 ---
 
-## Câu 3 · TEXT · `8ab847eda1454be894c7cd261ed6ef7c`
+## Câu 3 · MCQ · `0d6b3f2a429d4645b645143505a73a4b`
 
-**Câu hỏi:** Hãy trình bày lại bằng lời của bạn nội dung được giảng ở Day 2 (gợi ý, đoạn liên quan bắt đầu bằng: "AUTOMATE AI làm thay Chọn khi: · Việc khó, nhàm..."):
+**Câu hỏi:** Sai lầm nào thường gặp khi xây dựng giải pháp AI quá sớm?
 
-**Đáp án:** AUTOMATE AI làm thay Chọn khi: · Việc khó, nhàm chán, nguy hiểm hoặc cần scale · Người dùng thiếu kiến thức / khả năng tự làm · Có "đáp án đúng" mà mọi người cùng đồng thuận Đo thành công bằng: hiệu quả tăng · an toàn hơn · giảm việc tẻ nhạt. quyết định theo từng tác vụ AUGMENT AI hỗ trợ con người Chọn khi: · Người dùng thích tự làm việc đó · Stakes cao: tiền bạc, pháp lý, sức khỏe · Kết quả cần…
+- **A.** Không lượng hóa tổn thất hiện tại (ĐÚNG)
+- **B.** Đánh giá hiệu quả cải tiến
+- **C.** Thiết lập kịch bản kiểm thử
+- **D.** Rõ ràng phạm vi tự chủ của AI
 
-**Giải thích:** Đáp án mẫu được trích trực tiếp từ transcript tại [T02-017].
+**Đáp án:** Không lượng hóa tổn thất hiện tại
 
-**Trích dẫn:** [T02-017] — AUTOMATE AI làm thay Chọn khi: · Việc khó, nhàm chán, nguy hiểm hoặc cần scale · Người dùng thiếu kiến thức / khả năng tự làm · Có "đáp án đúng" mà mọi người cùng đồng thuận Đo thành công bằng: hiệu quả tăng · an toàn hơn · giảm việc tẻ nhạt. quyết định theo từng tác vụ AUGMENT AI hỗ trợ con người Chọn khi: · Người dùng thích tự làm việc đó · Stakes cao: tiền bạc, pháp lý, sức khỏe · Kết quả cần trách nhiệm cá nhân / social capital · Sở thích khó diễn đạt thành lời Đo bằng: mức độ thích thú · cảm giác kiểm soát · sáng tạo tăng. Automation vs Augmentation — Bước ② của PAIR: với từng tác vụ, AI nên làm thay hay hỗ trợ con người? ① ② ③ Việc đã automate vẫn gần như luôn cần human oversight — preview, edit, undo. NGUỒN  Google PAIR  Ch.1 User Needs + Defining Success RWA · AUTOMATE VS AUGMENT DAY 02 · 43 / 83
+**Giải thích:** Không lượng hóa tổn thất hiện tại dẫn đến mất căn cứ đánh giá hiệu quả cải tiến.
+
+**Trích dẫn:** [T02-007] — Không lượng hóa tổn thất hiện tại, dẫn đến mất căn cứ đánh giá hiệu quả cải tiến.
+
+**Nguồn:** `output/transcript/transcript-02-clean.md#T02-007`
+
+---
+
+## Câu 4 · MCQ · `a35f165d4f6e4da18b07737705c5aa1b`
+
+**Câu hỏi:** Trong quy trình xác định bài toán, câu hỏi nào không nên được đặt ra?
+
+- **A.** Hao phí hiện tại là bao nhiêu?
+- **B.** Có giải pháp phi AI đơn giản hơn?
+- **C.** Cần bao nhiêu người tham gia? (ĐÚNG)
+- **D.** Nút thắt nằm ở đâu?
+
+**Đáp án:** Cần bao nhiêu người tham gia?
+
+**Giải thích:** Câu hỏi này không liên quan đến việc xác định bài toán mà chỉ liên quan đến số lượng người tham gia.
+
+**Trích dẫn:** [T02-010] — Câu hỏi khai thác bài toán — Bộ câu hỏi định hình vấn đề dành cho các bên liên quan hoặc chính mình
+
+**Nguồn:** `output/transcript/transcript-02-clean.md#T02-010`
+
+---
+
+## Câu 5 · MCQ · `ac1547776fac4335a0728a6e761913b8`
+
+**Câu hỏi:** Khi nào AI có lợi thế theo mô hình PAIR?
+
+- **A.** Khi bài toán có tính chất đơn giản
+- **B.** Khi bài toán nằm trong nhóm 'AI probably better' (ĐÚNG)
+- **C.** Khi người dùng có khả năng tự làm
+- **D.** Khi không có giải pháp phi AI nào khả thi
+
+**Đáp án:** Khi bài toán nằm trong nhóm 'AI probably better'
+
+**Giải thích:** AI chỉ nên được áp dụng khi bài toán nằm trong nhóm này để đảm bảo hiệu quả.
+
+**Trích dẫn:** [T02-014] — Khi nào AI có lợi thế? — Tám trường hợp PAIR gọi là 'AI probably better'
+
+**Nguồn:** `output/transcript/transcript-02-clean.md#T02-014`
+
+---
+
+## Câu 6 · MCQ · `ffc2ec094c4b4539939f2cc1a9708633`
+
+**Câu hỏi:** Khi nào AI nên được sử dụng để tự động hóa?
+
+- **A.** Khi người dùng thích tự làm việc đó
+- **B.** Khi việc khó, nhàm chán, nguy hiểm hoặc cần scale (ĐÚNG)
+- **C.** Khi kết quả cần trách nhiệm cá nhân
+- **D.** Khi có nhiều giải pháp phi AI đơn giản hơn
+
+**Đáp án:** Khi việc khó, nhàm chán, nguy hiểm hoặc cần scale
+
+**Giải thích:** AI nên được sử dụng để tự động hóa trong các tình huống khó khăn hoặc nguy hiểm.
+
+**Trích dẫn:** [T02-017] — Chọn khi: · Việc khó, nhàm chán, nguy hiểm hoặc cần scale
 
 **Nguồn:** `output/transcript/transcript-02-clean.md#T02-017`
 
 ---
 
-## Câu 4 · TEXT · `67f5fa1b45e241c1965ebf8d1f4bfc44`
+## Câu 7 · MCQ · `288aa512dd2c4b45a09d1c197baa7b67`
 
-**Câu hỏi:** Hãy trình bày lại bằng lời của bạn nội dung được giảng ở Day 2 (gợi ý, đoạn liên quan bắt đầu bằng: "Cây quyết định: Lựa chọn cấp độ giải pháp —..."):
+**Câu hỏi:** Trong quy trình Prompt Chaining, điều gì xảy ra sau khi thực hiện các LLM Call?
 
-**Đáp án:** Cây quyết định: Lựa chọn cấp độ giải pháp — Từ bài toán cốt lõi đến lựa chọn Rule, Workflow hay Agent Đi từ trên xuống — mỗi nhánh "KHÔNG" là một lần tránh được độ phức tạp không cần thiết. NGUỒN Anthropic — Building effective agents · Google — Rules of ML WORKFLOW · DECISION TREE DAY 02 · 55 / 83
+- **A.** Kết quả được đưa ra ngay lập tức
+- **B.** Kết quả được tổng hợp (ĐÚNG)
+- **C.** Kết quả được lưu trữ
+- **D.** Kết quả được phân tích chi tiết
 
-**Giải thích:** Đáp án mẫu được trích trực tiếp từ transcript tại [T02-025].
+**Đáp án:** Kết quả được tổng hợp
 
-**Trích dẫn:** [T02-025] — Cây quyết định: Lựa chọn cấp độ giải pháp — Từ bài toán cốt lõi đến lựa chọn Rule, Workflow hay Agent Đi từ trên xuống — mỗi nhánh "KHÔNG" là một lần tránh được độ phức tạp không cần thiết. NGUỒN  Anthropic — Building effective agents · Google — Rules of ML WORKFLOW · DECISION TREE DAY 02 · 55 / 83
+**Giải thích:** Sau khi thực hiện các LLM Call, kết quả sẽ được tổng hợp để đưa ra đầu ra cuối cùng.
 
-**Nguồn:** `output/transcript/transcript-02-clean.md#T02-025`
+**Trích dẫn:** [T02-020] — Chạy song song rồi tổng hợp (sectioning), hoặc chạy nhiều lần lấy vote.
+
+**Nguồn:** `output/transcript/transcript-02-clean.md#T02-020`
+
+---
+
+## Câu 8 · MCQ · `d0238647b91b44769fb8a45b899f7105`
+
+**Câu hỏi:** Nguyên tắc nào được đề xuất trong việc xây dựng các mô hình AI?
+
+- **A.** Tăng độ phức tạp ngay từ đầu
+- **B.** Chỉ tăng độ phức tạp khi thực sự cần thiết (ĐÚNG)
+- **C.** Giảm thiểu mọi yếu tố không cần thiết
+- **D.** Sử dụng nhiều mô hình phức tạp cùng lúc
+
+**Đáp án:** Chỉ tăng độ phức tạp khi thực sự cần thiết
+
+**Giải thích:** Nguyên tắc này giúp tối ưu hóa quy trình và giảm thiểu rủi ro.
+
+**Trích dẫn:** [T02-024] — Luôn ưu tiên giải pháp đơn giản nhất; chỉ tăng độ phức tạp khi thực sự cần thiết.
+
+**Nguồn:** `output/transcript/transcript-02-clean.md#T02-024`
+
+---
+
+## Câu 9 · TEXT · `1e84cecb8dc6494e8205735a18149ea7`
+
+**Câu hỏi:** Tại sao cần phải cân bằng giữa Precision và Recall trong hệ thống AI?
+
+**Đáp án:** Cần cân bằng giữa Precision và Recall để đảm bảo gợi ý chất lượng mà không bỏ sót người dùng cần giúp.
+
+**Giải thích:** Việc đánh đổi giữa Precision và Recall là một thách thức trong thiết kế hệ thống AI.
+
+**Trích dẫn:** [T02-027] — Precision ↔ Recall: đánh đổi không tránh khỏi
+
+**Nguồn:** `output/transcript/transcript-02-clean.md#T02-027`
+
+---
+
+## Câu 10 · TEXT · `3d67e49557654b759e9ea30bea2d2829`
+
+**Câu hỏi:** Hãy mô tả quy trình kiểm thử trong việc phát triển AI theo nội dung bài giảng.
+
+**Đáp án:** Quy trình kiểm thử bao gồm việc xác định chỉ số hiệu năng và kiểm tra các kịch bản thực tế.
+
+**Giải thích:** Quy trình này giúp đảm bảo rằng hệ thống AI hoạt động đúng và hiệu quả.
+
+**Trích dẫn:** [T02-030] — Từ Problem Statement đến Eval Plan — Problem Statement rõ ràng giúp định hình cụ thể các tiêu chí kiểm thử.
+
+**Nguồn:** `output/transcript/transcript-02-clean.md#T02-030`
 
 ---

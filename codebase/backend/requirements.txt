@@ -13,3 +13,4 @@ streamlit>=1.30.0
 pypdf>=4.0.0            # đọc PDF slide trong data/slides/ (vlearn/ingest.py)
 fastapi>=0.110.0         # HTTP API (codebase/backend/api.py)
 uvicorn[standard]>=0.27.0  # chạy FastAPI (api.py / vlearn_cli.py serve)
+python-multipart>=0.0.9    # nhận file upload multipart/form-data (POST /api/upload)

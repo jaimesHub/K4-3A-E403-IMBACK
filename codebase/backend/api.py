@@ -9,8 +9,9 @@ Xem README_VLEARN.md để biết đầy đủ bảng endpoint + ví dụ reques
 from __future__ import annotations
 
 import re
+from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, Field
@@ -131,6 +132,47 @@ def list_days() -> list[dict]:
             }
         )
     return result
+
+
+_ALLOWED_UPLOAD_SUFFIX = ".pdf"
+
+
+@app.post("/api/upload")
+async def api_upload(file: UploadFile = File(...)) -> JSONResponse:
+    """Nhận 1 file PDF slide bài giảng từ màn hình import, lưu vào data/slides/.
+
+    Chỉ nhận .pdf (khớp pipeline ingest hiện tại — pypdf). Tên file càng khớp
+    quy ước 'd<N>-...pdf' / 'day<N>-...pdf' thì càng tự nhận diện được Day N
+    (dùng chung regex với GET /api/days) — nếu không khớp, vẫn lưu file
+    nhưng trả `day: null` kèm hướng dẫn đặt tên lại.
+    """
+    original_name = file.filename or "upload.pdf"
+    suffix = Path(original_name).suffix.lower()
+    if suffix != _ALLOWED_UPLOAD_SUFFIX:
+        return JSONResponse(
+            status_code=400,
+            content={"error": f"Chỉ nhận file .pdf — file '{original_name}' không hợp lệ."},
+        )
+
+    content = await file.read()
+    if not content:
+        return JSONResponse(status_code=400, content={"error": "File rỗng — vui lòng chọn lại file PDF."})
+
+    safe_name = re.sub(r"[^A-Za-z0-9._-]+", "_", original_name).strip("_") or "upload.pdf"
+    config.SLIDES_DIR.mkdir(parents=True, exist_ok=True)
+    dest = config.SLIDES_DIR / safe_name
+    dest.write_bytes(content)
+
+    match = _SLIDE_DAY_RE.match(dest.stem)
+    day = int(match.group(1)) if match else None
+    if day is not None:
+        message = f"Đã lưu '{dest.name}' vào data/slides/. Tự nhận diện Day {day}."
+    else:
+        message = (
+            f"Đã lưu '{dest.name}' vào data/slides/. Không tự nhận diện được ngày học từ tên file — "
+            "đặt tên theo dạng 'd<N>-...pdf' để hệ thống tự nhận, hoặc tự nhập đúng số ngày ở bước Generate."
+        )
+    return JSONResponse(content={"filename": dest.name, "day": day, "message": message})
 
 
 @app.post("/api/ingest")
