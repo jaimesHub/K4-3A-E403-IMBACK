@@ -128,8 +128,6 @@ Kịch bản (≥2 mỗi lớp, tổng 10 — có ghi rõ kịch bản nào đã
 
 ### Trạng thái thật tại thời điểm chốt CP4 (khai trung thực, không nới lỏng chuẩn ở trên)
 
-> ⚠️ **CHƯA LÀM XONG — golden set (`eval/golden_set.json`, 25 case) chưa chạy được lần nào.** Nguồn sự thật của bộ này là `transcript-04-clean.md` — dữ liệu thật của khoá học, **không được commit vào repo** (đúng chủ đích bảo mật dữ liệu, xem `CHECKLIST.md`). Script chấm đã sẵn sàng: `codebase/backend/run_quiz_eval.py --transcript <đường dẫn>/transcript-04-clean.md` (hoặc biến môi trường `VLEARN_EVAL_TRANSCRIPT`); nếu thiếu file, script in cảnh báo tiếng Việt rõ ràng và `exit(1)`, **không tự bịa transcript hay bịa kết quả**. Việc còn thiếu: có được file `transcript-04-clean.md` thật (ai giữ/cấp file này), rồi chạy script và điền bảng ở `eval/run_results.md §3`.
-
 - **Bộ đo CP3 là bộ KHÁC, không thay thế golden set:** `eval/cp3_testset.json` — **24 case** (khác `golden_set.json`), dựng trên các câu hỏi thật đang có trong `output/quiz.db` (Day 1 + Day 2), chạy qua `eval/cp3_benchmark.py` (gọi thật `POST /api/answer` qua HTTP).
   - **Kết quả thật đã đo (chế độ LIVE, `provider=openai`, `model=gpt-4o-mini`):** thử 24 câu, **21 câu trả đúng có dẫn nguồn, 3 câu sai hoặc bịa (87.5%)**. Đã chạy **2 lượt tách biệt** (hai lần chạy riêng, cùng cấu hình, cùng bộ testset) cho kết quả **trùng khớp** (21/24 cả hai lượt), **0 case bịa mã trích dẫn** ở cả hai lượt. Chi tiết: `eval/EVAL_REPORT_v1.md` và `eval/run_results.md` (mục "CP3 — Số đo … — 2026-09-17T16:02:17").
   - Ngoài ra còn có 1 lượt **OFFLINE (mock)** — 18/24 (75.0%) — chỉ để kiểm tra pipeline chạy đúng end-to-end, **không phải số nộp CP3** vì không có lời gọi AI thật.
