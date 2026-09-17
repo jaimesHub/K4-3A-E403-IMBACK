@@ -296,8 +296,10 @@ cd /Users/jaimes/Working/AI20K-IV/K4-3A-E403-IMBACK/codebase/backend
 # 2. Cài dependencies (nếu chưa)
 pip install -r requirements.txt
 
-# 3. Điền API key (VÍ DỤ)
-echo "OPENAI_API_KEY=sk-..." > .env
+# 3. Điền API key — SỬA FILE, ĐỪNG GHI ĐÈ
+#    CẢNH BÁO: `echo ... > .env` sẽ XOÁ SẠCH .env đang có (kể cả key thật).
+#    Mở .env bằng editor và sửa dòng OPENAI_API_KEY=, hoặc append có kiểm tra:
+grep -q '^OPENAI_API_KEY=' .env || echo "OPENAI_API_KEY=sk-..." >> .env
 
 # 4. Khởi động server (chạy trên terminal 1)
 python3 -m uvicorn api:app --port 8000
@@ -307,9 +309,14 @@ python3 -m uvicorn api:app --port 8000
 curl http://127.0.0.1:8000/api/health
 # Kỳ vọng: {"status":"ok","mode":"live",...}
 
-# 6. Trích transcript + Sinh câu hỏi (nếu chưa có)
+# 6. Trích transcript + sinh câu hỏi — CHỈ chạy khi chưa có bộ câu hỏi
+#    CẢNH BÁO: generate lại sẽ đổi toàn bộ question_id trong output/quiz.db,
+#    khiến eval/cp3_testset.json (gắn theo question_id cũ) trượt hàng loạt vì
+#    không tìm thấy câu hỏi — KHÔNG phải vì AI trả lời sai.
+#    Nếu đã có sẵn quiz (kiểm tra bằng: curl .../api/days), BỎ QUA bước này.
+#    Nếu buộc phải generate lại, phải dựng lại eval/cp3_testset.json cho khớp.
 python3 vlearn_cli.py ingest --day 1
-python3 vlearn_cli.py generate --day 1 --n 24
+python3 vlearn_cli.py generate --day 1 --n 10
 
 # 7. Chạy benchmark CP3 (từ gốc repo, terminal 2)
 cd /Users/jaimes/Working/AI20K-IV/K4-3A-E403-IMBACK
