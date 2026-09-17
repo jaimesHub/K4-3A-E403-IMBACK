@@ -3,413 +3,429 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>D2 - Hoc tu loi truoc</title>
+  <title>VLearn Quiz – Học từ lỗi trước</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #6c63ff;
+      --primary-dark: #574fd6;
+      --primary-light: #f0edff;
+      --primary-muted: #c5c0f5;
+      --green: #27ae60;
+      --green-bg: #f0fff4;
+      --red: #e74c3c;
+      --red-bg: #fff4f4;
+      --orange: #f39c12;
+      --orange-bg: #fffbf0;
+      --border: #e0e0ef;
+      --text: #1a1a2e;
+      --muted: #666;
+      --bg: #f0f4ff;
+    }
     body {
       font-family: 'Segoe UI', system-ui, sans-serif;
-      background: #f0f4ff; color: #1a1a2e;
+      background: var(--bg); color: var(--text);
       min-height: 100vh; display: flex;
-      align-items: center; justify-content: center; padding: 24px;
+      align-items: flex-start; justify-content: center; padding: 24px;
     }
     .card {
-      background: #fff; border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-      max-width: 680px; width: 100%; padding: 40px 36px;
+      background: #fff; border-radius: 20px;
+      box-shadow: 0 4px 32px rgba(108,99,255,0.10);
+      max-width: 720px; width: 100%; padding: 40px 40px;
+      margin: auto;
     }
-    .lesson-label { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: #6c63ff; margin-bottom: 6px; }
-    h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-    .subtitle { font-size: 14px; color: #666; margin-bottom: 28px; }
+    /* ── Typography ── */
+    .label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--primary); margin-bottom: 6px; }
+    h1 { font-size: 24px; font-weight: 800; margin-bottom: 6px; line-height: 1.3; }
+    h2 { font-size: 19px; font-weight: 700; margin-bottom: 14px; line-height: 1.4; }
+    .subtitle { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+    /* ── Progress ── */
     .progress-wrap { margin-bottom: 28px; }
-    .progress-label { font-size: 12px; color: #888; margin-bottom: 6px; }
+    .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: #999; margin-bottom: 6px; }
     .progress-bar { height: 6px; background: #e8e8f0; border-radius: 99px; overflow: hidden; }
-    .progress-fill { height: 100%; background: #6c63ff; border-radius: 99px; transition: width 0.4s ease; }
+    .progress-fill { height: 100%; background: var(--primary); border-radius: 99px; transition: width 0.4s ease; }
+    /* ── Screens ── */
     .screen { display: none; }
     .screen.active { display: block; }
-    .intro-box {
-      background: #f5f3ff; border-left: 4px solid #6c63ff;
-      border-radius: 8px; padding: 16px 20px; margin-bottom: 24px;
-      font-size: 15px; line-height: 1.6;
+    /* ── Pill ── */
+    .pill { display: inline-flex; align-items: center; gap: 6px; background: var(--primary-light); color: var(--primary); font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 99px; margin-bottom: 20px; }
+    /* ── Info box ── */
+    .info-box { background: var(--primary-light); border-left: 4px solid var(--primary); border-radius: 10px; padding: 16px 20px; margin-bottom: 22px; font-size: 14px; line-height: 1.65; }
+    .info-box strong { color: var(--primary); }
+    /* ── Steps ── */
+    .steps { display: flex; gap: 0; margin-bottom: 28px; }
+    .step { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+    .step:not(:last-child)::after { content:''; position:absolute; top: 16px; left: calc(50% + 14px); right: calc(-50% + 14px); height: 2px; background: var(--border); z-index: 0; }
+    .step-circle { width: 32px; height: 32px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #aaa; position: relative; z-index: 1; transition: all 0.3s; }
+    .step-circle.done { background: var(--green); color: #fff; }
+    .step-circle.active { background: var(--primary); color: #fff; box-shadow: 0 0 0 4px var(--primary-light); }
+    .step-label { font-size: 11px; color: #aaa; margin-top: 6px; text-align: center; font-weight: 600; }
+    .step-label.active { color: var(--primary); }
+    .step-label.done { color: var(--green); }
+    /* ── Upload zone ── */
+    .upload-zone { border: 2px dashed var(--border); border-radius: 14px; padding: 32px 24px; text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 20px; background: #fafaff; }
+    .upload-zone:hover, .upload-zone.drag { border-color: var(--primary); background: var(--primary-light); }
+    .upload-zone .upload-icon { font-size: 40px; margin-bottom: 10px; }
+    .upload-zone p { font-size: 14px; color: var(--muted); }
+    .upload-zone strong { color: var(--primary); }
+    .file-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+    .file-item { display: flex; align-items: center; gap: 10px; background: var(--primary-light); border-radius: 8px; padding: 10px 14px; font-size: 13px; }
+    .file-item .fi-icon { font-size: 18px; }
+    .file-item .fi-name { flex: 1; font-weight: 600; color: var(--text); }
+    .file-item .fi-size { color: #999; font-size: 11px; }
+    .file-item .fi-remove { cursor: pointer; color: #bbb; font-size: 16px; }
+    .file-item .fi-remove:hover { color: var(--red); }
+    /* ── Generate form ── */
+    .gen-form { background: #fafaff; border: 1.5px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
+    .gen-form label { font-size: 13px; font-weight: 700; color: var(--text); display: block; margin-bottom: 8px; }
+    .gen-row { display: flex; gap: 10px; align-items: flex-start; }
+    .gen-row input[type="number"] {
+      width: 120px; border: 2px solid var(--border); border-radius: 10px;
+      padding: 12px 14px; font-size: 16px; font-family: inherit;
+      outline: none; transition: border-color 0.2s; font-weight: 700; text-align: center;
     }
-    .intro-box strong { color: #6c63ff; }
-    .question-text { font-size: 17px; font-weight: 600; line-height: 1.55; margin-bottom: 20px; }
-    .question-hint { font-size: 13px; color: #888; margin-bottom: 16px; font-style: italic; }
-    textarea {
-      width: 100%; border: 2px solid #e0e0ef; border-radius: 10px;
-      padding: 14px 16px; font-size: 15px; font-family: inherit;
-      resize: vertical; min-height: 110px; outline: none; transition: border-color 0.2s;
-    }
-    textarea:focus { border-color: #6c63ff; }
-    .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+    .gen-row input[type="number"]:focus { border-color: var(--primary); }
+    .gen-preview { flex: 1; background: #f0f0fa; border-radius: 8px; padding: 12px 14px; font-size: 13px; color: #555; line-height: 1.5; font-style: italic; }
+    /* ── Options ── */
+    .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
     .option {
-      border: 2px solid #e0e0ef; border-radius: 10px; padding: 13px 16px;
+      border: 2px solid var(--border); border-radius: 12px; padding: 14px 16px;
       cursor: pointer; font-size: 15px; transition: all 0.18s;
-      display: flex; align-items: center; gap: 12px;
+      display: flex; align-items: center; gap: 12px; position: relative;
     }
-    .option:hover { border-color: #6c63ff; background: #f5f3ff; }
-    .option.selected { border-color: #6c63ff; background: #f0edff; font-weight: 600; }
-    .option .opt-key {
-      width: 26px; height: 26px; border-radius: 50%; border: 2px solid #c8c8e0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 700; flex-shrink: 0; color: #888;
-    }
-    .option.selected .opt-key { background: #6c63ff; border-color: #6c63ff; color: #fff; }
-    .feedback-wrong { background: #fff4f4; border-left: 4px solid #f04848; border-radius: 12px; padding: 18px 20px; margin-bottom: 20px; font-size: 15px; line-height: 1.6; }
-    .feedback-wrong .fb-title { color: #c0392b; font-weight: 700; margin-bottom: 6px; }
-    .feedback-right { background: #f0fff4; border-left: 4px solid #27ae60; border-radius: 12px; padding: 18px 20px; margin-bottom: 20px; font-size: 15px; line-height: 1.6; }
-    .feedback-right .fb-title { color: #1e8449; font-weight: 700; margin-bottom: 6px; }
-    .feedback-neutral { background: #fffbf0; border-left: 4px solid #f39c12; border-radius: 12px; padding: 18px 20px; margin-bottom: 20px; font-size: 15px; line-height: 1.6; }
-    .feedback-neutral .fb-title { color: #b7770d; font-weight: 700; margin-bottom: 6px; }
+    .option:hover { border-color: var(--primary); background: var(--primary-light); }
+    .option.selected { border-color: var(--primary); background: #f0edff; font-weight: 600; }
+    .option.correct { border-color: var(--green); background: var(--green-bg); }
+    .option.wrong { border-color: var(--red); background: var(--red-bg); }
+    .opt-key { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #c8c8e0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; color: #888; }
+    .option.selected .opt-key { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .option.correct .opt-key { background: var(--green); border-color: var(--green); color: #fff; }
+    .option.wrong .opt-key { background: var(--red); border-color: var(--red); color: #fff; }
+    /* ── Feedback ── */
+    .fb-box { border-radius: 12px; padding: 18px 20px; margin-bottom: 20px; font-size: 14px; line-height: 1.65; }
+    .fb-box .fb-title { font-weight: 700; margin-bottom: 8px; font-size: 15px; }
+    .fb-correct { background: var(--green-bg); border-left: 4px solid var(--green); }
+    .fb-correct .fb-title { color: var(--green); }
+    .fb-wrong { background: var(--red-bg); border-left: 4px solid var(--red); }
+    .fb-wrong .fb-title { color: #c0392b; }
+    .fb-neutral { background: var(--orange-bg); border-left: 4px solid var(--orange); }
+    .fb-neutral .fb-title { color: #b7770d; }
+    .fb-ai { background: var(--primary-light); border-left: 4px solid var(--primary); }
+    .fb-ai .fb-title { color: var(--primary); }
+    /* ── Source block ── */
     .source-block { background: #f8f8ff; border: 1.5px solid #d0ccff; border-radius: 10px; padding: 16px 18px; margin-bottom: 20px; }
-    .source-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #6c63ff; margin-bottom: 8px; }
-    .source-text { font-size: 14px; line-height: 1.65; color: #333; font-style: italic; }
+    .source-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; }
+    .source-text { font-size: 14px; line-height: 1.7; color: #333; font-style: italic; }
     .source-cite { font-size: 12px; color: #888; margin-top: 8px; }
-    .summary-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; font-size: 14px; line-height: 1.5; }
-    .summary-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
-    .score-badge { display: inline-block; background: #6c63ff; color: #fff; font-size: 28px; font-weight: 800; padding: 10px 24px; border-radius: 12px; margin: 16px 0; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 13px 26px; border-radius: 10px; border: none;
-      cursor: pointer; font-size: 15px; font-weight: 600;
-      transition: all 0.18s; text-decoration: none;
+    /* ── Textarea ── */
+    textarea {
+      width: 100%; border: 2px solid var(--border); border-radius: 10px;
+      padding: 14px 16px; font-size: 15px; font-family: inherit;
+      resize: vertical; min-height: 120px; outline: none; transition: border-color 0.2s; color: var(--text);
     }
-    .btn-primary { background: #6c63ff; color: #fff; }
-    .btn-primary:hover { background: #574fd6; transform: translateY(-1px); }
-    .btn-primary:disabled { background: #c5c0f5; cursor: not-allowed; transform: none; }
-    .btn-secondary { background: #f0edff; color: #6c63ff; }
+    textarea:focus { border-color: var(--primary); }
+    /* ── Buttons ── */
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; border-radius: 10px; border: none; cursor: pointer; font-size: 15px; font-weight: 600; transition: all 0.18s; text-decoration: none; white-space: nowrap; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-primary:disabled { background: var(--primary-muted); cursor: not-allowed; transform: none; }
+    .btn-secondary { background: var(--primary-light); color: var(--primary); }
     .btn-secondary:hover { background: #e0d9ff; }
-    .btn-row { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
-    .step-pill { display: inline-block; background: #f0edff; color: #6c63ff; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 99px; margin-bottom: 20px; }
-    .warn-note { font-size: 13px; color: #888; margin-top: 10px; font-style: italic; }
-    hr.divider { border: none; border-top: 1px solid #ebebf5; margin: 24px 0; }
+    .btn-success { background: var(--green); color: #fff; }
+    .btn-success:hover { background: #219a52; transform: translateY(-1px); }
+    .btn-outline { background: #fff; color: var(--primary); border: 2px solid var(--primary); }
+    .btn-outline:hover { background: var(--primary-light); }
+    .btn-row { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; align-items: center; }
+    /* ── Loading ── */
+    .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    /* ── Loading full ── */
+    .loading-screen { text-align: center; padding: 40px 0; }
+    .loading-screen .big-spinner { width: 56px; height: 56px; border: 5px solid var(--primary-light); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+    .loading-screen p { color: var(--muted); font-size: 14px; }
+    /* ── Quiz list ── */
+    .quiz-info { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+    .quiz-badge { background: var(--primary-light); color: var(--primary); border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; }
+    .question-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .q-dot { width: 36px; height: 36px; border-radius: 8px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; cursor: pointer; color: #888; transition: all 0.18s; }
+    .q-dot:hover { border-color: var(--primary); color: var(--primary); }
+    .q-dot.current { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .q-dot.answered-correct { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+    .q-dot.answered-wrong { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+    .q-dot.skipped { background: var(--orange-bg); border-color: var(--orange); color: var(--orange); }
+    /* ── Question card ── */
+    .q-type-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 99px; margin-bottom: 14px; }
+    .q-type-mcq { background: #e8f4fd; color: #2980b9; }
+    .q-type-text { background: #fdf3e8; color: #d35400; }
+    .question-text { font-size: 17px; font-weight: 600; line-height: 1.6; margin-bottom: 18px; }
+    /* ── Summary ── */
+    .score-circle { width: 120px; height: 120px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 20px; }
+    .score-circle .sc-num { font-size: 34px; font-weight: 800; line-height: 1; }
+    .score-circle .sc-label { font-size: 11px; opacity: 0.8; margin-top: 4px; }
+    .summary-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .summary-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-radius: 10px; font-size: 14px; border: 1.5px solid; }
+    .summary-item.si-correct { background: var(--green-bg); border-color: #b2e8c8; }
+    .summary-item.si-wrong { background: var(--red-bg); border-color: #f5b8b8; }
+    .si-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .si-body { flex: 1; }
+    .si-q { font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .si-ref { font-size: 12px; color: #888; }
+    /* ── Success screen ── */
+    .success-icon { font-size: 64px; text-align: center; margin-bottom: 16px; }
+    /* ── Divider ── */
+    hr { border: none; border-top: 1px solid #ebebf5; margin: 24px 0; }
+    /* ── Responsive ── */
+    @media (max-width: 500px) {
+      .card { padding: 24px 20px; }
+      h1 { font-size: 20px; }
+      .gen-row { flex-direction: column; }
+      .gen-row input[type="number"] { width: 100%; }
+    }
+    /* ── Local storage saved state banner ── */
+    .saved-banner { background: #e8f8ef; border: 1.5px solid #b2e8c8; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #1e8449; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
   </style>
 </head>
 <body>
-<div class="card">
+<div class="card" id="app">
 
-  <!-- SCREEN 0 - Intro -->
-  <div class="screen active" id="s0">
-    <div class="lesson-label">Day 4 · LLM Foundation</div>
-    <h1>Tokenization &amp; LLM</h1>
-    <div class="subtitle" style="background:#6c63ff;color:#fff;padding:8px 14px;border-radius:8px;display:inline-block;font-weight:600;">Trước khi xem bài giảng, hãy thử trả lời 3 câu hỏi ngắn.</div>
-    <div style="margin-top:8px;margin-bottom:4px;font-size:13px;color:#888;font-style:italic;">Bài này không chấm điểm - chỉ để kiểm tra kiến thức nền trước khi học.</div>
+  <!-- ══════════════════════════════════════════════
+       SCREEN: import — Bước 1: Upload tài liệu
+  ══════════════════════════════════════════════ -->
+  <div class="screen active" id="s-import">
+    <div class="label">VLearn Quiz Generator</div>
+    <h1>Tạo bộ câu hỏi từ bài giảng</h1>
+    <p class="subtitle">Upload tài liệu bài giảng để AI tự động tạo câu hỏi ôn tập.</p>
 
-    <div class="intro-box">
-      <strong>Cách học hôm nay khác một chút.</strong><br/>
-      Thay vì học lý thuyết trước, bạn sẽ <strong>thử trả lời trước</strong> - dù chưa biết gì.
-      Sau khi trả lời, AI sẽ chỉ ra bạn đang hiểu đúng hay sai ở đâu,
-      rồi dẫn thẳng đến đoạn bài giảng liên quan.<br/><br/>
-      Không có điểm số ở bước này. Sai là bình thường - sai rồi học mới nhớ lâu.
+    <div class="steps" id="steps-import">
+      <div class="step">
+        <div class="step-circle active" id="sc-1">1</div>
+        <div class="step-label active">Upload tài liệu</div>
+      </div>
+      <div class="step">
+        <div class="step-circle" id="sc-2">2</div>
+        <div class="step-label" id="sl-2">Generate câu hỏi</div>
+      </div>
+      <div class="step">
+        <div class="step-circle" id="sc-3">3</div>
+        <div class="step-label" id="sl-3">Bắt đầu quiz</div>
+      </div>
     </div>
 
-    <div class="summary-row">
-      <span class="summary-icon">&#9203;</span>
-      <span>~5 phút để trả lời 3 câu hỏi trước khi xem bài giảng</span>
+    <!-- Kiểm tra local storage: có kết quả cũ không? -->
+    <div class="saved-banner" id="saved-banner" style="display:none">
+      <span>💾</span>
+      <span>Bạn đã có kết quả ôn tập từ trước. <strong id="saved-info"></strong>
+        — <a href="#" onclick="loadSavedQuiz(); return false;" style="color:var(--green); font-weight:700;">Ôn tập lại ngay</a>
+        hoặc tạo bộ câu hỏi mới bên dưới.
+      </span>
     </div>
-    <div class="summary-row">
-      <span class="summary-icon">&#127919;</span>
-      <span>AI sẽ chỉ ra bạn đang hiểu đúng hay còn nhầm chỗ nào - để bạn biết cần chú ý gì khi xem bài giảng, không phải để chấm điểm</span>
+
+    <div class="upload-zone" id="upload-zone" onclick="triggerUpload()" ondragover="onDragOver(event)" ondrop="onDrop(event)" ondragleave="onDragLeave(event)">
+      <div class="upload-icon">📂</div>
+      <p><strong>Kéo thả file vào đây</strong> hoặc bấm để chọn file</p>
+      <p style="margin-top:6px; font-size:12px; color:#bbb">Hỗ trợ: .pdf, .md, .txt, .pptx — Tối đa 10 file</p>
     </div>
-    <div class="summary-row">
-      <span class="summary-icon">&#128214;</span>
-      <span>Sau mỗi câu, bạn được chỉ đúng đoạn transcript cần đọc</span>
-    </div>
+    <input type="file" id="file-input" multiple accept=".pdf,.md,.txt,.pptx" style="display:none" onchange="onFileChange(event)" />
+
+    <div class="file-list" id="file-list"></div>
 
     <div class="btn-row">
-      <button class="btn btn-primary" onclick="go('s1')">Bắt đầu thử &#8594;</button>
+      <button class="btn btn-primary" id="btn-next-import" onclick="goStep2()" disabled>
+        Tiếp theo →
+      </button>
     </div>
   </div>
 
-  <!-- SCREEN 1 - Câu 1 MCQ -->
-  <div class="screen" id="s1">
-    <div class="step-pill">Câu 1 / 3</div>
+  <!-- ══════════════════════════════════════════════
+       SCREEN: generate — Bước 2: Generate câu hỏi
+  ══════════════════════════════════════════════ -->
+  <div class="screen" id="s-generate">
+    <div class="label">VLearn Quiz Generator</div>
+    <h1>Generate bộ câu hỏi</h1>
+    <p class="subtitle">Chọn ngày học cần tạo câu hỏi. AI sẽ scan tài liệu tương ứng và sinh ra câu hỏi + đáp án + giải thích.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-circle done">✓</div>
+        <div class="step-label done">Upload tài liệu</div>
+      </div>
+      <div class="step">
+        <div class="step-circle active">2</div>
+        <div class="step-label active">Generate câu hỏi</div>
+      </div>
+      <div class="step">
+        <div class="step-circle">3</div>
+        <div class="step-label">Bắt đầu quiz</div>
+      </div>
+    </div>
+
+    <div class="gen-form">
+      <label>Nhập số ngày học cần tạo câu hỏi:</label>
+      <div class="gen-row">
+        <input type="number" id="day-input" min="1" max="30" placeholder="4" value="" oninput="updateGenPreview()" />
+        <div class="gen-preview" id="gen-preview">
+          Nhập một số để xem prompt sẽ được gửi tới AI...
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>Hệ thống sẽ:</strong><br/>
+      1. Scan tài liệu <strong id="day-label-info">Day X</strong> từ folder data<br/>
+      2. Gửi prompt đến AI để tạo bộ câu hỏi theo template transcript<br/>
+      3. Lưu kết quả vào database (CSV) trong folder <code>~/output</code>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="go('s-import')">← Quay lại</button>
+      <button class="btn btn-primary" id="btn-generate" onclick="startGenerate()" disabled>
+        ✨ Generate câu hỏi
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN: generating — Đang xử lý (loading)
+  ══════════════════════════════════════════════ -->
+  <div class="screen" id="s-generating">
+    <div class="loading-screen">
+      <div class="big-spinner"></div>
+      <h2 style="margin-bottom:8px;">AI đang tạo câu hỏi...</h2>
+      <p id="gen-status">Đang scan tài liệu Day <span id="gen-day-label">4</span>...</p>
+      <div style="margin-top:20px; color:#bbb; font-size:13px;">Thường mất 10–20 giây</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN: gen-done — Generate thành công
+  ══════════════════════════════════════════════ -->
+  <div class="screen" id="s-gen-done">
+    <div class="steps">
+      <div class="step">
+        <div class="step-circle done">✓</div>
+        <div class="step-label done">Upload tài liệu</div>
+      </div>
+      <div class="step">
+        <div class="step-circle done">✓</div>
+        <div class="step-label done">Generate câu hỏi</div>
+      </div>
+      <div class="step">
+        <div class="step-circle active">3</div>
+        <div class="step-label active">Bắt đầu quiz</div>
+      </div>
+    </div>
+
+    <div class="success-icon">🎉</div>
+    <h1 style="text-align:center; margin-bottom:8px;">Generate thành công!</h1>
+    <p class="subtitle" style="text-align:center;">Đã tạo xong bộ câu hỏi cho <strong id="done-day-label">Day 4</strong></p>
+
+    <div style="background:#f8f8ff; border:1.5px solid #d0ccff; border-radius:12px; padding:20px 22px; margin-bottom:24px;">
+      <div style="font-weight:700; margin-bottom:12px; color:var(--primary)">📋 Tóm tắt bộ câu hỏi vừa tạo</div>
+      <div id="gen-summary-list" style="display:flex; flex-direction:column; gap:8px; font-size:14px; color:#444;"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary btn-success" onclick="startQuiz()" style="flex:1; justify-content:center;">
+        🚀 Bắt đầu làm quiz →
+      </button>
+    </div>
+    <div class="btn-row" style="margin-top:8px;">
+      <button class="btn btn-secondary" onclick="go('s-generate')" style="font-size:13px;">Tạo thêm cho ngày khác</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       SCREEN: quiz — Màn hình làm quiz
+  ══════════════════════════════════════════════ -->
+  <div class="screen" id="s-quiz">
+    <div class="label" id="quiz-day-label">Day 4 · LLM Foundation</div>
+    <h1 id="quiz-title">Ôn tập bài giảng</h1>
+
+    <div class="quiz-info">
+      <div class="quiz-badge" id="qbadge-count">5 câu hỏi</div>
+      <div class="quiz-badge" id="qbadge-types">3 trắc nghiệm · 2 tự luận</div>
+      <div class="quiz-badge" id="qbadge-time">~10 phút</div>
+    </div>
+
     <div class="progress-wrap">
-      <div class="progress-label">Tiến độ</div>
-      <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
-    </div>
-    <div class="question-text">
-      Khi bạn gõ câu "Xin chào, tôi là học viên AI20k" vào một LLM -
-      model đó xử lý chuỗi ký tự đó như thế nào ở bước đầu tiên?
-    </div>
-    <div class="question-hint">Chọn câu trả lời bạn thấy hợp lý nhất (dù chưa chắc)</div>
-    <div class="options" id="q1-options">
-      <div class="option" onclick="selectOpt(this,'q1','A')">
-        <div class="opt-key">A</div>
-        Model đọc từng ký tự một (X, i, n, space, c, h, à, o...)
+      <div class="progress-meta">
+        <span id="q-progress-text">Câu <span id="q-cur">1</span> / <span id="q-total">5</span></span>
+        <span id="q-answered-text">0 đã trả lời</span>
       </div>
-      <div class="option" onclick="selectOpt(this,'q1','B')">
-        <div class="opt-key">B</div>
-        Model tách câu thành các từ theo dấu cách ("Xin", "chào", "tôi"...)
-      </div>
-      <div class="option" onclick="selectOpt(this,'q1','C')">
-        <div class="opt-key">C</div>
-        Model tách câu thành các <em>token</em> - có thể là từ, mảnh từ, hoặc ký tự đặc biệt
-      </div>
-      <div class="option" onclick="selectOpt(this,'q1','D')">
-        <div class="opt-key">D</div>
-        Model hiểu ý nghĩa câu ngay lập tức, không cần tách
-      </div>
+      <div class="progress-bar"><div class="progress-fill" id="q-progress-bar" style="width:0%"></div></div>
     </div>
-    <div class="btn-row">
-      <button class="btn btn-primary" id="btn-q1" disabled onclick="go('s1-fb')">Xem phân tích &#8594;</button>
-    </div>
-    <p class="warn-note">Chọn một đáp án để tiếp tục</p>
+
+    <div class="question-nav" id="question-nav"></div>
+
+    <!-- Question display area -->
+    <div id="question-area"></div>
   </div>
 
-  <!-- SCREEN 1-FB - Feedback câu 1 -->
-  <div class="screen" id="s1-fb">
-    <div class="step-pill">Phân tích · Câu 1</div>
+  <!-- ══════════════════════════════════════════════
+       SCREEN: feedback — Feedback sau mỗi câu
+  ══════════════════════════════════════════════ -->
+  <div class="screen" id="s-feedback">
+    <div class="pill" id="fb-pill">Phân tích · Câu 1</div>
 
-    <div class="feedback-wrong" id="fb1-wrong" style="display:none">
-      <div class="fb-title">&#10007; Sai - Đáp án đúng là C</div>
-      Nhiều người nghĩ LLM tách theo <strong>từ</strong> vì đó là cách con người đọc.
-      Thực tế model không biết "từ" là gì - nó chỉ thấy <strong>token</strong>,
-      và một token không nhất thiết là một từ.
-      "tokenization" có thể bị tách thành "token" + "ization" hoặc thậm chí hơn tùy model.
-      <div style="margin-top:10px;font-weight:700;color:#c0392b;">Giải thích</div>
-    </div>
-    <div class="feedback-right" id="fb1-right" style="display:none">
-      <div class="fb-title">&#10003; Đúng - Đáp án C</div>
-      Bạn đã nhận ra khái niệm token. Phần tiếp theo sẽ giúp bạn hiểu
-      <em>tại sao</em> token không phải là từ - và điều đó ảnh hưởng đến giới hạn
-      context window như thế nào.
-      <div style="margin-top:10px;font-weight:700;color:#1e8449;">Giải thích</div>
+    <div id="fb-content"></div>
+
+    <hr/>
+    <div class="source-block" id="fb-source" style="display:none">
+      <div class="source-tag">📖 Trích dẫn từ transcript</div>
+      <div class="source-text" id="fb-source-text"></div>
+      <div class="source-cite" id="fb-source-cite"></div>
     </div>
 
-    <hr class="divider"/>
-    <div style="font-size:12px;color:#888;margin-bottom:10px;font-style:italic;">Dù đúng hay sai đều có giải thích và trích dẫn từ bài giảng</div>
-    <div class="source-block">
-      <div class="source-tag">Trích dẫn</div>
-      <div class="source-text">
-        "...token là ngôn ngữ của máy. Con người chúng ta nói chuyện với nhau bằng ngôn ngữ
-        của từ ngữ, nhưng máy nói chuyện với nhau bằng ngôn ngữ của token. Nó sẽ chẻ nhỏ
-        những cái từ đấy ra thành token - nó không phải là từ, không phải là chữ cái,
-        mà nó là token... tiếng Việt thì sẽ tốn hơn tiếng Anh, bởi vì tiếng Việt nó có dấu."
-      </div>
-      <div class="source-cite">Tại trang [T04-049] · Transcript 04 · Mổ xẻ mô hình ngôn ngữ lớn: dự đoán token và context</div>
-    </div>
+    <div class="btn-row" id="fb-btn-row"></div>
+  </div>
 
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="go('s2')">Câu tiếp theo &#8594;</button>
+  <!-- ══════════════════════════════════════════════
+       SCREEN: ai-checking — AI đang chấm tự luận
+  ══════════════════════════════════════════════ -->
+  <div class="screen" id="s-ai-checking">
+    <div class="loading-screen">
+      <div class="big-spinner"></div>
+      <h2 style="margin-bottom:8px;">AI đang đánh giá câu trả lời...</h2>
+      <p>So sánh với transcript <span id="ai-check-ref"></span> và kiến thức bài giảng</p>
+      <div style="margin-top:20px; color:#bbb; font-size:13px;">Thường mất 3–5 giây</div>
     </div>
   </div>
 
-  <!-- SCREEN 2 - Câu 2 MCQ -->
-  <div class="screen" id="s2">
-    <div class="step-pill">Câu 2 / 3</div>
-    <div class="progress-wrap">
-      <div class="progress-label">Tiến độ</div>
-      <div class="progress-bar"><div class="progress-fill" style="width:33%"></div></div>
-    </div>
-    <div class="question-text">
-      GPT-4 có context window 128.000 token. Điều đó có nghĩa là gì trong thực tế?
-    </div>
-    <div class="question-hint">Chọn mô tả đúng nhất</div>
-    <div class="options" id="q2-options">
-      <div class="option" onclick="selectOpt(this,'q2','A')">
-        <div class="opt-key">A</div>
-        Model có thể "nhớ" tối đa 128.000 từ trong một cuộc hội thoại
+  <!-- ══════════════════════════════════════════════
+       SCREEN: summary — Tổng kết quiz
+  ══════════════════════════════════════════════ -->
+  <div class="screen" id="s-summary">
+    <div class="pill">🏁 Hoàn thành</div>
+    <h1 style="margin-bottom:6px;">Kết quả ôn tập</h1>
+    <p class="subtitle" id="summary-day-label">Day 4 · LLM Foundation</p>
+
+    <div style="text-align:center; margin-bottom:28px;">
+      <div class="score-circle" id="score-circle">
+        <div class="sc-num" id="score-num">0/0</div>
+        <div class="sc-label">câu đúng</div>
       </div>
-      <div class="option" onclick="selectOpt(this,'q2','B')">
-        <div class="opt-key">B</div>
-        Model xử lý tối đa 128.000 token (input + output) mỗi lần gọi API
-      </div>
-      <div class="option" onclick="selectOpt(this,'q2','C')">
-        <div class="opt-key">C</div>
-        Model được huấn luyện trên 128.000 trang tài liệu
-      </div>
-      <div class="option" onclick="selectOpt(this,'q2','D')">
-        <div class="opt-key">D</div>
-        Model có thể sinh ra tối đa 128.000 từ trong một lần trả lời
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-primary" id="btn-q2" disabled onclick="go('s2-fb')">Xem phân tích &#8594;</button>
-    </div>
-    <p class="warn-note">Chọn một đáp án để tiếp tục</p>
-  </div>
-
-  <!-- SCREEN 2-FB - Feedback câu 2 -->
-  <div class="screen" id="s2-fb">
-    <div class="step-pill">Phân tích · Câu 2</div>
-
-    <div class="feedback-wrong" id="fb2-wrong" style="display:none">
-      <div class="fb-title">&#10007; Sai - Đáp án đúng là B</div>
-      Context window <strong>không phải bộ nhớ dài hạn</strong>.
-      Model không "nhớ" cuộc hội thoại - mỗi lần gọi API, toàn bộ lịch sử
-      chat phải được gửi lại trong context. Khi context đầy,
-      các tin nhắn cũ bị cắt đi - model thực sự "quên".
-      Ngoài ra context tính bằng <strong>token</strong>, không phải từ.
-      <div style="margin-top:10px;font-weight:700;color:#c0392b;">Giải thích</div>
-    </div>
-    <div class="feedback-right" id="fb2-right" style="display:none">
-      <div class="fb-title">&#10003; Đúng - Đáp án B</div>
-      Context window là giới hạn kích thước của "cửa sổ" input+output mỗi lần gọi.
-      Đoạn tiếp theo sẽ giải thích tại sao điều này ảnh hưởng đến
-      cách thiết kế ứng dụng AI thực tế.
-      <div style="margin-top:10px;font-weight:700;color:#1e8449;">Giải thích</div>
+      <div id="score-msg" style="font-size:14px; color:var(--muted); margin-top:10px;"></div>
     </div>
 
-    <hr class="divider"/>
-    <div style="font-size:12px;color:#888;margin-bottom:10px;font-style:italic;">Dù đúng hay sai đều có giải thích và trích dẫn từ bài giảng</div>
-    <div class="source-block">
-      <div class="source-tag">Trích dẫn</div>
-      <div class="source-text">
-        "...Context window - cửa sổ ngữ cảnh - là một mô hình một lúc nó chỉ tiếp nhận được
-        một số lượng nhất định... Khi bạn càng đưa nhiều thông tin, càng đưa nhiều ngữ cảnh,
-        thì cái mô hình càng ngày về sau nó sẽ càng kém đi, và nó sẽ thường quên những
-        thông tin ở lúc đầu - đấy gọi là context rot."
-      </div>
-      <div class="source-cite">Tại trang [T04-051], [T04-052] · Transcript 04 · Mổ xẻ mô hình ngôn ngữ lớn: dự đoán token và context</div>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="go('s3')">Câu tiếp theo &#8594;</button>
-    </div>
-  </div>
-
-  <!-- SCREEN 3 - Câu 3 open-ended -->
-  <div class="screen" id="s3">
-    <div class="step-pill">Câu 3 / 3</div>
-    <div class="progress-wrap">
-      <div class="progress-label">Tiến độ</div>
-      <div class="progress-bar"><div class="progress-fill" style="width:66%"></div></div>
-    </div>
-    <div class="question-text">
-      Tại sao cùng một câu hỏi, ChatGPT đôi khi trả lời rất dài còn Gemini thì ngắn hơn
-      - dù cả hai đều "hiểu" câu hỏi?
-    </div>
-    <div class="question-hint">Viết suy nghĩ của bạn - không cần đúng hoàn toàn, viết những gì bạn đang nghĩ</div>
-    <textarea id="q3-text" placeholder="Ví dụ: Có thể do cách mỗi model được huấn luyện khác nhau, hoặc do giới hạn kỹ thuật nào đó..." oninput="checkQ3()"></textarea>
-    <div class="btn-row">
-      <button class="btn btn-primary" id="btn-q3" disabled onclick="go('s3-fb')">Xem phân tích &#8594;</button>
-    </div>
-    <p class="warn-note">Viết ít nhất một câu để tiếp tục</p>
-  </div>
-
-  <!-- SCREEN 3-FB - Feedback câu 3 -->
-  <div class="screen" id="s3-fb">
-    <div class="step-pill">Phân tích · Câu 3</div>
-
-    <div class="feedback-neutral">
-      <div class="fb-title">Có nhiều yếu tố ảnh hưởng</div>
-      Không có câu trả lời "sai" ở đây. Một số nguyên nhân thật sự:
-      <ul style="margin-top:10px; padding-left:20px; line-height:1.8">
-        <li><strong>System prompt</strong> khác nhau - mỗi sản phẩm có hướng dẫn riêng về độ dài</li>
-        <li><strong>RLHF / fine-tuning</strong> khác nhau - model học từ phản hồi của người dùng có xu hướng khác nhau</li>
-        <li><strong>Temperature &amp; sampling</strong> - tham số sinh văn bản ảnh hưởng đến độ "lan man"</li>
-        <li><strong>Giới hạn output token</strong> - có thể được cài mặc định khác nhau</li>
-      </ul>
-    </div>
-
-    <hr class="divider"/>
-    <div style="font-size:12px;color:#888;margin-bottom:10px;font-style:italic;">Dù đúng hay sai đều có giải thích và trích dẫn từ bài giảng</div>
-    <div class="source-block">
-      <div class="source-tag">Trích dẫn</div>
-      <div class="source-text">
-        "...Bản chất của hệ thống Transformer là nó dự đoán. Nó không phải là nó biết
-        cái tri thức đấy, mà là nó đang dự đoán những từ tiếp theo - những token...
-        Văn bản AI sinh ra nhìn trông rất là có lý, trông rất là thuận mắt,
-        nhưng mà thực ra nó có thể sai - đấy sẽ là hiện tượng ảo giác, hallucination."
-      </div>
-      <div class="source-cite">Tại trang [T04-047], [T04-048] · Transcript 04 · Mổ xẻ mô hình ngôn ngữ lớn: dự đoán token và context</div>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="go('s4')">Xem tổng kết &#8594;</button>
-    </div>
-  </div>
-
-  <!-- SCREEN 4 - Summary -->
-  <div class="screen" id="s4">
-    <div class="step-pill">Hoàn thành</div>
-    <div class="progress-wrap">
-      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
-    </div>
-
-    <h1 style="margin-bottom:8px;margin-top:0">Bạn đã thử xong 3 câu! &#127881;</h1>
-    <p style="color:#666; margin-bottom:24px; font-size:15px"></p>
-
-    <div id="summary-content"></div>
-
-    <hr class="divider"/>
+    <h2 style="font-size:15px; font-weight:700; margin-bottom:12px; color:#888; text-transform:uppercase; letter-spacing:0.5px;">Chi tiết từng câu</h2>
+    <div class="summary-list" id="summary-list"></div>
 
     <div style="background:#f5f3ff; border-radius:12px; padding:18px 20px; margin-bottom:24px;">
-      <div style="font-weight:700; margin-bottom:8px; color:#6c63ff">&#128250; Tiếp theo: xem bài giảng</div>
-      <div style="font-size:14px; color:#444; line-height:1.6">
-        Trong lúc xem, chú ý đặc biệt vào:<br/>
-        <strong>[T04-049]</strong> - Tokenization là gì<br/>
-        <strong>[T04-051]</strong> - Context window hoạt động thế nào<br/>
-        <strong>[T04-047]</strong> - Bản chất dự đoán của LLM và hallucination
-      </div>
+      <div style="font-weight:700; margin-bottom:8px; color:var(--primary)">📚 Phần lý thuyết cần xem lại</div>
+      <div id="summary-refs" style="font-size:14px; color:#444; line-height:1.8;"></div>
     </div>
 
     <div class="btn-row">
-      <a href="https://vlearn.dev/dashboard" target="_blank" class="btn btn-primary">
-        Xem bài giảng &#8594;
+      <a href="https://vlearn.dev/my-courses" target="_blank" class="btn btn-primary">
+        📺 Xem bài giảng →
       </a>
-      <button class="btn btn-secondary" onclick="go('s5')">
-        Kiểm tra lại sau bài &#8594;
+      <button class="btn btn-secondary" onclick="retryQuiz()">
+        🔄 Ôn Tập lại
       </button>
     </div>
-  </div>
-
-  <!-- SCREEN 5 - Post-lesson check -->
-  <div class="screen" id="s5">
-    <div class="step-pill">Kiểm tra sau bài giảng</div>
-
-    <div class="intro-box">
-      <strong>Bạn đã xem xong bài giảng chưa?</strong><br/>
-      Trang này dành để làm <em>sau</em> khi xem xong. Nếu chưa xem, hãy quay lại
-      và xem bài giảng trước - đặc biệt các đoạn <strong>[T04-047]</strong>,
-      <strong>[T04-049]</strong>, <strong>[T04-051]</strong> đã được chỉ ra ở trang trước.<br/><br/>
-      Khi đã xem xong, nhập câu trả lời của bạn rồi bấm <strong>"Kiểm tra"</strong> -
-      AI sẽ so sánh với những gì bạn đã trả lời trước khi xem để thấy bạn hiểu thêm được gì.
-    </div>
-
-    <div class="question-text">
-      Bây giờ hãy giải thích: <em>token</em> là gì và tại sao LLM không đọc theo "từ"?
-    </div>
-    <div class="question-hint">Viết bằng lời của bạn, không cần copy từ bài giảng</div>
-
-    <textarea id="q-post" placeholder="Token là..." oninput="checkPost()"></textarea>
-
-    <div class="btn-row">
-      <button class="btn btn-primary" id="btn-post" disabled onclick="go('s5-fb')">
-        Kiểm tra &#8594;
-      </button>
-    </div>
-    <p class="warn-note">Viết ít nhất một câu để kiểm tra</p>
-  </div>
-
-  <!-- SCREEN 5-FB - Post feedback -->
-  <div class="screen" id="s5-fb">
-    <div class="step-pill">Kết quả · Sau bài giảng</div>
-
-    <div class="feedback-right">
-      <div class="fb-title">&#10003; Phân tích câu trả lời của bạn</div>
-      <div id="post-analysis">
-        AI đang so sánh câu trả lời của bạn với câu trả lời trước bài giảng...<br/><br/>
-        <em>(Trong bản thật: AI sẽ highlight chỗ bạn hiểu thêm được,
-        chỗ còn chưa chính xác, và gợi ý đọc thêm nếu cần.
-        Ở prototype này, đây là mock output.)</em>
-      </div>
-    </div>
-
-    <div class="feedback-neutral" style="margin-top:16px">
-      <div class="fb-title">&#128202; So sánh trước / sau</div>
-      <div style="font-size:14px; line-height:1.7">
-        <strong>Trước bài giảng:</strong> Bạn chọn "model tách theo từ" - giả định phổ biến<br/>
-        <strong>Sau bài giảng:</strong> Bạn đề cập đến token và cách tách sub-word<br/>
-        <strong>Tiến bộ:</strong> Hiểu thêm được cơ chế tokenization &#10003;
-      </div>
-    </div>
-
-    <hr class="divider"/>
-
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="go('s0'); resetAll()">
-        Bắt đầu lại (demo) &#8635;
+    <div class="btn-row" style="margin-top:8px;">
+      <button class="btn btn-outline" onclick="go('s-import'); checkSavedState()">
+        + Tạo bộ câu hỏi mới
       </button>
     </div>
   </div>
@@ -417,68 +433,682 @@
 </div>
 
 <script>
-  const answers = { q1: null, q2: null };
-  const CORRECT  = { q1: 'C', q2: 'B' };
+// ═══════════════════════════════════════════════════════════
+// DATA — Mock questions database (simulates ~/output CSV)
+// Mỗi câu có: id, day, type(mcq|text), question, options,
+//             correct, explain, reference, refCode, refURL
+// ═══════════════════════════════════════════════════════════
+const MOCK_DB = {
+  4: [
+    {
+      id: 1, day: 4, type: 'mcq',
+      question: 'Khi bạn gõ câu "Xin chào, tôi là học viên AI20k" vào một LLM — model đó xử lý chuỗi ký tự đó như thế nào ở bước đầu tiên?',
+      options: [
+        { key: 'A', text: 'Model đọc từng ký tự một (X, i, n, space, c, h, à, o...)' },
+        { key: 'B', text: 'Model tách câu thành các từ theo dấu cách ("Xin", "chào", "tôi"...)' },
+        { key: 'C', text: 'Model tách câu thành các token — có thể là từ, mảnh từ, hoặc ký tự đặc biệt' },
+        { key: 'D', text: 'Model hiểu ý nghĩa câu ngay lập tức, không cần tách' },
+      ],
+      correct: 'C',
+      explain: 'LLM không biết "từ" là gì — nó chỉ thấy token. Một token không nhất thiết là một từ. "tokenization" có thể bị tách thành "token" + "ization" tùy model. Tiếng Việt có dấu nên tốn nhiều token hơn tiếng Anh.',
+      reference: '"...token là ngôn ngữ của máy. Con người chúng ta nói chuyện với nhau bằng ngôn ngữ của từ ngữ, nhưng máy nói chuyện với nhau bằng ngôn ngữ của token. Nó sẽ chẻ nhỏ những cái từ đấy ra thành token — tiếng Việt thì sẽ tốn hơn tiếng Anh, bởi vì tiếng Việt nó có dấu."',
+      refCode: 'T04-049',
+      refURL: 'https://github.com/VinUni-AI20k/K4-3A-Day05-06-AI-Product-Hackathon/tree/main/data/vlearn-pack/transcript',
+    },
+    {
+      id: 2, day: 4, type: 'mcq',
+      question: 'GPT-4 có context window 128.000 token. Điều đó có nghĩa là gì trong thực tế?',
+      options: [
+        { key: 'A', text: 'Model có thể "nhớ" tối đa 128.000 từ trong một cuộc hội thoại' },
+        { key: 'B', text: 'Model xử lý tối đa 128.000 token (input + output) mỗi lần gọi API' },
+        { key: 'C', text: 'Model được huấn luyện trên 128.000 trang tài liệu' },
+        { key: 'D', text: 'Model có thể sinh ra tối đa 128.000 từ trong một lần trả lời' },
+      ],
+      correct: 'B',
+      explain: 'Context window không phải bộ nhớ dài hạn. Model không "nhớ" cuộc hội thoại — mỗi lần gọi API, toàn bộ lịch sử chat phải được gửi lại trong context. Khi đầy, tin nhắn cũ bị cắt đi — model thực sự "quên". Hiện tượng này gọi là context rot.',
+      reference: '"...Context window — cửa sổ ngữ cảnh — là một mô hình một lúc nó chỉ tiếp nhận được một số lượng nhất định... Khi bạn càng đưa nhiều thông tin thì cái mô hình về sau nó sẽ càng kém đi, và nó sẽ thường quên những thông tin ở lúc đầu — đấy gọi là context rot."',
+      refCode: 'T04-051',
+      refURL: 'https://github.com/VinUni-AI20k/K4-3A-Day05-06-AI-Product-Hackathon/tree/main/data/vlearn-pack/transcript',
+    },
+    {
+      id: 3, day: 4, type: 'mcq',
+      question: 'Hiện tượng "hallucination" trong LLM xảy ra khi nào?',
+      options: [
+        { key: 'A', text: 'Khi model bị quá tải và không trả lời được' },
+        { key: 'B', text: 'Khi model sinh ra nội dung trông có vẻ đúng nhưng thực ra sai hoặc bịa' },
+        { key: 'C', text: 'Khi người dùng hỏi những câu quá khó' },
+        { key: 'D', text: 'Khi context window bị đầy' },
+      ],
+      correct: 'B',
+      explain: 'Bản chất của LLM là dự đoán token tiếp theo — không phải "biết" sự thật. Do đó nó có thể tạo ra văn bản nghe rất có lý nhưng hoàn toàn sai. Đây là hallucination và là lý do cần luôn kiểm chứng output của AI.',
+      reference: '"...Bản chất của hệ thống Transformer là nó dự đoán. Nó không phải là nó biết cái tri thức đấy, mà là nó đang dự đoán những từ tiếp theo... Văn bản AI sinh ra nhìn trông rất là có lý, nhưng mà thực ra nó có thể sai — đấy sẽ là hiện tượng ảo giác, hallucination."',
+      refCode: 'T04-047',
+      refURL: 'https://github.com/VinUni-AI20k/K4-3A-Day05-06-AI-Product-Hackathon/tree/main/data/vlearn-pack/transcript',
+    },
+    {
+      id: 4, day: 4, type: 'text',
+      question: 'Giải thích bằng lời của bạn: Tại sao cùng một câu hỏi, ChatGPT đôi khi trả lời rất dài còn Gemini thì ngắn hơn — dù cả hai đều "hiểu" câu hỏi?',
+      correct: null,
+      explain: null, // AI graded
+      reference: '"...Bản chất của hệ thống Transformer là nó dự đoán token tiếp theo. System prompt, cấu hình temperature và RLHF của từng sản phẩm ảnh hưởng lớn đến phong cách sinh văn bản..."',
+      refCode: 'T04-047',
+      refURL: 'https://github.com/VinUni-AI20k/K4-3A-Day05-06-AI-Product-Hackathon/tree/main/data/vlearn-pack/transcript',
+    },
+    {
+      id: 5, day: 4, type: 'text',
+      question: 'Token là gì và tại sao LLM không đọc theo "từ" mà lại theo "token"? Giải thích bằng ngôn ngữ của bạn.',
+      correct: null,
+      explain: null, // AI graded
+      reference: '"...token là ngôn ngữ của máy... Nó sẽ chẻ nhỏ những cái từ đấy ra thành token — nó không phải là từ, không phải là chữ cái, mà nó là token..."',
+      refCode: 'T04-049',
+      refURL: 'https://github.com/VinUni-AI20k/K4-3A-Day05-06-AI-Product-Hackathon/tree/main/data/vlearn-pack/transcript',
+    },
+  ],
+  2: [
+    {
+      id: 1, day: 2, type: 'mcq',
+      question: 'Prompt engineering là gì?',
+      options: [
+        { key: 'A', text: 'Kỹ năng lập trình để tạo ra model AI' },
+        { key: 'B', text: 'Nghệ thuật thiết kế câu lệnh để AI hiểu đúng và trả lời đúng ý người dùng' },
+        { key: 'C', text: 'Quy trình fine-tune model với dữ liệu mới' },
+        { key: 'D', text: 'Cách tối ưu tốc độ của model AI' },
+      ],
+      correct: 'B',
+      explain: 'Prompt engineering là kỹ năng viết và thiết kế câu lệnh (prompt) sao cho AI hiểu đúng ngữ cảnh, mục tiêu và cho ra kết quả phù hợp. Đây là kỹ năng quan trọng khi làm việc với LLM.',
+      reference: '"...Prompt engineering — cách bạn viết câu lệnh cho AI — ảnh hưởng trực tiếp đến chất lượng câu trả lời..."',
+      refCode: 'T02-031',
+      refURL: 'https://github.com/VinUni-AI20k/K4-3A-Day05-06-AI-Product-Hackathon/tree/main/data/vlearn-pack/transcript',
+    },
+    {
+      id: 2, day: 2, type: 'text',
+      question: 'Mô tả một ví dụ thực tế bạn có thể ứng dụng prompt engineering vào công việc hoặc học tập.',
+      correct: null,
+      explain: null,
+      reference: '"...Mỗi task cần cấu trúc prompt khác nhau. Task tóm tắt cần context đầy đủ; task viết code cần format output cụ thể..."',
+      refCode: 'T02-035',
+      refURL: 'https://github.com/VinUni-AI20k/K4-3A-Day05-06-AI-Product-Hackathon/tree/main/data/vlearn-pack/transcript',
+    },
+  ],
+};
 
-  function go(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    if (id === 's1-fb') renderFeedback1();
-    if (id === 's2-fb') renderFeedback2();
-    if (id === 's4')    renderSummary();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let state = {
+  uploadedFiles: [],
+  selectedDay: null,
+  questions: [],
+  currentQ: 0,
+  answers: {},      // { qIndex: { type:'mcq'|'text', value, correct } }
+  generatedDay: null,
+};
+
+// ═══════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════
+function go(screenId) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(screenId).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ═══════════════════════════════════════════════════════════
+// LOCAL STORAGE — persist quiz results
+// ═══════════════════════════════════════════════════════════
+const LS_KEY = 'vlearn_quiz_state';
+
+function saveToLS() {
+  const data = {
+    day: state.generatedDay,
+    answers: state.answers,
+    questions: state.questions,
+    savedAt: new Date().toISOString(),
+  };
+  localStorage.setItem(LS_KEY, JSON.stringify(data));
+}
+
+function checkSavedState() {
+  const saved = localStorage.getItem(LS_KEY);
+  if (!saved) return;
+  try {
+    const data = JSON.parse(saved);
+    const banner = document.getElementById('saved-banner');
+    const info = document.getElementById('saved-info');
+    const d = new Date(data.savedAt);
+    const answeredCount = Object.keys(data.answers).length;
+    info.textContent = `Day ${data.day} · ${answeredCount}/${data.questions.length} câu đã trả lời · ${d.toLocaleDateString('vi-VN')}`;
+    banner.style.display = 'flex';
+  } catch(e) {}
+}
+
+function loadSavedQuiz() {
+  const saved = localStorage.getItem(LS_KEY);
+  if (!saved) return;
+  try {
+    const data = JSON.parse(saved);
+    state.generatedDay = data.day;
+    state.questions = data.questions;
+    state.answers = data.answers;
+    state.currentQ = 0;
+    showSummary();
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════════
+// SCREEN: IMPORT — Upload tài liệu
+// ═══════════════════════════════════════════════════════════
+function triggerUpload() {
+  document.getElementById('file-input').click();
+}
+
+function onDragOver(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.add('drag');
+}
+function onDragLeave(e) {
+  document.getElementById('upload-zone').classList.remove('drag');
+}
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag');
+  addFiles(Array.from(e.dataTransfer.files));
+}
+function onFileChange(e) {
+  addFiles(Array.from(e.target.files));
+}
+
+function addFiles(newFiles) {
+  newFiles.forEach(f => {
+    if (!state.uploadedFiles.find(x => x.name === f.name)) {
+      state.uploadedFiles.push(f);
+    }
+  });
+  renderFileList();
+}
+
+function removeFile(name) {
+  state.uploadedFiles = state.uploadedFiles.filter(f => f.name !== name);
+  renderFileList();
+}
+
+function renderFileList() {
+  const el = document.getElementById('file-list');
+  const btn = document.getElementById('btn-next-import');
+  if (state.uploadedFiles.length === 0) {
+    el.innerHTML = '';
+    btn.disabled = true;
+    return;
+  }
+  el.innerHTML = state.uploadedFiles.map(f => `
+    <div class="file-item">
+      <span class="fi-icon">${fileIcon(f.name)}</span>
+      <span class="fi-name">${esc(f.name)}</span>
+      <span class="fi-size">${formatBytes(f.size)}</span>
+      <span class="fi-remove" onclick="removeFile('${esc(f.name)}')" title="Xóa">✕</span>
+    </div>
+  `).join('');
+  btn.disabled = false;
+}
+
+function fileIcon(name) {
+  if (name.endsWith('.pdf')) return '📄';
+  if (name.endsWith('.md')) return '📝';
+  if (name.endsWith('.pptx')) return '📊';
+  return '📃';
+}
+
+function formatBytes(b) {
+  if (!b) return '';
+  if (b < 1024) return b + ' B';
+  if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+  return (b/1024/1024).toFixed(1) + ' MB';
+}
+
+function goStep2() {
+  go('s-generate');
+}
+
+// ═══════════════════════════════════════════════════════════
+// SCREEN: GENERATE
+// ═══════════════════════════════════════════════════════════
+function updateGenPreview() {
+  const val = document.getElementById('day-input').value.trim();
+  const preview = document.getElementById('gen-preview');
+  const btn = document.getElementById('btn-generate');
+  const dayInfo = document.getElementById('day-label-info');
+  if (!val || isNaN(val) || Number(val) < 1) {
+    preview.textContent = 'Nhập một số để xem prompt sẽ được gửi tới AI...';
+    btn.disabled = true;
+    return;
+  }
+  const day = Number(val);
+  state.selectedDay = day;
+  dayInfo.textContent = `Day ${day}`;
+  preview.innerHTML = `<strong>Prompt gửi AI:</strong><br/>"Generate bộ câu hỏi trắc nghiệm và tự luận cho <strong>Day ${day}</strong> từ transcript bài giảng [T${String(day).padStart(2,'0')}]. Mỗi câu hỏi kèm đáp án, giải thích ngắn gọn và mã trích dẫn [T${String(day).padStart(2,'0')}-NNN]."`;
+  btn.disabled = false;
+}
+
+function startGenerate() {
+  const day = state.selectedDay;
+  document.getElementById('gen-day-label').textContent = day;
+  go('s-generating');
+  // Simulate generate steps
+  const steps = [
+    `Đang scan tài liệu Day ${day}...`,
+    `Đang gửi prompt đến AI...`,
+    `AI đang tạo câu hỏi và đáp án...`,
+    `Đang lưu kết quả vào database...`,
+  ];
+  let i = 0;
+  const statusEl = document.getElementById('gen-status');
+  const interval = setInterval(() => {
+    if (i < steps.length) {
+      statusEl.textContent = steps[i++];
+    } else {
+      clearInterval(interval);
+      finishGenerate(day);
+    }
+  }, 700);
+}
+
+function finishGenerate(day) {
+  // Use mock data — fall back to day 4 if no data for requested day
+  const qs = MOCK_DB[day] || MOCK_DB[4];
+  state.generatedDay = day;
+  state.questions = qs;
+  state.answers = {};
+  state.currentQ = 0;
+
+  document.getElementById('done-day-label').textContent = `Day ${day}`;
+  const mcqCount = qs.filter(q => q.type === 'mcq').length;
+  const textCount = qs.filter(q => q.type === 'text').length;
+  document.getElementById('gen-summary-list').innerHTML = `
+    <div>📌 Tổng số câu hỏi: <strong>${qs.length}</strong></div>
+    <div>🔵 Trắc nghiệm (MCQ): <strong>${mcqCount} câu</strong></div>
+    <div>✏️ Tự luận (Open-text): <strong>${textCount} câu</strong></div>
+    <div>💾 Đã lưu vào: <code>~/output/day${day}_quiz.csv</code></div>
+    <div style="font-size:12px; color:#bbb; margin-top:6px;">(Mock data — prototype demo)</div>
+  `;
+  go('s-gen-done');
+}
+
+// ═══════════════════════════════════════════════════════════
+// SCREEN: QUIZ
+// ═══════════════════════════════════════════════════════════
+function startQuiz() {
+  state.currentQ = 0;
+  renderQuizScreen();
+  go('s-quiz');
+}
+
+function retryQuiz() {
+  state.answers = {};
+  state.currentQ = 0;
+  renderQuizScreen();
+  go('s-quiz');
+}
+
+function renderQuizScreen() {
+  const qs = state.questions;
+  const day = state.generatedDay;
+  document.getElementById('quiz-day-label').textContent = `Day ${day} · Ôn tập`;
+  document.getElementById('quiz-title').textContent = `Bộ câu hỏi Day ${day}`;
+  document.getElementById('qbadge-count').textContent = `${qs.length} câu hỏi`;
+  const mcqC = qs.filter(q=>q.type==='mcq').length;
+  const txtC = qs.filter(q=>q.type==='text').length;
+  document.getElementById('qbadge-types').textContent = `${mcqC} trắc nghiệm · ${txtC} tự luận`;
+  document.getElementById('q-total').textContent = qs.length;
+
+  renderQuestionNav();
+  renderCurrentQuestion();
+}
+
+function renderQuestionNav() {
+  const qs = state.questions;
+  const nav = document.getElementById('question-nav');
+  nav.innerHTML = qs.map((q, i) => {
+    let cls = 'q-dot';
+    if (i === state.currentQ) cls += ' current';
+    else if (state.answers[i] !== undefined) {
+      if (q.type === 'text') cls += ' answered-correct'; // open-text always shown as answered
+      else cls += state.answers[i].correct ? ' answered-correct' : ' answered-wrong';
+    }
+    return `<div class="${cls}" onclick="jumpToQuestion(${i})">${i+1}</div>`;
+  }).join('');
+
+  const answered = Object.keys(state.answers).length;
+  document.getElementById('q-cur').textContent = state.currentQ + 1;
+  document.getElementById('q-answered-text').textContent = `${answered} đã trả lời`;
+  const pct = qs.length > 0 ? (answered / qs.length) * 100 : 0;
+  document.getElementById('q-progress-bar').style.width = pct + '%';
+}
+
+function jumpToQuestion(i) {
+  state.currentQ = i;
+  renderQuestionNav();
+  renderCurrentQuestion();
+}
+
+function renderCurrentQuestion() {
+  const q = state.questions[state.currentQ];
+  const i = state.currentQ;
+  const total = state.questions.length;
+  const area = document.getElementById('question-area');
+  const isAnswered = state.answers[i] !== undefined;
+
+  if (q.type === 'mcq') {
+    const selected = isAnswered ? state.answers[i].value : null;
+    area.innerHTML = `
+      <div class="q-type-badge q-type-mcq">🔵 Trắc nghiệm</div>
+      <div class="question-text">${esc(q.question)}</div>
+      <div class="options" id="opts-${i}">
+        ${q.options.map(o => {
+          let cls = 'option';
+          if (selected === o.key) cls += ' selected';
+          return `<div class="${cls}" onclick="${isAnswered ? '' : `pickOpt(${i},'${o.key}')`}" style="${isAnswered ? 'cursor:default;' : ''}">
+            <div class="opt-key">${o.key}</div>
+            <span>${esc(o.text)}</span>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="btn-row">
+        ${i > 0 ? `<button class="btn btn-secondary" onclick="prevQ()">← Trước</button>` : ''}
+        <button class="btn btn-primary" id="btn-submit-q" ${isAnswered || selected === null ? (isAnswered ? '' : 'disabled') : 'disabled'}
+          onclick="submitMCQ(${i})">
+          ${isAnswered ? 'Xem phân tích →' : 'Xác nhận →'}
+        </button>
+        ${isAnswered && i < total-1 ? `<button class="btn btn-secondary" onclick="nextQ()">Câu tiếp →</button>` : ''}
+        ${isAnswered && i === total-1 ? `<button class="btn btn-success" onclick="showSummary()">Xem kết quả 🏁</button>` : ''}
+      </div>
+    `;
+  } else {
+    const savedText = isAnswered ? state.answers[i].value : '';
+    area.innerHTML = `
+      <div class="q-type-badge q-type-text">✏️ Tự luận</div>
+      <div class="question-text">${esc(q.question)}</div>
+      <textarea id="text-ans-${i}" placeholder="Viết câu trả lời của bạn ở đây..." oninput="checkTextBtn(${i})">${esc(savedText)}</textarea>
+      <div class="btn-row" style="margin-top:16px;">
+        ${i > 0 ? `<button class="btn btn-secondary" onclick="prevQ()">← Trước</button>` : ''}
+        <button class="btn btn-primary" id="btn-submit-text-${i}" ${savedText ? '' : 'disabled'}
+          onclick="submitText(${i})">
+          ${isAnswered ? 'Xem phân tích →' : '✨ Gửi cho AI chấm →'}
+        </button>
+        ${isAnswered && i < total-1 ? `<button class="btn btn-secondary" onclick="nextQ()">Câu tiếp →</button>` : ''}
+        ${isAnswered && i === total-1 ? `<button class="btn btn-success" onclick="showSummary()">Xem kết quả 🏁</button>` : ''}
+      </div>
+    `;
+  }
+}
+
+function checkTextBtn(i) {
+  const ta = document.getElementById(`text-ans-${i}`);
+  const btn = document.getElementById(`btn-submit-text-${i}`);
+  if (btn) btn.disabled = ta.value.trim().length < 5;
+}
+
+function pickOpt(i, key) {
+  // Update UI selection
+  const opts = document.querySelectorAll(`#opts-${i} .option`);
+  opts.forEach(o => o.classList.remove('selected'));
+  const opt = document.querySelector(`#opts-${i} .option:nth-child(${['A','B','C','D'].indexOf(key)+1})`);
+  if (opt) opt.classList.add('selected');
+  // Enable submit
+  const btn = document.getElementById('btn-submit-q');
+  if (btn) {
+    btn.disabled = false;
+    btn.onclick = () => submitMCQ(i, key);
+  }
+  // Store temp selection
+  if (!state._tempMCQ) state._tempMCQ = {};
+  state._tempMCQ[i] = key;
+}
+
+function submitMCQ(i, keyOverride) {
+  if (state.answers[i]) {
+    // Already answered — show feedback
+    showFeedbackMCQ(i);
+    return;
+  }
+  const key = keyOverride || (state._tempMCQ && state._tempMCQ[i]);
+  if (!key) return;
+  const q = state.questions[i];
+  const correct = key === q.correct;
+  state.answers[i] = { type: 'mcq', value: key, correct };
+  saveToLS();
+  showFeedbackMCQ(i);
+}
+
+function showFeedbackMCQ(i) {
+  const q = state.questions[i];
+  const ans = state.answers[i];
+  const isCorrect = ans.correct;
+  const total = state.questions.length;
+
+  document.getElementById('fb-pill').textContent = `Phân tích · Câu ${i+1}`;
+
+  let fbHtml = '';
+  if (isCorrect) {
+    fbHtml = `<div class="fb-box fb-correct">
+      <div class="fb-title">✓ Đúng rồi! — Đáp án ${q.correct}</div>
+      <div>${esc(q.explain)}</div>
+    </div>`;
+  } else {
+    fbHtml = `<div class="fb-box fb-wrong">
+      <div class="fb-title">✗ Chưa đúng — Đáp án đúng là ${q.correct}</div>
+      <div>${esc(q.explain)}</div>
+    </div>`;
   }
 
-  function selectOpt(el, qid, key) {
-    el.closest('.options').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
-    answers[qid] = key;
-    const btn = document.getElementById('btn-' + qid);
-    if (btn) btn.disabled = false;
-  }
+  // Show selected option highlight
+  fbHtml += `<div style="background:#f8f8ff; border-radius:10px; padding:14px 16px; margin-bottom:16px; font-size:14px;">
+    <strong>Bạn chọn:</strong> ${ans.value} — ${esc(q.options.find(o=>o.key===ans.value)?.text || '')}
+    ${!isCorrect ? `<br/><strong>Đáp án đúng:</strong> ${q.correct} — ${esc(q.options.find(o=>o.key===q.correct)?.text || '')}` : ''}
+  </div>`;
 
-  function checkQ3()  { document.getElementById('btn-q3').disabled  = document.getElementById('q3-text').value.trim().length < 5; }
-  function checkPost() { document.getElementById('btn-post').disabled = document.getElementById('q-post').value.trim().length  < 5; }
+  document.getElementById('fb-content').innerHTML = fbHtml;
 
-  function renderFeedback1() {
-    const a = answers.q1;
-    document.getElementById('fb1-wrong').style.display = (a !== 'C') ? 'block' : 'none';
-    document.getElementById('fb1-right').style.display = (a === 'C') ? 'block' : 'none';
-  }
-  function renderFeedback2() {
-    const a = answers.q2;
-    document.getElementById('fb2-wrong').style.display = (a !== 'B') ? 'block' : 'none';
-    document.getElementById('fb2-right').style.display = (a === 'B') ? 'block' : 'none';
-  }
+  // Source
+  const srcEl = document.getElementById('fb-source');
+  srcEl.style.display = 'block';
+  document.getElementById('fb-source-text').textContent = q.reference;
+  document.getElementById('fb-source-cite').innerHTML = `Mã trang: <strong>[${q.refCode}]</strong> · <a href="${q.refURL}" target="_blank" style="color:var(--primary);">Xem transcript →</a>`;
 
-  function renderSummary() {
-    const q1ok  = answers.q1 === CORRECT.q1;
-    const q2ok  = answers.q2 === CORRECT.q2;
-    const score = (q1ok ? 1 : 0) + (q2ok ? 1 : 0);
-    const rows  = [
-      { q: 'Tokenization - cách LLM tách input',       ok: q1ok, hint: q1ok ? 'Hiểu đúng cơ chế token'       : 'Cần đọc kỹ [T04-049]' },
-      { q: 'Context window - giới hạn và ý nghĩa',     ok: q2ok, hint: q2ok ? 'Phân biệt được token vs từ'   : 'Cần đọc kỹ [T04-051]' },
-      { q: 'Hành vi LLM - nhiều yếu tố ảnh hưởng',    ok: true, hint: 'Câu mở - không có đúng/sai' },
-    ];
-    let html = `<div class="score-badge">${score}/2 câu MCQ đúng</div>`;
-    rows.forEach(r => {
-      html += `<div class="summary-row">
-        <span class="summary-icon">${r.ok ? '&#9989;' : '&#10007;'}</span>
-        <div><strong>${r.q}</strong><br/><span style="color:#666;font-size:13px">${r.hint}</span></div>
-      </div>`;
-    });
-    document.getElementById('summary-content').innerHTML = html;
-  }
+  // Buttons
+  const isLast = i === total - 1;
+  document.getElementById('fb-btn-row').innerHTML = `
+    ${i > 0 ? `<button class="btn btn-secondary" onclick="go('s-quiz'); renderQuestionNav();">← Danh sách câu</button>` : ''}
+    ${!isLast ? `<button class="btn btn-primary" onclick="nextQFromFb()">Câu tiếp theo →</button>` : ''}
+    ${isLast ? `<button class="btn btn-success" onclick="showSummary()">Xem kết quả 🏁</button>` : ''}
+  `;
 
-  function resetAll() {
-    answers.q1 = null; answers.q2 = null;
-    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-    document.querySelectorAll('textarea').forEach(t => t.value = '');
-    ['btn-q1','btn-q2','btn-q3','btn-post'].forEach(id => {
-      const b = document.getElementById(id);
-      if (b) b.disabled = true;
-    });
+  go('s-feedback');
+}
+
+function submitText(i) {
+  if (state.answers[i]) {
+    showFeedbackText(i, state._aiResult && state._aiResult[i]);
+    return;
   }
+  const ta = document.getElementById(`text-ans-${i}`);
+  if (!ta || ta.value.trim().length < 5) return;
+  const text = ta.value.trim();
+  const q = state.questions[i];
+
+  // Show AI checking screen
+  document.getElementById('ai-check-ref').textContent = `[${q.refCode}]`;
+  go('s-ai-checking');
+
+  // Simulate AI grading (mock)
+  setTimeout(() => {
+    const aiResult = mockAIGrade(text, q);
+    state.answers[i] = { type: 'text', value: text, correct: aiResult.pass };
+    if (!state._aiResult) state._aiResult = {};
+    state._aiResult[i] = aiResult;
+    saveToLS();
+    showFeedbackText(i, aiResult);
+  }, 2500);
+}
+
+function mockAIGrade(text, q) {
+  // Simple mock: check if text mentions key concepts
+  const keywords = {
+    'T04-049': ['token', 'mảnh', 'tách', 'ngôn ngữ', 'máy', 'sub'],
+    'T04-047': ['dự đoán', 'predict', 'hallucination', 'ảo giác', 'sai', 'system prompt', 'temperature', 'fine-tune', 'rlhf'],
+    'T04-051': ['context', 'cửa sổ', 'nhớ', 'quên', 'token'],
+    'T02-035': ['prompt', 'format', 'context', 'task', 'ví dụ'],
+  };
+  const kws = keywords[q.refCode] || [];
+  const lc = text.toLowerCase();
+  const hits = kws.filter(k => lc.includes(k));
+  const pass = hits.length >= 2 || text.length > 80;
+
+  if (pass) {
+    return {
+      pass: true,
+      label: '✓ Câu trả lời đạt yêu cầu',
+      feedback: `Bạn đã đề cập được các khái niệm quan trọng${hits.length > 0 ? ': ' + hits.join(', ') : ''}. AI xác nhận câu trả lời phù hợp với nội dung transcript [${q.refCode}].`,
+      suggestion: 'Để hoàn thiện hơn, hãy thêm ví dụ cụ thể hoặc so sánh với khái niệm liên quan.',
+    };
+  } else {
+    return {
+      pass: false,
+      label: '⚠ Câu trả lời cần bổ sung thêm',
+      feedback: `AI nhận thấy câu trả lời chưa đề cập đủ các điểm chính. Các từ khóa còn thiếu: ${kws.filter(k => !text.toLowerCase().includes(k)).slice(0,3).join(', ')}.`,
+      suggestion: 'Hãy xem lại đoạn transcript [' + q.refCode + '] và thử viết lại.',
+    };
+  }
+}
+
+function showFeedbackText(i, aiResult) {
+  const q = state.questions[i];
+  const total = state.questions.length;
+  const ans = state.answers[i];
+
+  document.getElementById('fb-pill').textContent = `Phân tích AI · Câu ${i+1}`;
+
+  const cls = aiResult.pass ? 'fb-ai' : 'fb-neutral';
+  let fbHtml = `
+    <div class="fb-box ${cls}">
+      <div class="fb-title">${aiResult.label}</div>
+      <div style="margin-bottom:10px;">${esc(aiResult.feedback)}</div>
+      <div><strong>Gợi ý:</strong> ${esc(aiResult.suggestion)}</div>
+    </div>
+    <div style="background:#f8f8ff; border-radius:10px; padding:14px 16px; margin-bottom:16px; font-size:14px;">
+      <strong>Câu trả lời của bạn:</strong><br/>
+      <span style="color:#444; font-style:italic;">"${esc(ans.value)}"</span>
+    </div>
+  `;
+
+  document.getElementById('fb-content').innerHTML = fbHtml;
+
+  const srcEl = document.getElementById('fb-source');
+  srcEl.style.display = 'block';
+  document.getElementById('fb-source-text').textContent = q.reference;
+  document.getElementById('fb-source-cite').innerHTML = `Mã trang: <strong>[${q.refCode}]</strong> · <a href="${q.refURL}" target="_blank" style="color:var(--primary);">Xem transcript →</a>`;
+
+  const isLast = i === total - 1;
+  document.getElementById('fb-btn-row').innerHTML = `
+    <button class="btn btn-secondary" onclick="go('s-quiz'); renderQuestionNav();">← Danh sách câu</button>
+    ${!isLast ? `<button class="btn btn-primary" onclick="nextQFromFb()">Câu tiếp theo →</button>` : ''}
+    ${isLast ? `<button class="btn btn-success" onclick="showSummary()">Xem kết quả 🏁</button>` : ''}
+  `;
+
+  go('s-feedback');
+}
+
+function nextQ() {
+  if (state.currentQ < state.questions.length - 1) {
+    state.currentQ++;
+    renderQuestionNav();
+    renderCurrentQuestion();
+  }
+}
+
+function prevQ() {
+  if (state.currentQ > 0) {
+    state.currentQ--;
+    renderQuestionNav();
+    renderCurrentQuestion();
+  }
+}
+
+function nextQFromFb() {
+  state.currentQ = Math.min(state.currentQ + 1, state.questions.length - 1);
+  renderQuizScreen();
+  go('s-quiz');
+}
+
+// ═══════════════════════════════════════════════════════════
+// SCREEN: SUMMARY
+// ═══════════════════════════════════════════════════════════
+function showSummary() {
+  const qs = state.questions;
+  const day = state.generatedDay;
+  document.getElementById('summary-day-label').textContent = `Day ${day} · Ôn tập`;
+
+  let correctCount = 0;
+  let total = qs.length;
+  const refSet = new Set();
+
+  const listHtml = qs.map((q, i) => {
+    const ans = state.answers[i];
+    const isCorrect = ans ? ans.correct : false;
+    if (isCorrect) correctCount++;
+    refSet.add(q.refCode);
+
+    const icon = isCorrect ? '✅' : (ans ? '❌' : '⏭');
+    const cls = isCorrect ? 'si-correct' : 'si-wrong';
+    const typeLabel = q.type === 'mcq' ? '[MCQ]' : '[Tự luận]';
+    const shortQ = q.question.length > 80 ? q.question.slice(0, 80) + '…' : q.question;
+    const ansInfo = ans
+      ? (q.type === 'mcq' ? `Bạn chọn: ${ans.value} · Đúng đáp án: ${q.correct}` : `AI đánh giá: ${isCorrect ? 'đạt' : 'cần xem lại'}`)
+      : 'Chưa trả lời';
+
+    return `<div class="summary-item ${cls}">
+      <div class="si-icon">${icon}</div>
+      <div class="si-body">
+        <div class="si-q"><span style="opacity:0.6;font-size:12px;">${typeLabel}</span> ${esc(shortQ)}</div>
+        <div class="si-ref">${ansInfo} · Trích dẫn: [${q.refCode}]</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('summary-list').innerHTML = listHtml;
+  document.getElementById('score-num').textContent = `${correctCount}/${total}`;
+
+  const pct = total > 0 ? Math.round(correctCount / total * 100) : 0;
+  let msg = '';
+  if (pct === 100) msg = '🎯 Tuyệt vời! Bạn đã nắm vững bài giảng này.';
+  else if (pct >= 70) msg = '👍 Tốt! Xem lại các câu sai và đọc transcript phần đó.';
+  else if (pct >= 40) msg = '📖 Cần ôn thêm — hãy xem lại bài giảng rồi thử lại.';
+  else msg = '💡 Hãy xem bài giảng trước rồi quay lại làm quiz nhé!';
+  document.getElementById('score-msg').textContent = msg;
+
+  // Refs to review
+  const wrongRefs = qs
+    .filter((q, i) => state.answers[i] && !state.answers[i].correct)
+    .map(q => `[${q.refCode}]`);
+  const uniqueWrongRefs = [...new Set(wrongRefs)];
+  const refsHtml = uniqueWrongRefs.length > 0
+    ? uniqueWrongRefs.map(r => `• Đọc lại trang <strong>${r}</strong> trong transcript bài giảng`).join('<br/>')
+    : '• Bạn đã trả lời đúng hết! Không cần xem lại phần nào.';
+  document.getElementById('summary-refs').innerHTML = refsHtml;
+
+  saveToLS();
+  go('s-summary');
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  checkSavedState();
+});
 </script>
 </body>
 </html>
