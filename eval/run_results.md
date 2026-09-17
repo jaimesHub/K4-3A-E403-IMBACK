@@ -131,13 +131,55 @@ Ký hiệu: `P` = đạt · `F1/F2/F3/F4` = trượt điều kiện tương ứn
 | CP3-023 | Text ngoai_nguon_du_lieu | ngoai_nguon_du_lieu | sai | ✗ | ✓ | TRƯỢT |
 | CP3-024 | Text ngoai_nguon_du_lieu | ngoai_nguon_du_lieu | ngoai_nguon_du_lieu | ✓ | ✓ | ĐẠT |
 
-### CP3 — Lượt chạy LIVE (chưa thực hiện)
+### CP3 — Lượt chạy LIVE (đã thực hiện — xem mục ngay bên dưới)
 
-> **Chờ chạy — hiện chưa có.** `codebase/backend/.env` chưa được điền API key
-> tại thời điểm nộp CP3 nên chưa có lượt chạy LIVE nào của
-> `eval/cp3_benchmark.py`. Đây là mục giữ chỗ — TUYỆT ĐỐI KHÔNG điền số ước
-> lượng/dự đoán vào đây. Khi có key: điền `.env` → khởi động lại server →
-> xác nhận `GET /api/health` trả `"mode":"live"` → generate lại quiz bằng
-> LLM thật (`regenerate:true`) → chạy `python3 eval/cp3_benchmark.py` → kết
-> quả LIVE thật sẽ tự append thành một mục mới ngay phía trên mục này (không
-> sửa tay mục này).
+> **Đã chạy.** Ngày 2026-09-17, `.env` đã có `OPENAI_API_KEY` thật, server chạy
+> `mode: live` (`provider=openai`, `model=gpt-4o-mini`). Bộ câu hỏi Day 1 + Day 2
+> đã được sinh lại bằng LLM thật (`POST /api/generate {regenerate:true}`), testset
+> `eval/cp3_testset.json` đã được dựng lại khớp với `question_id` mới, và
+> `eval/cp3_benchmark.py` đã chạy LIVE thật. Kết quả — **21/24 (87.5%)** — nằm ở
+> mục "CP3 — Số đo … — 2026-09-17T16:02:17" ngay phía dưới đây (script tự append,
+> không sửa tay). Đây là mục giữ chỗ cũ, giữ nguyên nội dung lịch sử để đối chiếu
+> thời điểm trước khi có API key; số nộp CP3 chính thức là mục LIVE bên dưới.
+
+---
+
+## CP3 — Số đo "thử bao nhiêu, đúng bao nhiêu" — 2026-09-17T16:02:17
+
+- Script: `eval/cp3_benchmark.py` · Testset: `eval/cp3_testset.json` (24 case) · Base URL: `http://127.0.0.1:8000`
+- Chế độ AI lúc chạy (`GET /api/health`): **LIVE** — provider=`openai`, model=`gpt-4o-mini`
+
+**Thử 24 câu, 21 câu trả đúng có dẫn nguồn, 3 câu sai hoặc bịa.**
+
+- Tỉ lệ đạt: 87.5% (21/24)
+- Trong đó nhóm câu tự luận có AI chấm thật (`qtype=text`): 13/16 đạt
+- Số case bị phát hiện mã trích dẫn bịa (`validation.invalid_codes` không rỗng): 0
+
+> Định nghĩa ĐẠT: (1) `verdict_label` khớp `expected_verdict` trong testset, VÀ (2) không có mã `[Txx-NNN]` bịa (`validation.invalid_codes` rỗng). Xem chi tiết trong docstring đầu file `eval/cp3_benchmark.py`.
+
+| Case | Nhóm | Kỳ vọng | AI trả về | C1 khớp verdict | C2 không bịa mã | Đạt |
+|---|---|---|---|---|---|---|
+| CP3-001 | MCQ dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-002 | MCQ dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-003 | MCQ dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-004 | MCQ dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-005 | MCQ sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-006 | MCQ sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-007 | MCQ sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-008 | MCQ sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-009 | Text dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-010 | Text dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-011 | Text dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-012 | Text dung | dung | dung | ✓ | ✓ | ĐẠT |
+| CP3-013 | Text mot_phan | mot_phan | dung | ✗ | ✓ | TRƯỢT |
+| CP3-014 | Text mot_phan | mot_phan | mot_phan | ✓ | ✓ | ĐẠT |
+| CP3-015 | Text mot_phan | mot_phan | mot_phan | ✓ | ✓ | ĐẠT |
+| CP3-016 | Text sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-017 | Text sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-018 | Text sai | sai | sai | ✓ | ✓ | ĐẠT |
+| CP3-019 | Text khong_du_thong_tin | khong_du_thong_tin | khong_du_thong_tin | ✓ | ✓ | ĐẠT |
+| CP3-020 | Text khong_du_thong_tin | khong_du_thong_tin | khong_du_thong_tin | ✓ | ✓ | ĐẠT |
+| CP3-021 | Text ngoai_pham_vi | ngoai_pham_vi | ngoai_pham_vi | ✓ | ✓ | ĐẠT |
+| CP3-022 | Text ngoai_pham_vi | ngoai_pham_vi | ngoai_pham_vi | ✓ | ✓ | ĐẠT |
+| CP3-023 | Text ngoai_nguon_du_lieu | ngoai_nguon_du_lieu | khong_du_thong_tin | ✗ | ✓ | TRƯỢT |
+| CP3-024 | Text ngoai_nguon_du_lieu | ngoai_nguon_du_lieu | khong_du_thong_tin | ✗ | ✓ | TRƯỢT |

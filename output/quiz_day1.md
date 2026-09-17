@@ -1,36 +1,31 @@
 # Bộ câu hỏi Day 1 (10 câu)
 
-## Câu 1 · MCQ · `d66d3a70356a4589ba22e404a4235caf`
+## Câu 1 · MCQ · `6d09c09f16034e389f8ede59232b79db`
 
-**Câu hỏi:** Theo bài giảng Day 1, nội dung nào sau đây mô tả ĐÚNG nhất phần được trích tại [T01-001]?
+**Câu hỏi:** AI thực sự đang làm gì trong cuộc sống hàng ngày của chúng ta?
 
-- **A.** Lịch sử AI 70 năm
-- **B.** AI & LLM Foundation Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì? (ĐÚNG)
-- **C.** 2017: Transformer Transformer là bước ngoặt vì nó cho mô hình hiểu ngôn ngữ theo cách linh hoạt hơn: mỗi từ có thể nhìn sang những từ quan trọng khác trong cả…
-- **D.** 2022: ChatGPT ChatGPT xuất hiện như một trải nghiệm đại chúng Lần đầu tiên rất đông người dùng phổ thông có thể trực tiếp chạm vào một mô hình ngôn ngữ mạnh,…
+- **A.** Phân loại dữ liệu
+- **B.** Tạo ra nội dung mới
+- **C.** Hỗ trợ ra quyết định
+- **D.** Tất cả các ý trên (ĐÚNG)
 
-**Đáp án:** AI & LLM Foundation Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?
+**Đáp án:** Tất cả các ý trên
 
-**Giải thích:** Đáp án đúng là phương án B, trích trực tiếp từ [T01-001] trong transcript.
+**Giải thích:** AI có thể thực hiện nhiều tác vụ khác nhau, bao gồm phân loại, tạo nội dung và hỗ trợ ra quyết định.
 
-**Trích dẫn:** [T01-001] — AI & LLM Foundation Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?
+**Trích dẫn:** [T01-001] — Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?
 
 **Nguồn:** `output/transcript/transcript-01-clean.md#T01-001`
 
 ---
 
-## Câu 2 · MCQ · `113877b0a2514db4830c7aa04d9bfd32`
+## Câu 2 · TEXT · `368f725f06cc45f3befb345ebf34b00e`
 
-**Câu hỏi:** Theo bài giảng Day 1, nội dung nào sau đây mô tả ĐÚNG nhất phần được trích tại [T01-004]?
+**Câu hỏi:** Hãy giải thích về cơ chế hoạt động của LLM.
 
-- **A.** 1 Phân loại spam Model thực chất đã học: “đếm số hyperlink trong emailˮ Email sạch nhưng nhiều link → vẫn bị gán spam 2 Câu chủ quan vs khách quan Model thực…
-- **B.** Lịch sử AI 70 năm Khai sinh, lời hứa đầu tiên 2 lần mùa đông, cách tiếp cận chạm trần Từ model đơn lẻ sang system có khả năng hành động như agent
-- **C.** Từ LLM đến agent: bốn mức độ — mỗi bậc thêm một năng lực LEVEL 0 Bộ não suy luận LLM trần — không công cụ, không dữ liệu mới LEVEL 1 Có kết nối + tools: search…
-- **D.** Bên trong LLM: cơ chế vận hành (ĐÚNG)
+**Đáp án:** LLM hoạt động thông qua việc đọc nhiều dữ liệu, học từ ví dụ và được uốn nắn qua phản hồi của con người.
 
-**Đáp án:** Bên trong LLM: cơ chế vận hành
-
-**Giải thích:** Đáp án đúng là phương án D, trích trực tiếp từ [T01-004] trong transcript.
+**Giải thích:** Cơ chế hoạt động của LLM bao gồm việc học từ nhiều nguồn dữ liệu và cải thiện qua phản hồi.
 
 **Trích dẫn:** [T01-004] — Bên trong LLM: cơ chế vận hành
 
@@ -38,18 +33,18 @@
 
 ---
 
-## Câu 3 · MCQ · `d0ba1d81eeb946c8be2888ff0cb3af7e`
+## Câu 3 · MCQ · `0dd4e16a736343639f5874069dd91048`
 
-**Câu hỏi:** Theo bài giảng Day 1, nội dung nào sau đây mô tả ĐÚNG nhất phần được trích tại [T01-008]?
+**Câu hỏi:** Khi gọi API lần đầu, điều gì là quan trọng nhất?
 
-- **A.** Attention: mỗi từ được “nhìn sangˮ những từ quan trọng khác Thay vì đọc tuần tự từng chữ, cơ chế attention cho phép mỗi token: Chủ động “quay đầuˮ nhìn lại các…
-- **B.** Từ LLM đến AI Agent
-- **C.** Gọi API lần đầu (ĐÚNG)
-- **D.** Bên trong LLM: cơ chế vận hành
+- **A.** Chọn đúng endpoint (ĐÚNG)
+- **B.** Xác thực thông tin
+- **C.** Kiểm tra tốc độ phản hồi
+- **D.** Tất cả các ý trên
 
-**Đáp án:** Gọi API lần đầu
+**Đáp án:** Chọn đúng endpoint
 
-**Giải thích:** Đáp án đúng là phương án C, trích trực tiếp từ [T01-008] trong transcript.
+**Giải thích:** Chọn đúng endpoint là bước đầu tiên và quan trọng nhất khi gọi API.
 
 **Trích dẫn:** [T01-008] — Gọi API lần đầu
 
@@ -57,104 +52,124 @@
 
 ---
 
-## Câu 4 · MCQ · `b3ca33c748694fecb4c6359cd281a1ce`
+## Câu 4 · MCQ · `9c49b54dcc86497782357a8be9915104`
 
-**Câu hỏi:** Theo bài giảng Day 1, nội dung nào sau đây mô tả ĐÚNG nhất phần được trích tại [T01-012]?
+**Câu hỏi:** AI có thể được phân loại thành những nhóm nào?
 
-- **A.** Từ LLM đến agent: bốn mức độ — mỗi bậc thêm một năng lực LEVEL 0 Bộ não suy luận LLM trần — không công cụ, không dữ liệu mới LEVEL 1 Có kết nối + tools: search…
-- **B.** Giải phẫu một prompt: bốn lớp xếp chồng LỚP 1 System instruction “Lời dặn đầu caˮ: model là ai, cư xử thế nào, không được làm gì «Bạn là trợ lý y khoa, trả lời…
-- **C.** Bong bóng thời gian Model bị "đóng băng" tại ngày ngừng đọc. Chuyện sau đó nó không biết — trừ khi bạn cung cấp thêm (knowledge cutoff). Nói chắc như đúng rồi…
-- **D.** Discriminative AI Giỏi phân loại, dự đoán: lọc spam, phát hiện gian lận, nhận diện ảnh. Input → một nhãn, một con số Generative AI Sinh ra thứ mới: văn bản,… (ĐÚNG)
+- **A.** Phân loại, sinh nội dung, hành động (ĐÚNG)
+- **B.** Dữ liệu, thuật toán, mô hình
+- **C.** Học máy, học sâu, học tăng cường
+- **D.** Phân tích, dự đoán, tối ưu hóa
 
-**Đáp án:** Discriminative AI Giỏi phân loại, dự đoán: lọc spam, phát hiện gian lận, nhận diện ảnh. Input → một nhãn, một con số Generative AI Sinh ra thứ mới: văn bản,…
+**Đáp án:** Phân loại, sinh nội dung, hành động
 
-**Giải thích:** Đáp án đúng là phương án D, trích trực tiếp từ [T01-012] trong transcript.
+**Giải thích:** AI được chia thành ba nhóm chính: phân loại, sinh nội dung và hành động.
 
-**Trích dẫn:** [T01-012] — Discriminative AI Giỏi phân loại, dự đoán: lọc spam, phát hiện gian lận, nhận diện ảnh. Input → một nhãn, một con số Generative AI Sinh ra thứ mới: văn bản, ảnh, code. ChatGPT, Claude, Midjourney. Prompt → nội dung mới Agentic AI Nhận mục tiêu rồi tự làm nhiều bước: lập kế hoạch, dùng công cụ, hành động. Goal → Plan → Action Ba nhóm AI chính: phân loại · sinh nội dung · hành động LLM là engine chung của cả Generative lẫn Agentic — cuối buổi sáng mình sẽ thấy agent khác LLM ở đâu Hành trình khóa học: LLM Foundation → Agent → Multi-Agent → Deploy → Evaluate
+**Trích dẫn:** [T01-012] — Ba nhóm AI chính: phân loại · sinh nội dung · hành động
 
 **Nguồn:** `output/transcript/transcript-01-clean.md#T01-012`
 
 ---
 
-## Câu 5 · TEXT · `94288e57860e47c99efedd0357f5e5c3`
+## Câu 5 · MCQ · `64a7f04ecd00480dad0b7f36f982992d`
 
-**Câu hỏi:** Hãy trình bày lại bằng lời của bạn nội dung được giảng ở Day 1 (gợi ý, đoạn liên quan bắt đầu bằng: "2009: Fei-Fei Li và ImageNet — cuộc cách mạng của..."):
+**Câu hỏi:** Bài học nào được rút ra từ cuộc cách mạng dữ liệu của Fei-Fei Li?
 
-**Đáp án:** 2009: Fei-Fei Li và ImageNet — cuộc cách mạng của dữ liệu Trong khi cả ngành chạy theo thuật toán thông minh hơn, Fei-Fei Li chọn con đường khác: xây bộ dữ liệu lớn hơn — 14 triệu ảnh được gán nhãn tay, hơn 20.000 loại vật. Ba năm sau, chính bộ dữ liệu đó là sân khấu cho cú nổ AlexNet 2012 → bài học định hình cả kỷ nguyên: đôi khi dữ liệu tốt hơn đánh bại thuật toán khôn hơn.Deng, J. et al.…
+- **A.** Dữ liệu tốt hơn đánh bại thuật toán khôn hơn (ĐÚNG)
+- **B.** Thuật toán là yếu tố quyết định
+- **C.** Dữ liệu không quan trọng
+- **D.** Cần nhiều thuật toán phức tạp
 
-**Giải thích:** Đáp án mẫu được trích trực tiếp từ transcript tại [T01-015].
+**Đáp án:** Dữ liệu tốt hơn đánh bại thuật toán khôn hơn
 
-**Trích dẫn:** [T01-015] — 2009: Fei-Fei Li và ImageNet — cuộc cách mạng của dữ liệu Trong khi cả ngành chạy theo thuật toán thông minh hơn, Fei-Fei Li chọn con đường khác: xây bộ dữ liệu lớn hơn — 14 triệu ảnh được gán nhãn tay, hơn 20.000 loại vật. Ba năm sau, chính bộ dữ liệu đó là sân khấu cho cú nổ AlexNet 2012 → bài học định hình cả kỷ nguyên: đôi khi dữ liệu tốt hơn đánh bại thuật toán khôn hơn.Deng, J. et al. 2009, “ImageNet: A Large-Scale Hierarchical Image Databaseˮ, CVPR — doi.org/10.1109/CVPR.2009.5206848 · Fei-Fei Li, TED 2015 — ted.com
+**Giải thích:** Bài học từ cuộc cách mạng dữ liệu là đôi khi dữ liệu tốt hơn có thể đánh bại thuật toán thông minh hơn.
+
+**Trích dẫn:** [T01-015] — đôi khi dữ liệu tốt hơn đánh bại thuật toán khôn hơn
 
 **Nguồn:** `output/transcript/transcript-01-clean.md#T01-015`
 
 ---
 
-## Câu 6 · TEXT · `823dfae2f6174c3992e184e9e66a0eb5`
+## Câu 6 · MCQ · `81b2b3b9a47b47bdb346c2c5dda3be9b`
 
-**Câu hỏi:** Hãy trình bày lại bằng lời của bạn nội dung được giảng ở Day 1 (gợi ý, đoạn liên quan bắt đầu bằng: "Bên trong Transformer: đầu ra luôn là một phân bố..."):
+**Câu hỏi:** Cơ chế nào cho phép model LLM chọn từ dựa trên xác suất?
 
-**Đáp án:** Bên trong Transformer: đầu ra luôn là một phân bố xác suất Với mọi ngữ cảnh, model chấm điểm MỌI từ trong từ vựng — “landˮ 22%, “forestˮ 9%… — rồi chọn theo xác suất đó Transformers, the tech behind LLMs - 3Blue1Brown
+- **A.** Attention (ĐÚNG)
+- **B.** Pre-training
+- **C.** Discriminative AI
+- **D.** Generative AI
 
-**Giải thích:** Đáp án mẫu được trích trực tiếp từ transcript tại [T01-019].
+**Đáp án:** Attention
 
-**Trích dẫn:** [T01-019] — Bên trong Transformer: đầu ra luôn là một phân bố xác suất Với mọi ngữ cảnh, model chấm điểm MỌI từ trong từ vựng — “landˮ 22%, “forestˮ 9%… — rồi chọn theo xác suất đó Transformers, the tech behind LLMs - 3Blue1Brown
+**Giải thích:** Cơ chế attention cho phép model chấm điểm mức độ liên quan của từng từ trong ngữ cảnh.
+
+**Trích dẫn:** [T01-019] — Với mọi ngữ cảnh, model chấm điểm MỌI từ trong từ vựng — “landˮ 22%, “forestˮ 9%… — rồi chọn theo xác suất đó
 
 **Nguồn:** `output/transcript/transcript-01-clean.md#T01-019`
 
 ---
 
-## Câu 7 · TEXT · `cda7793a4fa54e7e9399587238338638`
+## Câu 7 · MCQ · `c9191d0f93b6480abed2377422035e43`
 
-**Câu hỏi:** Hãy trình bày lại bằng lời của bạn nội dung được giảng ở Day 1 (gợi ý, đoạn liên quan bắt đầu bằng: "Attention: mỗi từ được “nhìn sangˮ những từ quan trọng..."):
+**Câu hỏi:** Mô hình Transformer hoạt động như thế nào?
 
-**Đáp án:** Attention: mỗi từ được “nhìn sangˮ những từ quan trọng khác Thay vì đọc tuần tự từng chữ, cơ chế attention cho phép mỗi token: Chủ động “quay đầuˮ nhìn lại các token trước đó trong câu Chấm điểm mức độ liên quan của từng token đối với nghĩa của mình Khóa nghĩa theo ngữ cảnh — “nóˮ là quyển sách hay cái túi, tùy theo nó chú ý vào từ nào Đây chính là chữ T trong GPT — và là lý do model hiểu ngữ…
+- **A.** Chỉ đọc tuần tự từng từ
+- **B.** Chấm điểm mức độ liên quan của từng từ (ĐÚNG)
+- **C.** Chỉ sử dụng một từ để dự đoán
+- **D.** Không sử dụng xác suất
 
-**Giải thích:** Đáp án mẫu được trích trực tiếp từ transcript tại [T01-023].
+**Đáp án:** Chấm điểm mức độ liên quan của từng từ
 
-**Trích dẫn:** [T01-023] — Attention: mỗi từ được “nhìn sangˮ những từ quan trọng khác Thay vì đọc tuần tự từng chữ, cơ chế attention cho phép mỗi token: Chủ động “quay đầuˮ nhìn lại các token trước đó trong câu Chấm điểm mức độ liên quan của từng token đối với nghĩa của mình Khóa nghĩa theo ngữ cảnh — “nóˮ là quyển sách hay cái túi, tùy theo nó chú ý vào từ nào Đây chính là chữ T trong GPT — và là lý do model hiểu ngữ cảnh tốt hơn hẳn các thế hệ trước Video minh họa: Attention in transformers, step-by-step - 3Blue1Brown
+**Giải thích:** Mô hình Transformer sử dụng cơ chế attention để chấm điểm mức độ liên quan của từng token đối với nghĩa của mình.
+
+**Trích dẫn:** [T01-023] — Chấm điểm mức độ liên quan của từng token đối với nghĩa của mình
 
 **Nguồn:** `output/transcript/transcript-01-clean.md#T01-023`
 
 ---
 
-## Câu 8 · TEXT · `4676be70c43344d3a20a9fdfbd006c87`
+## Câu 8 · MCQ · `915ddee830684d948e1f4160f3b1d3d4`
 
-**Câu hỏi:** Hãy trình bày lại bằng lời của bạn nội dung được giảng ở Day 1 (gợi ý, đoạn liên quan bắt đầu bằng: "LLM được tạo ra như thế nào? — đọc nhiều,..."):
+**Câu hỏi:** Quá trình nào không phải là một phần trong việc tạo ra LLM?
 
-**Đáp án:** LLM được tạo ra như thế nào? — đọc nhiều, được chỉ, được uốn nắn, luyện đề ① Pre-training — "đọc cả thư viện": học tiếng nói và kiến thức từ hàng nghìn tỷ token. ② SFT — "được chỉ cách trả lời": học theo ví dụ mẫu để ra dáng trợ lý. ③ RLHF/DPO — "được uốn nắn": học theo phản hồi con người, an toàn và dễ chịu hơn. ④ Luyện suy luận — "giải đề tự chấm" (từ 2025 luyện toán/code có đáp án kiểm…
+- **A.** Pre-training
+- **B.** SFT
+- **C.** RLHF/DPO
+- **D.** Tối ưu hóa thuật toán (ĐÚNG)
 
-**Giải thích:** Đáp án mẫu được trích trực tiếp từ transcript tại [T01-026].
+**Đáp án:** Tối ưu hóa thuật toán
 
-**Trích dẫn:** [T01-026] — LLM được tạo ra như thế nào? — đọc nhiều, được chỉ, được uốn nắn, luyện đề ① Pre-training — "đọc cả thư viện": học tiếng nói và kiến thức từ hàng nghìn tỷ token. ② SFT — "được chỉ cách trả lời": học theo ví dụ mẫu để ra dáng trợ lý. ③ RLHF/DPO — "được uốn nắn": học theo phản hồi con người, an toàn và dễ chịu hơn. ④ Luyện suy luận — "giải đề tự chấm" (từ 2025 luyện toán/code có đáp án kiểm chứng được → model biết làm nháp trước khi trả lời. Đọc vạn cuốn sách chưa chắc biết trả lời phỏng vấn — đó là lý do cần bước ②, ③, ④ Ouyang et al. 2022, InstructGPT — arxiv.org/abs/2203.02155 · Rafailov et al. 2023, DPO — arxiv.org/abs/2305.18290 · RLVR RL with verifiable rewards.
+**Giải thích:** Quá trình tạo ra LLM bao gồm Pre-training, SFT và RLHF/DPO, không bao gồm tối ưu hóa thuật toán.
+
+**Trích dẫn:** [T01-026] — LLM được tạo ra như thế nào? — đọc nhiều, được chỉ, được uốn nắn, luyện đề
 
 **Nguồn:** `output/transcript/transcript-01-clean.md#T01-026`
 
 ---
 
-## Câu 9 · TEXT · `c7f369ca67444fe7bb73adef972a313c`
+## Câu 9 · TEXT · `b3a60eca32df4c848fe81d0571aaefbc`
 
-**Câu hỏi:** Hãy trình bày lại bằng lời của bạn nội dung được giảng ở Day 1 (gợi ý, đoạn liên quan bắt đầu bằng: "Bài toán: "Có 5 quả bóng tennis. Mua thêm 2..."):
+**Câu hỏi:** Giải thích về khái niệm Chain-of-Thought trong LLM.
 
-**Đáp án:** Bài toán: "Có 5 quả bóng tennis. Mua thêm 2 hộp, mỗi hộp 3 quả. Hỏi tổng cộng có bao nhiêu quả?" Không có nháp — trả lời ngay Model đọc câu hỏi → bật ra đáp án ngay: "Đáp án là 27 quả." ✗ SAI Có giấy nháp — "hãy nghĩ từng bước" "Bắt đầu có 5 quả. Mỗi hộp 3 quả × 2 hộp = 6 quả. 5 + 6 = 11. Đáp án là 11 quả." ✓ ĐÚNG Chain-of-Thought: chỉ thêm "giấy nháp", từ sai thành đúng Cùng một model, cùng một…
+**Đáp án:** Chain-of-Thought là phương pháp cho phép mô hình suy luận từng bước, từ đó cải thiện độ chính xác trong câu trả lời.
 
-**Giải thích:** Đáp án mẫu được trích trực tiếp từ transcript tại [T01-030].
+**Giải thích:** Phương pháp này giúp mô hình không chỉ đưa ra đáp án mà còn giải thích quá trình suy luận.
 
-**Trích dẫn:** [T01-030] — Bài toán: "Có 5 quả bóng tennis. Mua thêm 2 hộp, mỗi hộp 3 quả. Hỏi tổng cộng có bao nhiêu quả?" Không có nháp — trả lời ngay Model đọc câu hỏi → bật ra đáp án ngay: "Đáp án là 27 quả." ✗ SAI Có giấy nháp — "hãy nghĩ từng bước" "Bắt đầu có 5 quả. Mỗi hộp 3 quả × 2 hộp = 6 quả. 5 + 6 = 11. Đáp án là 11 quả." ✓ ĐÚNG Chain-of-Thought: chỉ thêm "giấy nháp", từ sai thành đúng Cùng một model, cùng một câu hỏi — cho nó được viết nháp từng bước, bản chất suy luận lộ ra Wei et al. 2022, “Chain-of-Thought Prompting Elicits Reasoning in Large Language Modelsˮ — arxiv.org/abs/2201.11903 · Đây là mầm của các reasoning model (o1, R1...) và của test-time compute ở các slide sau.
+**Trích dẫn:** [T01-030] — Cùng một model, cùng một câu hỏi — cho nó được viết nháp từng bước
 
 **Nguồn:** `output/transcript/transcript-01-clean.md#T01-030`
 
 ---
 
-## Câu 10 · TEXT · `7a63319ec9e0415aba98aa81060e6e64`
+## Câu 10 · TEXT · `a629959f7c724362923db5483dea4cdb`
 
-**Câu hỏi:** Hãy trình bày lại bằng lời của bạn nội dung được giảng ở Day 1 (gợi ý, đoạn liên quan bắt đầu bằng: "Chọn model theo TẦNG, không chọn theo tên VIỆC CỦA..."):
+**Câu hỏi:** Tại sao việc chọn model theo tầng lại quan trọng?
 
-**Đáp án:** Chọn model theo TẦNG, không chọn theo tên VIỆC CỦA BẠN TẦNG MODEL Hai lỗi đối xứng: ✗ việc đơn giản mà gọi frontier → phí tiền ✗ việc khó mà cố dùng rẻ → kết quả tệ Việc đơn giản, khối lượng lớn phân loại · trích xuất · tóm tắt ngắn Việc hàng ngày viết · code · phân tích công việc · automation Việc khó nhất suy luận nhiều bước · code phức tạp · tài liệu dài · độ tin cậy cao Việc cần kiểm soát dữ…
+**Đáp án:** Việc chọn model theo tầng giúp tối ưu hóa chi phí và hiệu suất cho từng loại công việc cụ thể.
 
-**Giải thích:** Đáp án mẫu được trích trực tiếp từ transcript tại [T01-034].
+**Giải thích:** Chọn model theo tầng giúp tránh việc sử dụng model đắt cho các tác vụ đơn giản và ngược lại.
 
-**Trích dẫn:** [T01-034] — Chọn model theo TẦNG, không chọn theo tên VIỆC CỦA BẠN TẦNG MODEL Hai lỗi đối xứng: ✗ việc đơn giản mà gọi frontier → phí tiền ✗ việc khó mà cố dùng rẻ → kết quả tệ Việc đơn giản, khối lượng lớn phân loại · trích xuất · tóm tắt ngắn Việc hàng ngày viết · code · phân tích công việc · automation Việc khó nhất suy luận nhiều bước · code phức tạp · tài liệu dài · độ tin cậy cao Việc cần kiểm soát dữ liệu nhạy cảm · chi phí ở quy mô lớn TẦNG 1 — FRONTIER ĐÓNG Fable 5 · GPT5.6 Sol · Opus 4.8 đắt nhất — chỉ trả cho việc thật sự khó TẦNG 2 — RẺ MÀ MẠNH Sonnet 4.6 · Terra · Gemini 3.1 Pro · Kimi K3 · Haiku · Flash giải quyết đa số việc hằng ngày ★ MẶC ĐỊNH THỬ TẦNG NÀY TRƯỚC TẦNG 3 — SELF-HOST / SIÊU RẺ Kimi K3 open-weight · DeepSeek · Qwen khi cần kiểm soát dữ liệu hoặc chi phí quy mô lớn Bắt đầu từ model đủ tốt và đủ rẻ — chỉ nâng tầng khi kết quả thực sự chặn use case
+**Trích dẫn:** [T01-034] — Chọn model theo TẦNG, không chọn theo tên
 
 **Nguồn:** `output/transcript/transcript-01-clean.md#T01-034`
 

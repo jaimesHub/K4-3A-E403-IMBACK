@@ -7,9 +7,19 @@
 ## 0. Điều kiện tiên quyết — PHẢI làm trước khi quay
 
 Video CP3 **bắt buộc** có ít nhất 1 lời gọi AI chạy thật (không phải mock).
-Ở trạng thái repo hiện tại, `codebase/backend/.env` **chưa có API key** nên
-server đang chạy `mode: offline` (mock, xem badge góc phải trên cùng của
-trang). Trước khi quay:
+
+> **Cập nhật 2026-09-17:** `codebase/backend/.env` **đã có** `OPENAI_API_KEY`
+> thật. Đã xác nhận `curl http://127.0.0.1:8000/api/health` trả
+> `{"status":"ok","mode":"live","provider":"openai","model":"gpt-4o-mini"}`.
+> Bộ câu hỏi Day 1 + Day 2 đã được generate lại bằng LLM thật
+> (`POST /api/generate {regenerate:true}`) — đây là lần đầu bộ câu hỏi trong
+> `output/quiz.db` được sinh bởi LLM thật thay vì mock offline. Số đo LIVE đầy
+> đủ nằm ở §2.2 bên dưới. Việc còn lại trước khi nộp bài là **quay video** theo
+> kịch bản §1 (người dùng tự quay) — server cần đang chạy ở `mode: live` lúc
+> quay.
+
+Các bước dưới đây vẫn giữ nguyên làm tài liệu tái lập cho người khác trong
+nhóm (hoặc nếu key hết hạn/đổi máy):
 
 1. Mở `codebase/backend/.env`, điền **một** trong các key sau (khuyến nghị
    `OPENROUTER_API_KEY` — rẻ, đa model):
@@ -75,20 +85,43 @@ ghi lại đầy đủ + bảng chi tiết từng case tại `eval/run_results.m
 
 ### 2.2. Lượt chạy LIVE — SỐ NỘP CP3
 
-**Chưa chạy — chờ điền API key.** Sau khi làm xong §0 ở trên, chạy lại đúng
-lệnh ở §3.4; số thật (dù xấu hay đẹp) sẽ tự động append vào
-`eval/run_results.md` và phải được copy vào bảng dưới đây trước khi nộp bài:
+**Đã chạy — 2026-09-17T16:02:17.** Trước khi chạy: generate lại toàn bộ bộ
+câu hỏi Day 1 + Day 2 bằng LLM thật (`regenerate:true`, xem §0), dựng lại
+`eval/cp3_testset.json` khớp `question_id` mới, rồi chạy
+`python3 eval/cp3_benchmark.py`. Số dưới đây copy nguyên văn từ
+`eval/run_results.md` (mục "CP3 — Số đo … — 2026-09-17T16:02:17"), không làm
+tròn, không chỉnh sửa:
+
+**Thử 24 câu, 21 câu trả đúng có dẫn nguồn, 3 câu sai hoặc bịa.**
 
 | Chỉ số | Giá trị |
 |---|---|
-| Thử bao nhiêu câu | *(điền sau khi chạy LIVE)* |
-| Trả đúng có dẫn nguồn | *(điền sau khi chạy LIVE)* |
-| Sai hoặc bịa | *(điền sau khi chạy LIVE)* |
-| Chế độ AI (`GET /api/health`) | *(điền `provider:model` thật)* |
+| Thử bao nhiêu câu | 24 |
+| Trả đúng có dẫn nguồn | 21 (87.5%) |
+| Sai hoặc bịa | 3 (0 case bịa mã trích dẫn — cả 3 case trượt đều do lệch `verdict_label`, không có mã `[Txx-NNN]` bịa) |
+| Riêng nhóm tự luận có AI chấm thật (`qtype=text`) | 13/16 đạt |
+| Chế độ AI (`GET /api/health`) | `live` — `provider=openai`, `model=gpt-4o-mini` |
+| Thời điểm chạy | 2026-09-17T16:02:17 |
 
-Không tự điền số ước lượng vào bảng này — chỉ điền sau khi thực sự chạy
-`eval/cp3_benchmark.py` ở chế độ LIVE và đọc số ra từ output/từ
-`eval/run_results.md`.
+3 case trượt (chi tiết + phân tích nguyên nhân ở `eval/run_results.md`):
+- `CP3-013` (kỳ vọng `mot_phan`, AI trả `dung`) — câu hỏi trích dẫn mã
+  `[T01-004]`, nhưng nội dung transcript dưới mã này chỉ là một dòng tiêu đề
+  ngắn ("Bên trong LLM: cơ chế vận hành"), gần như không có nội dung thực chất
+  để đối chiếu — model có khả năng đã dùng kiến thức nền của nó thay vì chỉ
+  dựa vào ngữ cảnh mỏng được cấp, nên chấm "đúng" rộng rãi hơn kỳ vọng.
+- `CP3-023`, `CP3-024` (kỳ vọng `ngoai_nguon_du_lieu`, AI trả `khong_du_thong_tin`)
+  — cả hai case đưa câu trả lời hoàn toàn lạc đề (đi uống cà phê, xem đá banh).
+  Model nhận ra đúng là câu trả lời không liên quan tới câu hỏi, nhưng gán
+  nhãn `khong_du_thong_tin` thay vì `ngoai_nguon_du_lieu` — cho thấy ranh giới
+  giữa hai nhãn này (thiếu thông tin vs. lạc nguồn dữ liệu) chưa được model
+  phân biệt rạch ròi như kỳ vọng của thiết kế. Đáng chú ý: không case nào bịa
+  mã trích dẫn — lớp "trung thực với nguồn" (`validation.invalid_codes`) hoạt
+  động đúng ở toàn bộ 24/24 case.
+
+So với lượt OFFLINE (mock, 75.0%) ở §2.1, lượt LIVE đạt cao hơn (87.5%) —
+điều này hợp lý vì LLM thật (gpt-4o-mini) chấm ngữ nghĩa tốt hơn heuristic so
+khớp từ khoá của mock, nhưng LIVE mới là số phản ánh đúng hành vi thật của
+sản phẩm và có 3 case lệch nhãn cần lưu ý ở trên.
 
 ## 3. Lệnh chạy từ đầu đến cuối (tái lập cho người khác trong nhóm)
 
