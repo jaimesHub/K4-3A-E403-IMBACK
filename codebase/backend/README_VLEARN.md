@@ -119,6 +119,7 @@ Base URL mặc định: `http://localhost:8000`. CORS mở cho `localhost`/`127.
 |---|---|---|
 | GET | `/api/health` | Trạng thái server: mode live/offline, provider, model |
 | GET | `/api/days` | Danh sách Day: có slide/transcript/quiz chưa, số câu |
+| POST | `/api/upload` | multipart `file` (.pdf) → lưu vào `data/slides/`, trả `{filename, day, message}` (`day` suy ra từ tên file, `null` nếu không khớp quy ước) |
 | POST | `/api/ingest` | `{day}` → trích xuất transcript, trả số đoạn + đường dẫn |
 | POST | `/api/generate` | `{day, num_questions?, mcq_ratio?, regenerate?}` → generate + lưu DB |
 | GET | `/api/quiz/{day}` | Câu hỏi cho UI — **không lộ** `answer`/`explain`/`correct_key` |

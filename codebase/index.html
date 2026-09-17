@@ -183,9 +183,29 @@
     }
     /* ── Local storage saved state banner ── */
     .saved-banner { background: #e8f8ef; border: 1.5px solid #b2e8c8; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #1e8449; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    /* ── AI status badge (bằng chứng "AI chạy thật" — LIVE/OFFLINE) ── */
+    .ai-status-badge {
+      position: fixed; top: 14px; right: 14px; z-index: 50;
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
+      padding: 7px 13px; border-radius: 99px;
+      background: #eee; color: #666; border: 1.5px solid #ddd;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+    }
+    .ai-status-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #999; flex-shrink: 0; }
+    .ai-status-badge.mode-live { background: #f0fff4; color: #1e8449; border-color: #b2e8c8; }
+    .ai-status-badge.mode-live .dot { background: #27ae60; box-shadow: 0 0 0 3px rgba(39,174,96,0.18); }
+    .ai-status-badge.mode-offline { background: #fffbf0; color: #b7770d; border-color: #f5dca0; }
+    .ai-status-badge.mode-offline .dot { background: #f39c12; }
+    .ai-status-badge.mode-error { background: #fff4f4; color: #c0392b; border-color: #f5b8b8; }
+    .ai-status-badge.mode-error .dot { background: #e74c3c; }
+    @media (max-width: 500px) { .ai-status-badge { top: 8px; right: 8px; font-size: 10px; padding: 6px 10px; } }
   </style>
 </head>
 <body>
+<div class="ai-status-badge" id="ai-status-badge" title="Trạng thái AI backend — bằng chứng lời gọi AI chạy thật cho CP3">
+  <span class="dot"></span><span id="ai-status-text">Đang kết nối backend…</span>
+</div>
 <div class="card" id="app">
 
   <!-- ══════════════════════════════════════════════
@@ -275,6 +295,8 @@
       2. Gửi prompt đến AI để tạo bộ câu hỏi theo template transcript<br/>
       3. Lưu kết quả vào database (CSV) trong folder <code>~/output</code>
     </div>
+
+    <div id="gen-error-box" style="display:none; background:var(--red-bg); border:1.5px solid #f5b8b8; color:#c0392b; border-radius:10px; padding:12px 16px; margin-bottom:16px; font-size:13px; line-height:1.5;"></div>
 
     <div class="btn-row">
       <button class="btn btn-secondary" onclick="go('s-import')">← Quay lại</button>
@@ -434,113 +456,80 @@
 
 <script>
 // ═══════════════════════════════════════════════════════════
-// DATA — Mock questions database (simulates ~/output CSV)
-// Mỗi câu có: id, day, type(mcq|text), question, options,
-//             correct, explain, reference, refCode, refURL
+// API — gọi backend thật (FastAPI tại cùng origin, xem codebase/backend/api.py)
 // ═══════════════════════════════════════════════════════════
-const MOCK_DB = {
-  4: [
-    {
-      id: 1, day: 4, type: 'mcq',
-      question: 'Khi bạn gõ câu "Xin chào, tôi là học viên AI20k" vào một LLM — model đó xử lý chuỗi ký tự đó như thế nào ở bước đầu tiên?',
-      options: [
-        { key: 'A', text: 'Model đọc từng ký tự một (X, i, n, space, c, h, à, o...)' },
-        { key: 'B', text: 'Model tách câu thành các từ theo dấu cách ("Xin", "chào", "tôi"...)' },
-        { key: 'C', text: 'Model tách câu thành các token — có thể là từ, mảnh từ, hoặc ký tự đặc biệt' },
-        { key: 'D', text: 'Model hiểu ý nghĩa câu ngay lập tức, không cần tách' },
-      ],
-      correct: 'C',
-      explain: 'LLM không biết "từ" là gì — nó chỉ thấy token. Một token không nhất thiết là một từ. "tokenization" có thể bị tách thành "token" + "ization" tùy model. Tiếng Việt có dấu nên tốn nhiều token hơn tiếng Anh.',
-      reference: '"...token là ngôn ngữ của máy. Con người chúng ta nói chuyện với nhau bằng ngôn ngữ của từ ngữ, nhưng máy nói chuyện với nhau bằng ngôn ngữ của token. Nó sẽ chẻ nhỏ những cái từ đấy ra thành token — tiếng Việt thì sẽ tốn hơn tiếng Anh, bởi vì tiếng Việt nó có dấu."',
-      refCode: 'T04-049',
-      refURL: 'https://github.com/VinUni-AI20k/K4-3A-Day05-06-AI-Product-Hackathon/tree/main/data/vlearn-pack/transcript',
-    },
-    {
-      id: 2, day: 4, type: 'mcq',
-      question: 'GPT-4 có context window 128.000 token. Điều đó có nghĩa là gì trong thực tế?',
-      options: [
-        { key: 'A', text: 'Model có thể "nhớ" tối đa 128.000 từ trong một cuộc hội thoại' },
-        { key: 'B', text: 'Model xử lý tối đa 128.000 token (input + output) mỗi lần gọi API' },
-        { key: 'C', text: 'Model được huấn luyện trên 128.000 trang tài liệu' },
-        { key: 'D', text: 'Model có thể sinh ra tối đa 128.000 từ trong một lần trả lời' },
-      ],
-      correct: 'B',
-      explain: 'Context window không phải bộ nhớ dài hạn. Model không "nhớ" cuộc hội thoại — mỗi lần gọi API, toàn bộ lịch sử chat phải được gửi lại trong context. Khi đầy, tin nhắn cũ bị cắt đi — model thực sự "quên". Hiện tượng này gọi là context rot.',
-      reference: '"...Context window — cửa sổ ngữ cảnh — là một mô hình một lúc nó chỉ tiếp nhận được một số lượng nhất định... Khi bạn càng đưa nhiều thông tin thì cái mô hình về sau nó sẽ càng kém đi, và nó sẽ thường quên những thông tin ở lúc đầu — đấy gọi là context rot."',
-      refCode: 'T04-051',
-      refURL: 'https://github.com/VinUni-AI20k/K4-3A-Day05-06-AI-Product-Hackathon/tree/main/data/vlearn-pack/transcript',
-    },
-    {
-      id: 3, day: 4, type: 'mcq',
-      question: 'Hiện tượng "hallucination" trong LLM xảy ra khi nào?',
-      options: [
-        { key: 'A', text: 'Khi model bị quá tải và không trả lời được' },
-        { key: 'B', text: 'Khi model sinh ra nội dung trông có vẻ đúng nhưng thực ra sai hoặc bịa' },
-        { key: 'C', text: 'Khi người dùng hỏi những câu quá khó' },
-        { key: 'D', text: 'Khi context window bị đầy' },
-      ],
-      correct: 'B',
-      explain: 'Bản chất của LLM là dự đoán token tiếp theo — không phải "biết" sự thật. Do đó nó có thể tạo ra văn bản nghe rất có lý nhưng hoàn toàn sai. Đây là hallucination và là lý do cần luôn kiểm chứng output của AI.',
-      reference: '"...Bản chất của hệ thống Transformer là nó dự đoán. Nó không phải là nó biết cái tri thức đấy, mà là nó đang dự đoán những từ tiếp theo... Văn bản AI sinh ra nhìn trông rất là có lý, nhưng mà thực ra nó có thể sai — đấy sẽ là hiện tượng ảo giác, hallucination."',
-      refCode: 'T04-047',
-      refURL: 'https://github.com/VinUni-AI20k/K4-3A-Day05-06-AI-Product-Hackathon/tree/main/data/vlearn-pack/transcript',
-    },
-    {
-      id: 4, day: 4, type: 'text',
-      question: 'Giải thích bằng lời của bạn: Tại sao cùng một câu hỏi, ChatGPT đôi khi trả lời rất dài còn Gemini thì ngắn hơn — dù cả hai đều "hiểu" câu hỏi?',
-      correct: null,
-      explain: null, // AI graded
-      reference: '"...Bản chất của hệ thống Transformer là nó dự đoán token tiếp theo. System prompt, cấu hình temperature và RLHF của từng sản phẩm ảnh hưởng lớn đến phong cách sinh văn bản..."',
-      refCode: 'T04-047',
-      refURL: 'https://github.com/VinUni-AI20k/K4-3A-Day05-06-AI-Product-Hackathon/tree/main/data/vlearn-pack/transcript',
-    },
-    {
-      id: 5, day: 4, type: 'text',
-      question: 'Token là gì và tại sao LLM không đọc theo "từ" mà lại theo "token"? Giải thích bằng ngôn ngữ của bạn.',
-      correct: null,
-      explain: null, // AI graded
-      reference: '"...token là ngôn ngữ của máy... Nó sẽ chẻ nhỏ những cái từ đấy ra thành token — nó không phải là từ, không phải là chữ cái, mà nó là token..."',
-      refCode: 'T04-049',
-      refURL: 'https://github.com/VinUni-AI20k/K4-3A-Day05-06-AI-Product-Hackathon/tree/main/data/vlearn-pack/transcript',
-    },
-  ],
-  2: [
-    {
-      id: 1, day: 2, type: 'mcq',
-      question: 'Prompt engineering là gì?',
-      options: [
-        { key: 'A', text: 'Kỹ năng lập trình để tạo ra model AI' },
-        { key: 'B', text: 'Nghệ thuật thiết kế câu lệnh để AI hiểu đúng và trả lời đúng ý người dùng' },
-        { key: 'C', text: 'Quy trình fine-tune model với dữ liệu mới' },
-        { key: 'D', text: 'Cách tối ưu tốc độ của model AI' },
-      ],
-      correct: 'B',
-      explain: 'Prompt engineering là kỹ năng viết và thiết kế câu lệnh (prompt) sao cho AI hiểu đúng ngữ cảnh, mục tiêu và cho ra kết quả phù hợp. Đây là kỹ năng quan trọng khi làm việc với LLM.',
-      reference: '"...Prompt engineering — cách bạn viết câu lệnh cho AI — ảnh hưởng trực tiếp đến chất lượng câu trả lời..."',
-      refCode: 'T02-031',
-      refURL: 'https://github.com/VinUni-AI20k/K4-3A-Day05-06-AI-Product-Hackathon/tree/main/data/vlearn-pack/transcript',
-    },
-    {
-      id: 2, day: 2, type: 'text',
-      question: 'Mô tả một ví dụ thực tế bạn có thể ứng dụng prompt engineering vào công việc hoặc học tập.',
-      correct: null,
-      explain: null,
-      reference: '"...Mỗi task cần cấu trúc prompt khác nhau. Task tóm tắt cần context đầy đủ; task viết code cần format output cụ thể..."',
-      refCode: 'T02-035',
-      refURL: 'https://github.com/VinUni-AI20k/K4-3A-Day05-06-AI-Product-Hackathon/tree/main/data/vlearn-pack/transcript',
-    },
-  ],
-};
+const API_BASE = '';
+let API_HEALTH = { status: 'unknown', mode: 'unknown', provider: null, model: null };
+
+async function apiCall(path, { method = 'GET', body, isForm = false } = {}) {
+  const opts = { method };
+  if (body !== undefined) {
+    if (isForm) {
+      opts.body = body; // FormData — browser tự set Content-Type kèm boundary
+    } else {
+      opts.headers = { 'Content-Type': 'application/json' };
+      opts.body = JSON.stringify(body);
+    }
+  }
+  let res;
+  try {
+    res = await fetch(API_BASE + path, opts);
+  } catch (netErr) {
+    throw new Error('Không kết nối được tới backend — kiểm tra server đã chạy chưa (cd codebase/backend && python3 -m uvicorn api:app --port 8000).');
+  }
+  let data = null;
+  try { data = await res.json(); } catch (e) { /* không có JSON body */ }
+  if (!res.ok) {
+    let msg = `Lỗi HTTP ${res.status}`;
+    if (data && data.error) msg = data.error;
+    else if (data && typeof data.detail === 'string') msg = data.detail;
+    else if (data && Array.isArray(data.detail)) msg = data.detail.map(d => d.msg || JSON.stringify(d)).join('; ');
+    throw new Error(msg);
+  }
+  return data;
+}
+
+async function refreshHealthBadge() {
+  const badge = document.getElementById('ai-status-badge');
+  const text = document.getElementById('ai-status-text');
+  try {
+    const h = await apiCall('/api/health');
+    API_HEALTH = h;
+    badge.classList.remove('mode-live', 'mode-offline', 'mode-error');
+    if (h.mode === 'live') {
+      badge.classList.add('mode-live');
+      text.textContent = `● LIVE — ${h.provider || ''}${h.model ? ' · ' + h.model : ''}`;
+    } else {
+      badge.classList.add('mode-offline');
+      text.textContent = '● OFFLINE (mock — chưa có API key)';
+    }
+  } catch (e) {
+    badge.classList.remove('mode-live', 'mode-offline');
+    badge.classList.add('mode-error');
+    text.textContent = '● Không kết nối được backend';
+  }
+}
+
+async function viewTranscriptCode(code) {
+  try {
+    const day = state.generatedDay;
+    const clean = String(code).replace(/[\[\]]/g, '');
+    const data = await apiCall(`/api/transcript/${day}/${clean}`);
+    alert(`${data.code}\n\n${data.text}`);
+  } catch (e) {
+    alert('Không tra được đoạn transcript: ' + e.message);
+  }
+}
 
 // ═══════════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════════
 let state = {
-  uploadedFiles: [],
+  uploadedFiles: [],   // [{ file: File, status: 'pending'|'uploading'|'done'|'error', day, message }]
   selectedDay: null,
-  questions: [],
+  questions: [],        // từ GET /api/quiz/{day}: [{id, day, qtype, question, options}]
   currentQ: 0,
-  answers: {},      // { qIndex: { type:'mcq'|'text', value, correct } }
+  answers: {},           // { qIndex: { type:'mcq'|'text', value, correct, result: <response của POST /api/answer> } }
   generatedDay: null,
 };
 
@@ -558,7 +547,7 @@ function esc(str) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// LOCAL STORAGE — persist quiz results
+// LOCAL STORAGE — persist quiz results (resume UI state giữa các phiên)
 // ═══════════════════════════════════════════════════════════
 const LS_KEY = 'vlearn_quiz_state';
 
@@ -595,12 +584,13 @@ function loadSavedQuiz() {
     state.questions = data.questions;
     state.answers = data.answers;
     state.currentQ = 0;
+    // Tổng kết luôn được lấy lại từ backend (nguồn sự thật) qua GET /api/summary/{day}.
     showSummary();
   } catch(e) {}
 }
 
 // ═══════════════════════════════════════════════════════════
-// SCREEN: IMPORT — Upload tài liệu
+// SCREEN: IMPORT — Upload tài liệu (POST /api/upload thật, lưu vào data/slides/)
 // ═══════════════════════════════════════════════════════════
 function triggerUpload() {
   document.getElementById('file-input').click();
@@ -624,15 +614,41 @@ function onFileChange(e) {
 
 function addFiles(newFiles) {
   newFiles.forEach(f => {
-    if (!state.uploadedFiles.find(x => x.name === f.name)) {
-      state.uploadedFiles.push(f);
+    if (!state.uploadedFiles.find(x => x.file.name === f.name)) {
+      const entry = { file: f, status: 'pending', day: null, message: '' };
+      state.uploadedFiles.push(entry);
+      uploadFileToBackend(entry);
     }
   });
   renderFileList();
 }
 
 function removeFile(name) {
-  state.uploadedFiles = state.uploadedFiles.filter(f => f.name !== name);
+  state.uploadedFiles = state.uploadedFiles.filter(x => x.file.name !== name);
+  renderFileList();
+}
+
+async function uploadFileToBackend(entry) {
+  entry.status = 'uploading';
+  renderFileList();
+  const form = new FormData();
+  form.append('file', entry.file);
+  try {
+    const res = await apiCall('/api/upload', { method: 'POST', body: form, isForm: true });
+    entry.status = 'done';
+    entry.day = res.day;
+    entry.message = res.message;
+    if (res.day) {
+      const dayInput = document.getElementById('day-input');
+      if (dayInput && !dayInput.value) {
+        dayInput.value = res.day;
+        updateGenPreview();
+      }
+    }
+  } catch (e) {
+    entry.status = 'error';
+    entry.message = e.message;
+  }
   renderFileList();
 }
 
@@ -644,14 +660,21 @@ function renderFileList() {
     btn.disabled = true;
     return;
   }
-  el.innerHTML = state.uploadedFiles.map(f => `
+  el.innerHTML = state.uploadedFiles.map(entry => {
+    const f = entry.file;
+    let statusHtml = '<span style="color:#bbb;font-size:11px;">chờ tải lên...</span>';
+    if (entry.status === 'uploading') statusHtml = '<span style="color:#999;font-size:11px;">⏳ đang tải lên server...</span>';
+    else if (entry.status === 'done') statusHtml = `<span style="color:var(--green);font-size:11px;" title="${esc(entry.message)}">✓ đã lưu${entry.day ? ' · Day ' + entry.day : ''}</span>`;
+    else if (entry.status === 'error') statusHtml = `<span style="color:var(--red);font-size:11px;" title="${esc(entry.message)}">✗ ${esc(entry.message)}</span>`;
+    return `
     <div class="file-item">
       <span class="fi-icon">${fileIcon(f.name)}</span>
       <span class="fi-name">${esc(f.name)}</span>
       <span class="fi-size">${formatBytes(f.size)}</span>
+      ${statusHtml}
       <span class="fi-remove" onclick="removeFile('${esc(f.name)}')" title="Xóa">✕</span>
     </div>
-  `).join('');
+  `; }).join('');
   btn.disabled = false;
 }
 
@@ -674,13 +697,15 @@ function goStep2() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// SCREEN: GENERATE
+// SCREEN: GENERATE — POST /api/ingest rồi POST /api/generate (thật)
 // ═══════════════════════════════════════════════════════════
 function updateGenPreview() {
   const val = document.getElementById('day-input').value.trim();
   const preview = document.getElementById('gen-preview');
   const btn = document.getElementById('btn-generate');
   const dayInfo = document.getElementById('day-label-info');
+  const errBox = document.getElementById('gen-error-box');
+  if (errBox) errBox.style.display = 'none';
   if (!val || isNaN(val) || Number(val) < 1) {
     preview.textContent = 'Nhập một số để xem prompt sẽ được gửi tới AI...';
     btn.disabled = true;
@@ -693,46 +718,58 @@ function updateGenPreview() {
   btn.disabled = false;
 }
 
-function startGenerate() {
+async function startGenerate() {
   const day = state.selectedDay;
+  if (!day) return;
   document.getElementById('gen-day-label').textContent = day;
+  const errBox = document.getElementById('gen-error-box');
+  if (errBox) errBox.style.display = 'none';
   go('s-generating');
-  // Simulate generate steps
-  const steps = [
-    `Đang scan tài liệu Day ${day}...`,
-    `Đang gửi prompt đến AI...`,
-    `AI đang tạo câu hỏi và đáp án...`,
-    `Đang lưu kết quả vào database...`,
-  ];
-  let i = 0;
   const statusEl = document.getElementById('gen-status');
-  const interval = setInterval(() => {
-    if (i < steps.length) {
-      statusEl.textContent = steps[i++];
-    } else {
-      clearInterval(interval);
-      finishGenerate(day);
+  try {
+    statusEl.textContent = `Đang trích xuất transcript Day ${day} từ tài liệu (POST /api/ingest)...`;
+    const ingestRes = await apiCall('/api/ingest', { method: 'POST', body: { day } });
+
+    const modeNote = API_HEALTH.mode === 'live'
+      ? `LIVE — ${API_HEALTH.provider}:${API_HEALTH.model}`
+      : 'OFFLINE (mock)';
+    statusEl.textContent = `Đang gửi yêu cầu sinh câu hỏi tới AI (chế độ ${modeNote})...`;
+    const genRes = await apiCall('/api/generate', { method: 'POST', body: { day, regenerate: true } });
+
+    statusEl.textContent = 'Đang tải lại bộ câu hỏi vừa lưu vào database...';
+    await finishGenerate(day, genRes, ingestRes);
+  } catch (e) {
+    go('s-generate');
+    if (errBox) {
+      errBox.style.display = 'block';
+      errBox.textContent = `⚠ Không tạo được bộ câu hỏi cho Day ${day}: ${e.message}`;
     }
-  }, 700);
+  }
 }
 
-function finishGenerate(day) {
-  // Use mock data — fall back to day 4 if no data for requested day
-  const qs = MOCK_DB[day] || MOCK_DB[4];
+async function finishGenerate(day, genRes, ingestRes) {
   state.generatedDay = day;
-  state.questions = qs;
   state.answers = {};
   state.currentQ = 0;
 
+  const questions = await apiCall(`/api/quiz/${day}`);
+  state.questions = questions;
+
   document.getElementById('done-day-label').textContent = `Day ${day}`;
-  const mcqCount = qs.filter(q => q.type === 'mcq').length;
-  const textCount = qs.filter(q => q.type === 'text').length;
+  const mcqCount = questions.filter(q => q.qtype === 'mcq').length;
+  const textCount = questions.filter(q => q.qtype === 'text').length;
+  const modeLabel = genRes.mode === 'live'
+    ? `LIVE (${API_HEALTH.provider || ''}${API_HEALTH.model ? ':' + API_HEALTH.model : ''})`
+    : 'OFFLINE (mock — chưa có API key)';
+
   document.getElementById('gen-summary-list').innerHTML = `
-    <div>📌 Tổng số câu hỏi: <strong>${qs.length}</strong></div>
+    <div>📌 Tổng số câu hỏi: <strong>${questions.length}</strong></div>
     <div>🔵 Trắc nghiệm (MCQ): <strong>${mcqCount} câu</strong></div>
     <div>✏️ Tự luận (Open-text): <strong>${textCount} câu</strong></div>
-    <div>💾 Đã lưu vào: <code>~/output/day${day}_quiz.csv</code></div>
-    <div style="font-size:12px; color:#bbb; margin-top:6px;">(Mock data — prototype demo)</div>
+    <div>🤖 Chế độ AI khi sinh: <strong>${esc(modeLabel)}</strong></div>
+    <div>💾 Đã lưu vào: <code>output/quiz_day${day}.csv</code> · <code>output/quiz.db</code></div>
+    ${ingestRes && ingestRes.num_segments ? `<div style="font-size:12px; color:#999;">Nguồn: ${esc(ingestRes.transcript_file || '')} (${ingestRes.num_segments} đoạn mã [T${String(day).padStart(2,'0')}-NNN])</div>` : ''}
+    ${genRes.warnings && genRes.warnings.length ? `<div style="font-size:12px; color:#b7770d;">⚠ ${genRes.warnings.length} cảnh báo khi sinh câu hỏi — xem log server.</div>` : ''}
   `;
   go('s-gen-done');
 }
@@ -759,8 +796,8 @@ function renderQuizScreen() {
   document.getElementById('quiz-day-label').textContent = `Day ${day} · Ôn tập`;
   document.getElementById('quiz-title').textContent = `Bộ câu hỏi Day ${day}`;
   document.getElementById('qbadge-count').textContent = `${qs.length} câu hỏi`;
-  const mcqC = qs.filter(q=>q.type==='mcq').length;
-  const txtC = qs.filter(q=>q.type==='text').length;
+  const mcqC = qs.filter(q=>q.qtype==='mcq').length;
+  const txtC = qs.filter(q=>q.qtype==='text').length;
   document.getElementById('qbadge-types').textContent = `${mcqC} trắc nghiệm · ${txtC} tự luận`;
   document.getElementById('q-total').textContent = qs.length;
 
@@ -775,8 +812,7 @@ function renderQuestionNav() {
     let cls = 'q-dot';
     if (i === state.currentQ) cls += ' current';
     else if (state.answers[i] !== undefined) {
-      if (q.type === 'text') cls += ' answered-correct'; // open-text always shown as answered
-      else cls += state.answers[i].correct ? ' answered-correct' : ' answered-wrong';
+      cls += state.answers[i].correct ? ' answered-correct' : ' answered-wrong';
     }
     return `<div class="${cls}" onclick="jumpToQuestion(${i})">${i+1}</div>`;
   }).join('');
@@ -800,38 +836,41 @@ function renderCurrentQuestion() {
   const total = state.questions.length;
   const area = document.getElementById('question-area');
   const isAnswered = state.answers[i] !== undefined;
+  const errSlot = `<div id="q-submit-error" style="color:var(--red); font-size:13px; margin-top:10px;"></div>`;
 
-  if (q.type === 'mcq') {
-    const selected = isAnswered ? state.answers[i].value : null;
+  if (q.qtype === 'mcq') {
+    const keys = ['A','B','C','D'].slice(0, (q.options || []).length);
+    const selected = isAnswered ? state.answers[i].value : ((state._tempMCQ && state._tempMCQ[i]) || null);
     area.innerHTML = `
       <div class="q-type-badge q-type-mcq">🔵 Trắc nghiệm</div>
       <div class="question-text">${esc(q.question)}</div>
       <div class="options" id="opts-${i}">
-        ${q.options.map(o => {
+        ${keys.map((key, idx) => {
           let cls = 'option';
-          if (selected === o.key) cls += ' selected';
-          return `<div class="${cls}" onclick="${isAnswered ? '' : `pickOpt(${i},'${o.key}')`}" style="${isAnswered ? 'cursor:default;' : ''}">
-            <div class="opt-key">${o.key}</div>
-            <span>${esc(o.text)}</span>
+          if (selected === key) cls += ' selected';
+          return `<div class="${cls}" onclick="${isAnswered ? '' : `pickOpt(${i},'${key}')`}" style="${isAnswered ? 'cursor:default;' : ''}">
+            <div class="opt-key">${key}</div>
+            <span>${esc(q.options[idx])}</span>
           </div>`;
         }).join('')}
       </div>
       <div class="btn-row">
         ${i > 0 ? `<button class="btn btn-secondary" onclick="prevQ()">← Trước</button>` : ''}
-        <button class="btn btn-primary" id="btn-submit-q" ${isAnswered || selected === null ? (isAnswered ? '' : 'disabled') : 'disabled'}
+        <button class="btn btn-primary" id="btn-submit-q" ${isAnswered ? '' : (selected ? '' : 'disabled')}
           onclick="submitMCQ(${i})">
           ${isAnswered ? 'Xem phân tích →' : 'Xác nhận →'}
         </button>
         ${isAnswered && i < total-1 ? `<button class="btn btn-secondary" onclick="nextQ()">Câu tiếp →</button>` : ''}
         ${isAnswered && i === total-1 ? `<button class="btn btn-success" onclick="showSummary()">Xem kết quả 🏁</button>` : ''}
       </div>
+      ${errSlot}
     `;
   } else {
     const savedText = isAnswered ? state.answers[i].value : '';
     area.innerHTML = `
       <div class="q-type-badge q-type-text">✏️ Tự luận</div>
       <div class="question-text">${esc(q.question)}</div>
-      <textarea id="text-ans-${i}" placeholder="Viết câu trả lời của bạn ở đây..." oninput="checkTextBtn(${i})">${esc(savedText)}</textarea>
+      <textarea id="text-ans-${i}" placeholder="Viết câu trả lời của bạn ở đây..." oninput="checkTextBtn(${i})" ${isAnswered ? 'readonly' : ''}>${esc(savedText)}</textarea>
       <div class="btn-row" style="margin-top:16px;">
         ${i > 0 ? `<button class="btn btn-secondary" onclick="prevQ()">← Trước</button>` : ''}
         <button class="btn btn-primary" id="btn-submit-text-${i}" ${savedText ? '' : 'disabled'}
@@ -841,6 +880,7 @@ function renderCurrentQuestion() {
         ${isAnswered && i < total-1 ? `<button class="btn btn-secondary" onclick="nextQ()">Câu tiếp →</button>` : ''}
         ${isAnswered && i === total-1 ? `<button class="btn btn-success" onclick="showSummary()">Xem kết quả 🏁</button>` : ''}
       </div>
+      ${errSlot}
     `;
   }
 }
@@ -852,73 +892,88 @@ function checkTextBtn(i) {
 }
 
 function pickOpt(i, key) {
-  // Update UI selection
   const opts = document.querySelectorAll(`#opts-${i} .option`);
   opts.forEach(o => o.classList.remove('selected'));
   const opt = document.querySelector(`#opts-${i} .option:nth-child(${['A','B','C','D'].indexOf(key)+1})`);
   if (opt) opt.classList.add('selected');
-  // Enable submit
   const btn = document.getElementById('btn-submit-q');
   if (btn) {
     btn.disabled = false;
     btn.onclick = () => submitMCQ(i, key);
   }
-  // Store temp selection
   if (!state._tempMCQ) state._tempMCQ = {};
   state._tempMCQ[i] = key;
 }
 
-function submitMCQ(i, keyOverride) {
+async function submitMCQ(i, keyOverride) {
   if (state.answers[i]) {
-    // Already answered — show feedback
     showFeedbackMCQ(i);
     return;
   }
   const key = keyOverride || (state._tempMCQ && state._tempMCQ[i]);
   if (!key) return;
   const q = state.questions[i];
-  const correct = key === q.correct;
-  state.answers[i] = { type: 'mcq', value: key, correct };
-  saveToLS();
-  showFeedbackMCQ(i);
+  const btn = document.getElementById('btn-submit-q');
+  const errSlot = document.getElementById('q-submit-error');
+  if (errSlot) errSlot.textContent = '';
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spinner" style="border-color:rgba(108,99,255,0.3); border-top-color:var(--primary);"></span> Đang chấm...'; }
+  try {
+    const result = await apiCall('/api/answer', { method: 'POST', body: { question_id: q.id, user_answer: key } });
+    state.answers[i] = { type: 'mcq', value: key, correct: result.is_correct, result };
+    saveToLS();
+    showFeedbackMCQ(i);
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Xác nhận →'; }
+    if (errSlot) errSlot.textContent = 'Không chấm được câu hỏi này: ' + e.message;
+  }
+}
+
+function renderFeedbackSource(result) {
+  const srcEl = document.getElementById('fb-source');
+  const codes = result.reference_code || [];
+  const quotes = result.reference_quote || [];
+  const urls = result.reference_url || [];
+  if (!codes.length) {
+    srcEl.style.display = 'none';
+    return;
+  }
+  srcEl.style.display = 'block';
+  document.getElementById('fb-source-text').textContent = quotes.filter(Boolean).join(' … ') || '(không có trích dẫn)';
+  const citeParts = codes.map((c) => `<a href="#" onclick="viewTranscriptCode('${esc(c)}'); return false;" style="color:var(--primary);">${esc(c)}</a>`);
+  document.getElementById('fb-source-cite').innerHTML = `Mã trích dẫn: <strong>${citeParts.join(', ')}</strong> ${urls[0] ? `· <code style="font-size:11px;">${esc(urls[0])}</code>` : ''}`;
 }
 
 function showFeedbackMCQ(i) {
   const q = state.questions[i];
   const ans = state.answers[i];
-  const isCorrect = ans.correct;
+  const result = ans.result;
+  const isCorrect = result.is_correct;
   const total = state.questions.length;
+  const keys = ['A','B','C','D'].slice(0, (q.options || []).length);
 
   document.getElementById('fb-pill').textContent = `Phân tích · Câu ${i+1}`;
 
   let fbHtml = '';
   if (isCorrect) {
     fbHtml = `<div class="fb-box fb-correct">
-      <div class="fb-title">✓ Đúng rồi! — Đáp án ${q.correct}</div>
-      <div>${esc(q.explain)}</div>
+      <div class="fb-title">✓ Đúng rồi!</div>
+      <div>${esc(result.explanation)}</div>
     </div>`;
   } else {
     fbHtml = `<div class="fb-box fb-wrong">
-      <div class="fb-title">✗ Chưa đúng — Đáp án đúng là ${q.correct}</div>
-      <div>${esc(q.explain)}</div>
+      <div class="fb-title">✗ Chưa đúng</div>
+      <div>${esc(result.explanation)}</div>
     </div>`;
   }
 
-  // Show selected option highlight
+  const selectedIdx = keys.indexOf(ans.value);
   fbHtml += `<div style="background:#f8f8ff; border-radius:10px; padding:14px 16px; margin-bottom:16px; font-size:14px;">
-    <strong>Bạn chọn:</strong> ${ans.value} — ${esc(q.options.find(o=>o.key===ans.value)?.text || '')}
-    ${!isCorrect ? `<br/><strong>Đáp án đúng:</strong> ${q.correct} — ${esc(q.options.find(o=>o.key===q.correct)?.text || '')}` : ''}
+    <strong>Bạn chọn:</strong> ${esc(ans.value)} — ${esc((q.options || [])[selectedIdx] || '')}
   </div>`;
 
   document.getElementById('fb-content').innerHTML = fbHtml;
+  renderFeedbackSource(result);
 
-  // Source
-  const srcEl = document.getElementById('fb-source');
-  srcEl.style.display = 'block';
-  document.getElementById('fb-source-text').textContent = q.reference;
-  document.getElementById('fb-source-cite').innerHTML = `Mã trang: <strong>[${q.refCode}]</strong> · <a href="${q.refURL}" target="_blank" style="color:var(--primary);">Xem transcript →</a>`;
-
-  // Buttons
   const isLast = i === total - 1;
   document.getElementById('fb-btn-row').innerHTML = `
     ${i > 0 ? `<button class="btn btn-secondary" onclick="go('s-quiz'); renderQuestionNav();">← Danh sách câu</button>` : ''}
@@ -929,9 +984,9 @@ function showFeedbackMCQ(i) {
   go('s-feedback');
 }
 
-function submitText(i) {
+async function submitText(i) {
   if (state.answers[i]) {
-    showFeedbackText(i, state._aiResult && state._aiResult[i]);
+    showFeedbackText(i);
     return;
   }
   const ta = document.getElementById(`text-ans-${i}`);
@@ -939,64 +994,46 @@ function submitText(i) {
   const text = ta.value.trim();
   const q = state.questions[i];
 
-  // Show AI checking screen
-  document.getElementById('ai-check-ref').textContent = `[${q.refCode}]`;
+  document.getElementById('ai-check-ref').textContent = API_HEALTH.mode === 'live'
+    ? `bằng AI thật (${API_HEALTH.provider}:${API_HEALTH.model})`
+    : 'bằng chế độ OFFLINE (mock — chưa có API key)';
   go('s-ai-checking');
 
-  // Simulate AI grading (mock)
-  setTimeout(() => {
-    const aiResult = mockAIGrade(text, q);
-    state.answers[i] = { type: 'text', value: text, correct: aiResult.pass };
-    if (!state._aiResult) state._aiResult = {};
-    state._aiResult[i] = aiResult;
+  try {
+    const result = await apiCall('/api/answer', { method: 'POST', body: { question_id: q.id, user_answer: text } });
+    state.answers[i] = { type: 'text', value: text, correct: result.is_correct, result };
     saveToLS();
-    showFeedbackText(i, aiResult);
-  }, 2500);
-}
-
-function mockAIGrade(text, q) {
-  // Simple mock: check if text mentions key concepts
-  const keywords = {
-    'T04-049': ['token', 'mảnh', 'tách', 'ngôn ngữ', 'máy', 'sub'],
-    'T04-047': ['dự đoán', 'predict', 'hallucination', 'ảo giác', 'sai', 'system prompt', 'temperature', 'fine-tune', 'rlhf'],
-    'T04-051': ['context', 'cửa sổ', 'nhớ', 'quên', 'token'],
-    'T02-035': ['prompt', 'format', 'context', 'task', 'ví dụ'],
-  };
-  const kws = keywords[q.refCode] || [];
-  const lc = text.toLowerCase();
-  const hits = kws.filter(k => lc.includes(k));
-  const pass = hits.length >= 2 || text.length > 80;
-
-  if (pass) {
-    return {
-      pass: true,
-      label: '✓ Câu trả lời đạt yêu cầu',
-      feedback: `Bạn đã đề cập được các khái niệm quan trọng${hits.length > 0 ? ': ' + hits.join(', ') : ''}. AI xác nhận câu trả lời phù hợp với nội dung transcript [${q.refCode}].`,
-      suggestion: 'Để hoàn thiện hơn, hãy thêm ví dụ cụ thể hoặc so sánh với khái niệm liên quan.',
-    };
-  } else {
-    return {
-      pass: false,
-      label: '⚠ Câu trả lời cần bổ sung thêm',
-      feedback: `AI nhận thấy câu trả lời chưa đề cập đủ các điểm chính. Các từ khóa còn thiếu: ${kws.filter(k => !text.toLowerCase().includes(k)).slice(0,3).join(', ')}.`,
-      suggestion: 'Hãy xem lại đoạn transcript [' + q.refCode + '] và thử viết lại.',
-    };
+    showFeedbackText(i);
+  } catch (e) {
+    go('s-quiz');
+    renderQuestionNav();
+    renderCurrentQuestion();
+    const errSlot = document.getElementById('q-submit-error');
+    if (errSlot) errSlot.textContent = 'AI chấm bài thất bại: ' + e.message;
   }
 }
 
-function showFeedbackText(i, aiResult) {
-  const q = state.questions[i];
+const VERDICT_META = {
+  dung: { cls: 'fb-ai', label: '✓ Câu trả lời đúng' },
+  mot_phan: { cls: 'fb-neutral', label: '◐ Đúng một phần' },
+  sai: { cls: 'fb-wrong', label: '✗ Câu trả lời sai' },
+  khong_du_thong_tin: { cls: 'fb-neutral', label: '⚠ Câu trả lời chưa đủ thông tin' },
+  ngoai_nguon_du_lieu: { cls: 'fb-neutral', label: '⚠ Ngoài nguồn dữ liệu đã nạp' },
+  ngoai_pham_vi: { cls: 'fb-neutral', label: '⛔ Ngoài phạm vi chấm bài' },
+};
+
+function showFeedbackText(i) {
   const total = state.questions.length;
   const ans = state.answers[i];
+  const result = ans.result;
 
   document.getElementById('fb-pill').textContent = `Phân tích AI · Câu ${i+1}`;
+  const meta = VERDICT_META[result.verdict_label] || { cls: 'fb-ai', label: result.verdict_label };
 
-  const cls = aiResult.pass ? 'fb-ai' : 'fb-neutral';
   let fbHtml = `
-    <div class="fb-box ${cls}">
-      <div class="fb-title">${aiResult.label}</div>
-      <div style="margin-bottom:10px;">${esc(aiResult.feedback)}</div>
-      <div><strong>Gợi ý:</strong> ${esc(aiResult.suggestion)}</div>
+    <div class="fb-box ${meta.cls}">
+      <div class="fb-title">${meta.label}</div>
+      <div>${esc(result.explanation)}</div>
     </div>
     <div style="background:#f8f8ff; border-radius:10px; padding:14px 16px; margin-bottom:16px; font-size:14px;">
       <strong>Câu trả lời của bạn:</strong><br/>
@@ -1005,11 +1042,7 @@ function showFeedbackText(i, aiResult) {
   `;
 
   document.getElementById('fb-content').innerHTML = fbHtml;
-
-  const srcEl = document.getElementById('fb-source');
-  srcEl.style.display = 'block';
-  document.getElementById('fb-source-text').textContent = q.reference;
-  document.getElementById('fb-source-cite').innerHTML = `Mã trang: <strong>[${q.refCode}]</strong> · <a href="${q.refURL}" target="_blank" style="color:var(--primary);">Xem transcript →</a>`;
+  renderFeedbackSource(result);
 
   const isLast = i === total - 1;
   document.getElementById('fb-btn-row').innerHTML = `
@@ -1044,59 +1077,57 @@ function nextQFromFb() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// SCREEN: SUMMARY
+// SCREEN: SUMMARY — GET /api/summary/{day} (nguồn sự thật ở backend/DB)
 // ═══════════════════════════════════════════════════════════
-function showSummary() {
-  const qs = state.questions;
+async function showSummary() {
   const day = state.generatedDay;
   document.getElementById('summary-day-label').textContent = `Day ${day} · Ôn tập`;
 
-  let correctCount = 0;
-  let total = qs.length;
-  const refSet = new Set();
+  let data;
+  try {
+    data = await apiCall(`/api/summary/${day}`);
+  } catch (e) {
+    document.getElementById('summary-list').innerHTML = `<div style="color:var(--red);font-size:14px;">⚠ Không lấy được tổng kết từ backend: ${esc(e.message)}</div>`;
+    go('s-summary');
+    return;
+  }
 
-  const listHtml = qs.map((q, i) => {
-    const ans = state.answers[i];
-    const isCorrect = ans ? ans.correct : false;
-    if (isCorrect) correctCount++;
-    refSet.add(q.refCode);
-
-    const icon = isCorrect ? '✅' : (ans ? '❌' : '⏭');
+  const items = data.items || [];
+  const listHtml = items.map((item) => {
+    const answered = item.answered;
+    const isCorrect = answered ? !!item.is_correct : false;
+    const icon = answered ? (isCorrect ? '✅' : '❌') : '⏭';
     const cls = isCorrect ? 'si-correct' : 'si-wrong';
-    const typeLabel = q.type === 'mcq' ? '[MCQ]' : '[Tự luận]';
-    const shortQ = q.question.length > 80 ? q.question.slice(0, 80) + '…' : q.question;
-    const ansInfo = ans
-      ? (q.type === 'mcq' ? `Bạn chọn: ${ans.value} · Đúng đáp án: ${q.correct}` : `AI đánh giá: ${isCorrect ? 'đạt' : 'cần xem lại'}`)
+    const typeLabel = item.qtype === 'mcq' ? '[MCQ]' : '[Tự luận]';
+    const shortQ = item.question.length > 80 ? item.question.slice(0, 80) + '…' : item.question;
+    const ansInfo = answered
+      ? (item.qtype === 'mcq' ? `Đã chọn: ${item.user_answer} · Nhận định: ${item.verdict_label}` : `AI đánh giá: ${item.verdict_label}`)
       : 'Chưa trả lời';
-
     return `<div class="summary-item ${cls}">
       <div class="si-icon">${icon}</div>
       <div class="si-body">
         <div class="si-q"><span style="opacity:0.6;font-size:12px;">${typeLabel}</span> ${esc(shortQ)}</div>
-        <div class="si-ref">${ansInfo} · Trích dẫn: [${q.refCode}]</div>
+        <div class="si-ref">${esc(ansInfo)} · Trích dẫn: ${esc(item.reference_code || '')}</div>
       </div>
     </div>`;
   }).join('');
 
-  document.getElementById('summary-list').innerHTML = listHtml;
-  document.getElementById('score-num').textContent = `${correctCount}/${total}`;
+  document.getElementById('summary-list').innerHTML = listHtml || '<div style="color:#999;font-size:14px;">Chưa có câu nào được làm.</div>';
+  document.getElementById('score-num').textContent = `${data.correct}/${data.total_questions}`;
 
-  const pct = total > 0 ? Math.round(correctCount / total * 100) : 0;
+  const pct = data.score_percent;
   let msg = '';
   if (pct === 100) msg = '🎯 Tuyệt vời! Bạn đã nắm vững bài giảng này.';
   else if (pct >= 70) msg = '👍 Tốt! Xem lại các câu sai và đọc transcript phần đó.';
   else if (pct >= 40) msg = '📖 Cần ôn thêm — hãy xem lại bài giảng rồi thử lại.';
   else msg = '💡 Hãy xem bài giảng trước rồi quay lại làm quiz nhé!';
-  document.getElementById('score-msg').textContent = msg;
+  document.getElementById('score-msg').textContent = `${msg} (${pct}% · ${data.answered}/${data.total_questions} đã trả lời)`;
 
-  // Refs to review
-  const wrongRefs = qs
-    .filter((q, i) => state.answers[i] && !state.answers[i].correct)
-    .map(q => `[${q.refCode}]`);
+  const wrongRefs = items.filter(it => it.answered && !it.is_correct && it.reference_code).map(it => it.reference_code);
   const uniqueWrongRefs = [...new Set(wrongRefs)];
   const refsHtml = uniqueWrongRefs.length > 0
-    ? uniqueWrongRefs.map(r => `• Đọc lại trang <strong>${r}</strong> trong transcript bài giảng`).join('<br/>')
-    : '• Bạn đã trả lời đúng hết! Không cần xem lại phần nào.';
+    ? uniqueWrongRefs.map(r => `• Đọc lại đoạn <strong>${esc(r)}</strong> trong transcript bài giảng`).join('<br/>')
+    : '• Bạn đã trả lời đúng hết (hoặc chưa có câu sai)! Không cần xem lại phần nào.';
   document.getElementById('summary-refs').innerHTML = refsHtml;
 
   saveToLS();
@@ -1108,6 +1139,7 @@ function showSummary() {
 // ═══════════════════════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', () => {
   checkSavedState();
+  refreshHealthBadge();
 });
 </script>
 </body>
