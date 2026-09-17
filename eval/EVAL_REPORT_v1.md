@@ -1,6 +1,6 @@
 # Báo cáo đo lường — CP3 (v1)
 
-**Ngày 17/9/2026** · Branch: `main` · Commit thực hiện: `a2d829e` (16:03:55) · Chế độ AI: **LIVE** (provider=`openai`, model=`gpt-4o-mini`)
+**Ngày 17/9/2026** · Branch: `integrating` · Commit thực hiện: `a2d829e` (16:03:55) · Chế độ AI: **LIVE** (provider=`openai`, model=`gpt-4o-mini`)
 
 ---
 
@@ -54,10 +54,16 @@ Phân bố `expected_verdict`:
 Commit `687c8b4` vào **15:48:53** (trước lượt chạy LIVE 15 phút) — chốt chuẩn trước khi biết kết quả, đúng yêu cầu handbook trang 06:
 
 ```
-commit 687c8b4 (2026-09-17 15:48:53)
-Author: khanhdq
-Subject: chore: CP3 chuẩn đạt — 24 case + định nghĩa ĐẠT
+$ git log --format="%h %ad%n%s" --date=iso -1 687c8b4
+687c8b4 2026-09-17 15:48:53 +0700
+feat(integrating): tích hợp frontend với backend thật + hoàn thiện nộp CP3
+
+$ git log --format="%h %ad%n%s" --date=iso -1 a2d829e
+a2d829e 2026-09-17 16:03:55 +0700
+feat(cp3): chạy pipeline LIVE bằng LLM thật, cập nhật số đo CP3
 ```
+Commit `687c8b4` là commit đưa `eval/cp3_benchmark.py` (chứa định nghĩa ĐẠT)
+và `eval/cp3_testset.json` vào repo; commit `a2d829e` là lượt chạy LIVE.
 
 Phân bố `expected_verdict` **không thay đổi** từ trước đến sau khi chạy LIVE.
 
