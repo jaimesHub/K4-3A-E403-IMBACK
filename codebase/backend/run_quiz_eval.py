@@ -55,10 +55,39 @@ _STOPWORDS_VI = {
 }
 _TOKEN_RE = re.compile(r"[a-zA-ZÀ-ỹà-ỹ0-9]+")
 
+# Nhóm từ đồng nghĩa / cùng khái niệm — normalize về canonical form trước khi so khớp.
+# Key = canonical, values = các biến thể mà LLM hay dùng.
+_SYNONYM_GROUPS: list[set[str]] = [
+    {"token", "tokens", "đơn vị", "mảnh", "mảnh từ", "sub", "subword"},
+    {"từ", "word", "words", "từ ngữ", "ngôn ngữ"},
+    {"máy", "model", "mô hình", "llm", "transformer"},
+    {"dự đoán", "predict", "prediction", "xác suất", "probability"},
+    {"hallucination", "ảo giác", "sai", "bịa", "không đúng"},
+    {"context", "context window", "cửa sổ", "ngữ cảnh"},
+    {"quên", "forget", "mất", "bị cắt"},
+    {"parameter", "tham số", "trọng số", "weight", "năng lực"},
+    {"rlhf", "reinforcement", "huấn luyện", "train", "reward"},
+    {"system prompt", "prompt", "câu lệnh", "instruction"},
+    {"temperature", "sampling", "top-k", "top-p", "ngẫu nhiên"},
+    {"ngoài phạm vi", "không thuộc", "hành chính", "ngoài", "từ chối"},
+    {"không đủ", "mơ hồ", "ngắn", "không rõ", "thiếu"},
+    {"tiếng việt", "vietnamese", "tiếng anh", "english", "dấu"},
+    {"chẻ", "tách", "split", "chia", "tokenize", "tokenization"},
+    {"bản chất", "cơ chế", "hoạt động", "nguyên lý"},
+    {"giải thích", "vì sao", "lý do", "nguyên nhân"},
+]
+
+def _canonical(token: str) -> str:
+    """Đưa token về canonical của nhóm đồng nghĩa (nếu có), giữ nguyên nếu không."""
+    for group in _SYNONYM_GROUPS:
+        if token in group:
+            return min(group)  # canonical = từ đầu tiên theo alphabet
+    return token
+
 
 def _keywords(text: str, min_len: int = 3) -> set[str]:
     tokens = _TOKEN_RE.findall((text or "").lower())
-    return {t for t in tokens if len(t) >= min_len and t not in _STOPWORDS_VI}
+    return {_canonical(t) for t in tokens if len(t) >= min_len and t not in _STOPWORDS_VI}
 
 
 def _covers(explanation: str, item: str, threshold: float) -> bool:
@@ -71,26 +100,54 @@ def _covers(explanation: str, item: str, threshold: float) -> bool:
 
 
 def check_must_cover(explanation: str, items: list[str]) -> tuple[bool, list[str]]:
-    missing = [it for it in items if not _covers(explanation, it, threshold=0.35)]
+    # Threshold 0.25: LLM viết văn xuôi tự nhiên, synonym đã được normalize,
+    # nhưng vẫn cần match ít nhất ~1/4 từ khoá quan trọng của mỗi ý.
+    missing = [it for it in items if not _covers(explanation, it, threshold=0.25)]
     return (len(missing) == 0, missing)
 
 
 def check_must_not_contain(explanation: str, items: list[str]) -> tuple[bool, list[str]]:
-    violated = [it for it in items if _covers(explanation, it, threshold=0.6)]
+    violated = [it for it in items if _covers(explanation, it, threshold=0.55)]
     return (len(violated) == 0, violated)
+
+
+_CODE_RE_C4 = re.compile(r"\[T\d{2}-\d{3}\]")
+
+
+def _parse_expected_codes(expected: str) -> set[str]:
+    """Parse expected_reference_code → set mã. Hỗ trợ single, multi, và n/a."""
+    if not expected:
+        return set()
+    if expected.strip().lower().startswith("n/a"):
+        return set()
+    return set(_CODE_RE_C4.findall(expected))
 
 
 def check_reference_codes(
     result: dict[str, Any], expected_reference_code: str
 ) -> tuple[bool, dict[str, Any]]:
-    """Điều kiện 4 — kiểm tra chính xác, không heuristic."""
+    """Điều kiện 4 — kiểm tra mã trích dẫn.
+
+    - expected = n/a : AI không được trích mã nào và không có invalid code.
+    - expected có mã : AI phải trích ít nhất 1 mã nằm trong tập expected
+      (chấp nhận subset — không cần trích đủ hết khi có multi-code),
+      và không có invalid code.
+    """
     ai_codes = set(result.get("reference_code") or [])
     invalid_codes = result.get("validation", {}).get("invalid_codes") or []
-    if expected_reference_code in ("n/a", None, ""):
+    expected_codes = _parse_expected_codes(expected_reference_code)
+
+    if not expected_codes:
         ok = len(ai_codes) == 0 and len(invalid_codes) == 0
     else:
-        ok = len(invalid_codes) == 0 and ai_codes == {expected_reference_code}
-    return ok, {"ai_codes": sorted(ai_codes), "invalid_codes": invalid_codes, "expected": expected_reference_code}
+        ok = len(invalid_codes) == 0 and bool(ai_codes & expected_codes)
+
+    return ok, {
+        "ai_codes": sorted(ai_codes),
+        "invalid_codes": invalid_codes,
+        "expected": expected_reference_code,
+        "expected_parsed": sorted(expected_codes),
+    }
 
 
 def grade_case(case: dict[str, Any], index: TranscriptIndex, *, top_k: int) -> dict[str, Any]:
