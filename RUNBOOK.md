@@ -6,6 +6,146 @@
 
 ## Phần A — Chạy ứng dụng
 
+### 0. Hướng dẫn chi tiết: Chạy UI + Backend (bước từng bước)
+
+**UI (`codebase/index.html`) được Backend tự động phục vụ trên port 8000 — không cần config thêm.**
+
+#### Sơ đồ chạy
+```
+[Bạn]
+  ↓
+[Mở trình duyệt → http://127.0.0.1:8000/]
+  ↓
+[Backend (Python FastAPI) chạy trên port 8000]
+  ├─ Phục vụ UI (codebase/index.html)
+  ├─ Xử lý upload, ingest, generate, quiz
+  └─ Gọi OpenAI API (nếu có key)
+```
+
+#### Bước 1: Chuẩn bị (chạy 1 lần)
+
+```bash
+# Mở Terminal (hoặc Terminal mới nếu đã có)
+# Chạy lệnh dưới để vào thư mục backend
+cd /Users/jaimes/Working/AI20K-IV/K4-3A-E403-IMBACK/codebase/backend
+
+# Cài dependencies (chạy 1 lần)
+pip install -r requirements.txt
+```
+
+**Mục đích:** Cài `fastapi`, `uvicorn`, `pypdf`, `openai`, ... vào Python.
+
+**Thời gian:** ~1-2 phút lần đầu, lần sau không cần.
+
+#### Bước 2: Cấu hình API key (tuỳ chọn, để có chế độ LIVE)
+
+Nếu **chỉ muốn test mock (OFFLINE)** → Bỏ qua bước này.
+
+Nếu **muốn AI chấm bài thật (LIVE)** → Làm như sau:
+
+```bash
+# Mở file .env
+nano codebase/backend/.env
+# hoặc dùng editor yêu thích (VS Code, etc.)
+
+# Điền 1 dòng, ví dụ:
+# OPENAI_API_KEY=sk-proj-...
+# (thay "sk-proj-..." = key thật của bạn)
+
+# Lưu file (Ctrl+X, Y, Enter nếu dùng nano)
+```
+
+**Chú ý:** File `.env` bị gitignore, không commit được.
+
+#### Bước 3: Khởi động Backend
+
+**Mở Terminal 1 (cho backend server):**
+
+```bash
+cd /Users/jaimes/Working/AI20K-IV/K4-3A-E403-IMBACK/codebase/backend
+python3 -m uvicorn api:app --port 8000
+```
+
+**Chờ tới khi thấy dòng:**
+```
+INFO:     Application startup complete
+```
+
+**Màn hình sẽ in:**
+```
+INFO:     Uvicorn running on http://127.0.0.1:8000
+```
+
+**⚠️ QUAN TRỌNG:** Không đóng Terminal này. Để nó chạy liên tục.
+
+#### Bước 4: Kiểm tra Backend hoạt động (tuỳ chọn)
+
+**Mở Terminal 2 (khác):**
+
+```bash
+# Kiểm tra backend có chạy không
+curl http://127.0.0.1:8000/api/health
+```
+
+**Nếu thấy dòng này → Backend chạy bình thường:**
+```json
+{"status":"ok","mode":"live","provider":"openai","model":"gpt-4o-mini"}
+```
+
+hoặc (nếu không có key):
+```json
+{"status":"ok","mode":"offline","provider":null,"model":null}
+```
+
+#### Bước 5: Mở UI trên trình duyệt
+
+**Mở trình duyệt (Chrome, Firefox, Safari, ...)**
+
+**Gõ địa chỉ này vào URL bar:**
+```
+http://127.0.0.1:8000/
+```
+
+**Hoặc chỉ copy-paste:**
+```
+127.0.0.1:8000
+```
+
+**Chờ ~2 giây để trang tải.**
+
+#### Bước 6: Kiểm tra UI đã kết nối tới Backend
+
+**Tìm góc phải trên cùng của trang, sẽ thấy badge:**
+
+| Loại | Badge | Màu | Ý nghĩa |
+|---|---|---|---|
+| LIVE (có key) | `● LIVE — openai · gpt-4o-mini` | Xanh lá | AI chấm thật |
+| OFFLINE (không key) | `● OFFLINE (mock — chưa có API key)` | Cam | AI mock, không tốn tiền |
+| Lỗi kết nối | (không thấy badge, hoặc lỗi) | Đỏ | Backend chưa chạy |
+
+**Nếu không thấy badge:**
+- Kiểm tra Terminal 1 còn chạy không (Backend)
+- Nếu lỗi → Quay lại Bước 3
+
+#### Bước 7: Chạy luồng app 6 màn
+
+**Từ đây, UI đã sẵn sàng test.**
+
+| Số | Làm gì | Ghi chú |
+|---|---|---|
+| 1️⃣ | Upload file `data/slides/d1-slide-hackathon.pdf` | Bấm "Chọn file" hoặc kéo thả |
+| 2️⃣ | Bấm "Tiếp theo →" | File sẽ được upload lên `data/slides/` |
+| 3️⃣ | Nhập số **1** vào ô "Nhập số ngày học" | Số Day tương ứng với file slide |
+| 4️⃣ | Bấm "✨ Generate câu hỏi" | Backend sẽ: ingest PDF → trích transcript → generate quiz |
+| 5️⃣ | Chờ thông báo "🎉 Generate thành công!" | Có thể mất 10-30 giây tuỳ chế độ (LIVE/OFFLINE) |
+| 6️⃣ | Bấm "🚀 Bắt đầu làm quiz →" | Vào màn quiz |
+| 7️⃣ | Chọn câu hỏi, trả lời | MCQ: chọn A/B/C/D; Tự luận: gõ text |
+| 8️⃣ | Bấm "✨ Gửi cho AI chấm →" (cho tự luận) | Backend chấm + trả giải thích |
+| 9️⃣ | Xem kết quả + trích dẫn `[Txx-NNN]` | Click vào mã để xem nội dung đầy đủ |
+| 🔟 | Bấm "Xem kết quả 🏁" | Xem tổng kết điểm số |
+
+---
+
 ### 1. Yêu cầu môi trường
 
 | Thành phần | Yêu cầu |
