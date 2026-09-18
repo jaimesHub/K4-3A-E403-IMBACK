@@ -8,10 +8,10 @@ Theo yêu cầu CP5 (mục 4 của 4 mục bắt buộc): **mỗi thành viên v
 
 | # | Tên | MSSV | File cần tạo | Trạng thái |
 |---|---|---|---|---|
-| 1 | Dương Quốc Khánh (trưởng nhóm) | 03013 | `reflection/duong-quoc-khanh.md` | 🔲 chưa tạo |
-| 2 | Lưu Mạnh Hùng | 02942 | `reflection/luu-manh-hung.md` | 🔲 chưa tạo |
-| 3 | Nguyễn Công Minh | 02774 | `reflection/nguyen-cong-minh.md` | 🔲 chưa tạo |
-| 4 | Nguyên Ngọc Minh | 02653 | `reflection/nguyen-ngoc-minh.md` | 🔲 chưa tạo |
+| 1 | Dương Quốc Khánh (trưởng nhóm) | 03013 | `reflection/duong-quoc-khanh.md` | Tổng hợp thông tin, FE, BE |
+| 2 | Lưu Mạnh Hùng | 02942 | `reflection/luu-manh-hung.md` | Tổng hợp thông tin, BE |
+| 3 | Nguyễn Công Minh | 02774 | `reflection/nguyen-cong-minh.md` | Khảo sát, Làm FE |
+| 4 | Nguyên Ngọc Minh | 02653 | `reflection/nguyen-ngoc-minh.md` | Khảo sát, Làm FE, AI |
 
 Tên file gợi ý ở trên chỉ là quy ước đặt tên không dấu, thống nhất; từng người có thể đổi miễn giữ rõ ai là tác giả.
 
