@@ -1,4 +1,4 @@
-# AI Spec
+# Spec
 > *(spec.md — commit trước hạn chốt spec: 21:00 17/9, tại CP4 · quality bar chốt từ thời điểm nộp)*
 
 > Cấu trúc phủ đúng "SPEC 8 phần" của chương trình: Bằng chứng (§1-§2) · Lát cắt (§4) · Canvas (đính kèm CP1) · Augment/Automate (§4) · 4 đường đi của trải nghiệm (§6) · Kiểu lỗi (§5) · Kiểm thử (§7) · Phân công (§8). Hướng dẫn viết từng mục: `02-guide.md`.
@@ -16,28 +16,57 @@ Loại: [ ] Tối ưu tính năng có sẵn  [x] Tính năng mới
 - **Problem statement (KHÔNG chữ AI):** Sau mỗi buổi học, học viên không có cách nào nhanh để tự kiểm tra hiểu đúng/sai với đúng nội dung đã giảng — phải tự đọc lại toàn bộ slide/transcript hoặc đợi phản hồi từ giảng viên/trợ giảng, nên hiểu sai thường không được phát hiện ngay mà tích luỹ sang các buổi sau.
 - **Evidence (chuẩn A và/hoặc B — log đầy đủ trong repo):**
 
-  > ⚠️ **CHƯA LÀM XONG** — repo hiện KHÔNG có thư mục khảo sát/mining, không có log phỏng vấn, không có dữ liệu nguồn nào ngoài các file kỹ thuật (transcript, testset, code). Nhóm **không bịa** số liệu hay quote để lấp chỗ này. Cụ thể còn thiếu:
-  > - Số liệu mining / kết quả khảo sát (n = ?, % xác nhận): **chưa có** — cần khảo sát tối thiểu học viên khoá AI20K (bao nhiêu người từng "học xong quên liền/không biết mình hiểu đúng hay sai") hoặc mining hội thoại thật (vd `tutor_turns.csv` nếu có sẵn trong nguồn dữ liệu khoá học) để tính % xác nhận vấn đề có thật.
-  > - ≥5 quote/ví dụ nguyên văn + nguồn: **chưa có** — cần trích nguyên văn kèm nguồn (turn_id/thời điểm/người nói) từ dữ liệu thật của khoá học, không phải diễn giải lại.
-  > - Người phụ trách: cần phân công ở §8 (hiện chưa có ai nhận việc này — xem §8).
+  > **Dữ liệu thật từ khảo sát** — Khảo sát nội bộ `fix-gaps/1-Survey.csv` (n = 5 người trả lời, 16/09/2026 19:25:51–19:29:52, form ẩn danh):
+  > 
+  > | Câu hỏi | Kết quả |
+  > |---|---|
+  > | Gặp khó khăn với workflow "lý thuyết → ví dụ → bài tập"? | **5/5 Có** |
+  > | Khó ở phần lý thuyết? | 3/5 Có, 2 bỏ trống |
+  > | Khó ở phần thực hành/bài tập? | 4/5 Có, 1 Không |
+  > | Muốn thử làm bài trước khi được giảng lý thuyết? | **5/5 Có** — tách: 3/5 "Có, nhưng không chắc có hiệu quả hơn không" · 2/5 "Có, tôi nghĩ cách đó hiệu quả hơn" |
+  > | Công cụ đưa bài tập trước, làm sai thì giải thích sai chỗ — bạn có muốn dùng? | 5/5 Có — **câu hỏi dẫn dắt, bằng chứng YẾU** |
+  > | Điều gì giúp hiểu khái niệm khó nhất? | **3/5** "Tự làm bài tập, mắc lỗi rồi được giải thích" · 2/5 "Đọc / nghe giải thích lý thuyết kỹ" |
+  > 
+  > **Hai con số đáng tin nhất:** (1) **5/5 xác nhận gặp khó khăn với workflow hiện tại** — hỏi trực tiếp trải nghiệm đã xảy ra, bằng chứng mạnh; (2) **3/5 nói "tự làm bài tập, mắc lỗi rồi được giải thích" giúp hiểu khái niệm khó nhất** — hỗ trợ trực tiếp cơ chế sản phẩm, bằng chứng mạnh. **Một con số yếu:** 5/5 muốn dùng công cụ đến từ câu hỏi dẫn dắt, **KHÔNG dùng làm căn cứ chính**.
+  > 
+  > **Quote nguyên văn (4 có nội dung):**
+  > 
+  > | # | Quote | Nguồn (dấu thời gian) | Câu hỏi |
+  > |---|---|---|---|
+  > | 1 | `Nhiều thông tin` | 16/09/2026 19:25:51 | "điều gì khiến thấy khó khăn" |
+  > | 2 | `lí thuyết khó hiểu, dài dòng load chậm ` | 16/09/2026 19:28:45 | "điều gì khiến thấy khó khăn" |
+  > | 3 | `kiến thức quá nhiều và cảm giác dành cho người đã biết rồi :)))` | 16/09/2026 19:29:23 | "điều gì khiến thấy khó khăn" |
+  > | 4 | `Học nhiều thứ` | 16/09/2026 19:25:51 | "muốn thay đổi/cải thiện gì" |
+  > 
+  > ⚠️ **CHƯA LÀM XONG** — Khảo sát này là bước tiến đáng kể, nhưng vẫn còn thiếu:
+  > - **Dữ liệu nguồn không đủ:** mới có 4/5 quote nguyên văn (cần ≥5 theo chuẩn §1); form ẩn danh (chỉ có Dấu thời gian, không có tên/vai trò "người nói"); n=5 rất nhỏ, chưa đại diện toàn khoá — trình bày dạng phân số, **không quy phần trăm** để tránh gây ấn tượng sai lệch.
+  > - **Khớp problem statement:** khảo sát xác nhận "khó khăn với thứ tự dạy hiện tại" + "thích học qua làm-sai-được-sửa" khớp **mechanism**, nhưng chưa hỏi trực tiếp cốt lõi problem statement ("sau buổi học không có cách tự kiểm tra hiểu đúng/sai"). Giữ nguyên câu chữ problem statement, chỉ ghi chú lệch thời điểm.
+  > - **Chưa có mining hội thoại thật** từ dữ liệu khoá học.
+  > 
+  > **Ghi chú:** Khảo sát thực hiện 16/09/2026 (trước hạn chốt spec 21:00 17/9) — bằng chứng có sẵn từ trước, không phải bổ sung sau. Đối chiếu độ khớp đầy đủ (câu nào dẫn dắt, mức độ khớp problem statement) xem `fix-gaps/1-Survey-DANHGIA.md`.
 
 ## §2. Impact & quyết định chọn
 
 - **Bảng impact ≥3 ứng viên (bao nhiêu người · tần suất · tốn gì mỗi lần · khả thi):**
 
-  > ⚠️ **CHƯA LÀM XONG** — không có số liệu thật (bao nhiêu người, tần suất, chi phí mỗi lần) cho bất kỳ ứng viên nào; nhóm không điền số để tránh bịa. Dưới đây là danh sách ứng viên đã cân nhắc ở dạng **định tính** (suy ra từ hiểu biết về workflow khoá học, không phải đo đạc):
+  > Cập nhật nhánh `khanhdq/cp5`: đã lấp được **một phần** bằng số/ước lượng có nguồn thật, chỉ cho ứng viên đã chọn (tần suất + tốn-gì-mỗi-lần). Cột "bao nhiêu người" cho cả 3 ứng viên, và tần suất/chi phí cho 2 ứng viên bị loại **vẫn không có số** — không có nguồn dữ liệu nào từng đo hoặc hỏi riêng về 2 ứng viên đó, nhóm không suy đoán để lấp. Đánh giá đầy đủ vì sao lấp được/không lấp được từng ô: `fix-gaps/2-Impact-DANHGIA.md`.
 
-  | Ứng viên | Mô tả định tính | Số liệu (người/tần suất/chi phí) |
-  |---|---|---|
-  | Tự chấm quiz cuối buổi (đã chọn) | Lặp lại đều đặn theo lịch mỗi Day của khoá học; có đáp án đúng/sai rõ ràng để đo "đạt" khách quan | ⚠️ chưa có số |
-  | Tóm tắt tự động nội dung buổi học | Giúp ôn lại nhanh, nhưng không có đáp án đúng/sai rõ nên khó đo chất lượng bằng golden set | ⚠️ chưa có số |
-  | Hỏi-đáp tự do về nội dung khoá học (dạng trò chuyện) | Phạm vi rộng, khó giới hạn "lát cắt MỘT CÂU" cho hackathon, rủi ro trả lời ngoài nguồn cao hơn | ⚠️ chưa có số |
+  | Ứng viên | Mô tả định tính | Bao nhiêu người | Tần suất | Tốn gì mỗi lần | Khả thi |
+  |---|---|---|---|---|---|
+  | Tự chấm quiz cuối buổi (đã chọn) | Lặp lại đều đặn theo lịch mỗi Day của khoá học; có đáp án đúng/sai rõ ràng để đo "đạt" khách quan | ⚠️ chưa có số | **1 lượt quiz/buổi học** — suy ra từ thiết kế hệ thống: mỗi buổi hệ thống sinh đúng 1 bộ quiz (Day 1 = 10 câu, Day 2 = 10 câu, đếm được trong `output/quiz.db`); tần suất theo **thiết kế sản phẩm**, KHÔNG phải tần suất học viên thực sự dùng — chưa ai đo hành vi dùng thật | **Đo thật bằng bấm giờ (n=5 người, ngày 18/09/2026): trung bình 30,0 phút/buổi cho cách cũ (đọc lại transcript rồi tự đối chiếu đúng/sai)** — khoảng 20–40 phút. **Task đã đo:** đưa transcript một Day + 3 câu hỏi thật lấy từ `output/quiz.db`, người thử tự tìm căn cứ trong transcript để tự kiểm tra đúng/sai, không dùng sản phẩm. **Bằng chứng:** `fix-gaps/3-BANG-DO-THOI-GIAN.md`. **Tách theo nhóm:** Đã học AI20K (n=2) trung bình 30,0 phút; chưa học AI20K (n=3) trung bình 30,0 phút — cả hai nhóm gần như giống nhau về thời gian ở cỡ mẫu này, không có chênh lệch rõ về thời gian. Khác biệt duy nhất ở độ chính xác tự đánh giá (đã học 5/6 câu, chưa học 6/9 câu), nhưng với n=2 và n=3 thì chênh lệch này quá nhỏ để kết luận gì — không được diễn giải thành "người đã học làm tốt hơn". **Hạn chế:** n=5 rất nhỏ; mẫu trộn người đã học/chưa học nên không đại diện hoàn toàn cho riêng nhóm nào; số đo tự báo, không quan sát chuẩn hoá trong lab. **Đối chiếu:** ước lượng cũ từ độ dài văn bản là 18–34 phút (Day 1 3.501 từ ≈18–23 phút, Day 2 5.038 từ ≈25–34 phút — giả định 150–200 từ/phút) — số đo thật 30,0 phút nằm trong khoảng đó. | Cao — có đáp án đúng/sai rõ ràng, đo được bằng golden set/`verdict_label` enum 6 nhãn (định tính, không phải số đo) |
+  | Tóm tắt tự động nội dung buổi học *(loại)* | Giúp ôn lại nhanh, nhưng không có đáp án đúng/sai rõ nên khó đo chất lượng bằng golden set | ⚠️ chưa có số | ⚠️ chưa có số — chưa có bản dựng nào của ứng viên này để tần suất/chi phí có cơ sở suy ra | ⚠️ chưa có số | Thấp — không thiết lập được tiêu chí đạt/sai để xây golden set theo yêu cầu R4 (định tính, không phải số đo) |
+  | Hỏi-đáp tự do về nội dung khoá học (dạng trò chuyện) *(loại)* | Phạm vi rộng, khó giới hạn "lát cắt MỘT CÂU" cho hackathon, rủi ro trả lời ngoài nguồn cao hơn | ⚠️ chưa có số | ⚠️ chưa có số — chưa có bản dựng nào của ứng viên này để tần suất/chi phí có cơ sở suy ra | ⚠️ chưa có số | Thấp — phạm vi quá rộng, khó kiểm soát 4 lớp chỗ khó trong lát cắt MỘT CÂU (định tính, không phải số đo) |
+
+  > ⚠️ **CHƯA LÀM XONG (vẫn còn thiếu, khai thẳng):** cột "bao nhiêu người" trống ở cả 3 dòng — khảo sát `fix-gaps/1-Survey.csv` (n=5) không hỏi riêng "bao nhiêu người gặp vấn đề mà từng ứng viên giải quyết", và không có dữ liệu người dùng thật ngoài nhóm (validation chưa có). Hai dòng "loại" trống hoàn toàn ở cột tần suất/chi phí — **đây là bất đối xứng có thật**: dữ liệu hiện có chỉ nói về ứng viên đã chọn, gần như không nói gì về 2 ứng viên bị loại, vì chúng bị loại bằng lý lẽ định tính/kỹ thuật ngay từ đầu (khớp/không khớp yêu cầu R4 và ràng buộc lát cắt MỘT CÂU ở §4), không bằng số đo. Nhóm tự nhận đây là điểm yếu, không phải số bị giấu — không có số nào từng được đo cho 2 ứng viên này để mà giấu. Phương án lấp nốt (khảo sát vòng 2 hỏi tần suất/chi phí riêng cho từng ứng viên; bấm giờ thật người đọc lại transcript thay ước lượng bằng số đo hành vi thật): xem `fix-gaps/2-Impact-DANHGIA.md` mục 4.
 
 - **Ứng viên ĐÃ LOẠI + vì sao:**
   - Tóm tắt tự động: loại vì không thiết lập được tiêu chí "đạt/sai" rõ ràng để xây golden set và quality bar theo yêu cầu R4.
   - Hỏi-đáp tự do: loại vì phạm vi quá rộng so với thời lượng hackathon, khó kiểm soát 4 lớp chỗ khó (đặc biệt "ngoài phạm vi") trong một lát cắt MỘT CÂU.
 - **Ứng viên CHỌN + vì sao (bằng số):**
-  > ⚠️ **CHƯA LÀM XONG** — lý do định tính đã có (đáp án đúng/sai rõ ràng, đo được bằng golden set/verdict_label enum 6 nhãn, tái sử dụng được cho mọi Day của khoá học), nhưng "vì sao bằng số" đòi số liệu impact ở trên — chưa điền được vì chưa có khảo sát/mining thật.
+
+  > Lý do định tính: đáp án đúng/sai rõ ràng, đo được bằng golden set/`verdict_label` enum 6 nhãn, tái sử dụng được cho mọi Day của khoá học. Bằng số/ước lượng có nguồn (mới thêm): mỗi buổi học tốn khoảng **18–34 phút** nếu tự kiểm tra hiểu đúng/sai theo cách cũ (đọc lại toàn bộ transcript — ước lượng từ độ dài tài liệu thật, xem bảng trên), so với việc trả lời **10 câu quiz/buổi** đã có sẵn trong hệ thống (`output/quiz.db`, Day 1 + Day 2). Đây là ước lượng cho "chi phí cách cũ", KHÔNG phải số đo cho thấy sản phẩm nhanh hơn bao nhiêu — chưa ai đo thời gian thật hoàn thành quiz để so sánh trực tiếp hai cách.
+  >
+  > ⚠️ **CHƯA LÀM XONG:** không có số so sánh nào cho 2 ứng viên bị loại (không có gì để đối chứng "chọn cái này thay vì cái kia" bằng số) — quyết định chọn vẫn dựa chủ yếu vào lý lẽ định tính ở trên, số liệu mới chỉ làm rõ thêm chi phí của cách làm cũ mà ứng viên đã chọn thay thế, không chứng minh được ứng viên đã chọn "tốt hơn" 2 ứng viên kia bằng số.
 
 ## §3. Giải pháp tương tự đã nghiên cứu
 
@@ -135,20 +164,35 @@ Kịch bản (≥2 mỗi lớp, tổng 10 — có ghi rõ kịch bản nào đã
 
 ## §8. Phân công & kế hoạch
 
-- **Phân công có tên** (danh sách thành viên thật từ `TEAMMATES.md` — vai trò cụ thể cho từng người ở từng hạng mục spec/evidence/prompt/code/demo hiện **để trống**, cần nhóm họp và điền trước khi tiếp tục CP5):
+- **Phân công có tên** (danh sách thành viên thật từ `TEAMMATES.md` — vai trò cụ thể cho từng người ở từng hạng mục spec/evidence/prompt/code/demo):
 
   | Thành viên | MSSV | Github | Vai trò (spec/evidence/prompt/code/demo) |
   |---|---|---|---|
-  | Dương Quốc Khánh (trưởng nhóm) | 03013 | jaimesHub | ⚠️ chưa điền |
-  | Lưu Mạnh Hùng | 02942 | Kang8M | ⚠️ chưa điền |
-  | Nguyễn Công Minh | 02774 | congminh1705 | ⚠️ chưa điền |
-  | Nguyên Ngọc Minh | 02653 | NgNMinh | ⚠️ chưa điền |
+  | Dương Quốc Khánh (trưởng nhóm) | 03013 | jaimesHub | Tổng hợp thông tin, FE, BE |
+  | Lưu Mạnh Hùng | 02942 | Kang8M | Tổng hợp thông tin, BE |
+  | Nguyễn Công Minh | 02774 | congminh1705 | Khảo sát, Làm FE |
+  | Nguyên Ngọc Minh | 02653 | NgNMinh | Khảo sát, Làm FE, AI |
 
-  > ⚠️ **CHƯA LÀM XONG** — vai trò từng người cũng đang để trống trong `TEAMMATES.md`. Cần cả nhóm họp và điền cả hai file trước CP5.
+  > **Ghi chú:** Vai trò đã được nhóm chốt (2026-09-18) và đồng bộ ở cả `TEAMMATES.md` lẫn `spec.md` §8, nguồn gốc từ phân công nhóm tự ghi trong `reflection/README.md`.
 
-- **Willing users (≥2 tên) + kế hoạch vòng validation** *(bonus, nếu làm)*:
+- **Willing users + vòng validation (R6, CP5 — 8 điểm)** — **đã chạy xong vòng dùng thử thật, 5/5 người**:
 
-  > ⚠️ **CHƯA LÀM XONG** — repo chưa có danh sách người dùng ngoài nhóm sẵn sàng dùng thử (không có thư mục `validation/`, không có `reflection/`). Đây là việc của **R6 (8 điểm) làm ở CP5**, yêu cầu **5 người ngoài nhóm** dùng thử thật, trong đó **2 người phải đã được khai từ CP1**. Nhóm cần: (1) xác nhận có khai willing users từ CP1 hay chưa, (2) nếu chưa, tìm và chốt ≥2 người ngoài nhóm sẵn sàng dùng thử trước khi vào CP5.
+  > **Danh sách 5 người dùng thử thật (Phần B) — bảng nhật ký + quote nguyên văn đầy đủ ở `validation/README.md`:**
+  >
+  > | # | Tên | Vai/quan hệ | Đã khai từ CP1 (willing user) |
+  > |---|---|---|---|
+  > | 1 | Nguyễn Phương Nam | Học viên cùng khoá K4 | **Có** |
+  > | 2 | Lại Bá Quân | Học viên cùng khoá K4 | **Có** |
+  > | 3 | Trần Minh Tuấn | Lập trình viên Backend (ngoài nhóm) | Không — tuyển thêm cho R6 |
+  > | 4 | Lê Hoàng Anh | Sinh viên CNTT năm cuối | Không — tuyển thêm cho R6 |
+  > | 5 | Phạm Quỳnh Nga | Product Owner tập sự | Không — tuyển thêm cho R6 |
+  >
+  > **Tiến độ điều kiện R6:** Yêu cầu **5 người ngoài nhóm** dùng thử thật, trong đó **≥2 người phải đã khai từ CP1** (theo handbook trang 09). **Cả 2 điều kiện đã thoả:** đủ 5/5 người ngoài nhóm, và 2/2 người trong đó (Nguyễn Phương Nam, Lại Bá Quân) có nguồn gốc willing user từ CP1 — **điều kiện R6 coi như đã đủ**, khác với trạng thái trước đây ("mới chốt, chưa ai dùng thử").
+  >
+  > ⚠️ **CHƯA LÀM XONG** — phần vẫn còn thiếu dù R6 đã đủ điều kiện:
+  > - **Thay đổi từ feedback: đã QUYẾT ĐỊNH, CHƯA THỰC HIỆN.** Từ 5 feedback thật, nhóm đã chọn 4 thay đổi ưu tiên (Case #2, #3, #4, #5 — xem `validation/README.md`), nhưng **chưa có thay đổi nào được thực hiện trong code**. Cụ thể đã kiểm tra bằng `git status`: `codebase/backend/vlearn/prompts/grade_text.md` (thay đổi trỏ Case #4) **chưa hề bị sửa**.
+  >
+  > **Nguồn đầy đủ:** bảng nhật ký + quote nguyên văn của cả 5 người ở `validation/README.md`.
 
 - **Multi-prototype (nếu làm):** Không làm multi-prototype — chỉ có một phương án lát cắt duy nhất (quiz tự luận + MCQ chấm theo transcript), không có phương án thứ hai để so sánh trục khác biệt.
 
@@ -165,3 +209,10 @@ Kịch bản (≥2 mỗi lớp, tổng 10 — có ghi rõ kịch bản nào đã
 | 2026-09-17 16:42–16:47 (`01dee92`, `9041196`, `e639a41`) | Thêm `RUNBOOK.md`, sửa 2 lệnh nguy hiểm trong khối tái lập nhanh | Đảm bảo người khác trong nhóm tái lập được pipeline an toàn |
 | 2026-09-17 19:59–20:01 (`3d35c42`, `b43a558`) | Thêm `eval/EVAL_REPORT_v1.md`, sửa bằng chứng bịa phát hiện trong báo cáo | Ghi lại phân tích 3 case trượt CP3 trung thực, sửa lỗi bằng chứng sai trước khi chốt |
 | 2026-09-17 (nhánh `khanhdq/cp4`) | Viết lại `spec.md`: bỏ khối bao ```markdown``` khiến file render sai, điền §1–§9, tự khai rõ phần Evidence/Impact/Willing users/Phân công chưa làm xong | Chốt mốc CP4 theo handbook trang 06 — chốt chuẩn "đạt" trước khi biết kết quả, khai thiếu thay vì giấu |
+| 2026-09-18 (nhánh `khanhdq/cp5`) | Cập nhật §1 Evidence bằng dữ liệu khảo sát thật `fix-gaps/1-Survey.csv` (n=5, thu 16/09/2026) — thay khối khai "chưa có dữ liệu nào" vốn đã không còn đúng; giữ nguyên khối khai phần vẫn còn thiếu (4/5 quote, form ẩn danh, n nhỏ) | Khảo sát thu trước hạn chốt spec nhưng chưa được đưa vào repo; §7 quality bar không đổi. |
+| 2026-09-18 (nhánh `khanhdq/cp5`) | Cập nhật §2 bảng impact: điền số/ước lượng có nguồn cho 2/12 ô (tần suất + tốn-gì-mỗi-lần của ứng viên đã chọn), dựa trên số câu hỏi thật trong `output/quiz.db` (Day 1=10, Day 2=10) và độ dài thật của `output/transcript/transcript-01-clean.md` (3.501 từ/37 đoạn ≈ 18–23 phút) và `transcript-02-clean.md` (5.038 từ/33 đoạn ≈ 25–34 phút); giữ `⚠️ chưa có số` ở 9/12 ô còn lại (cột "bao nhiêu người" cả 3 dòng; tần suất + chi phí của 2 ứng viên loại) vì không có nguồn dữ liệu nào từng đo hoặc hỏi riêng về 2 ứng viên đó | Đánh giá gap đầy đủ ở `fix-gaps/2-Impact-DANHGIA.md`; ghi rõ số 18–34 phút là ước lượng từ độ dài tài liệu, KHÔNG phải đo hành vi thật; §7 quality bar không đổi, §1 không đổi. |
+| 2026-09-18 (nhánh `khanhdq/cp5`) | Cập nhật §8 Willing users: chốt 2 người thật (Nguyễn Phương Nam, Lại Bá Quân — học viên cùng khoá K4, đã khai từ CP1), thay khối khai 'chưa có ai' vốn đã không còn đúng; vẫn giữ khối khai còn thiếu 3/5 người dùng thử và chưa chạy vòng dùng thử | Điều kiện R6 'ít nhất 2 người khai từ CP1' đã thoả; §7 quality bar không đổi. |
+| 2026-09-18 (nhánh `khanhdq/cp5`) | Thay ước lượng 18–34 phút/buổi ở §2 (suy từ độ dài văn bản) bằng số đo bấm giờ thật: n=5 người, trung bình 30,0 phút/buổi, khoảng 20–40 phút (đã học AI20K n=2: 30,0 phút; chưa học n=3: 30,0 phút) — nguồn `fix-gaps/3-BANG-DO-THOI-GIAN.md` | Phần A của buổi thu dữ liệu 18/09/2026 đã chạy xong; §7 quality bar không đổi. |
+| 2026-09-18 (nhánh `khanhdq/cp5`) — ⚠️ ngày cần người chạy buổi xác nhận lại (bảng nhật ký ghi 16–18/09/2026, xem `validation/README.md`) | Chạy xong vòng dùng thử sản phẩm thật (Phần B), R6, với **5/5 người ngoài nhóm** (2/2 người từ CP1: Nguyễn Phương Nam, Lại Bá Quân), thu được **5 quote nguyên văn** — bảng nhật ký đầy đủ ở `validation/README.md`. Từ feedback này, nhóm **đã quyết định** 4 thay đổi ưu tiên: (1) thêm progress bar/spinner khi generate quiz — Case #2 (Lại Bá Quân); (2) làm rõ/cụ thể hơn câu trả lời AI — Case #3 (Trần Minh Tuấn); (3) viết lại prompt chấm tự luận `codebase/backend/vlearn/prompts/grade_text.md` để giảm ngôn ngữ hàn lâm, trả kết quả dạng gạch đầu dòng — Case #4 (Lê Hoàng Anh); (4) ghim đề bài/tiêu chí khi làm tự luận (split-view) — Case #5 (Phạm Quỳnh Nga). **CẢ 4 THAY ĐỔI NÀY ĐỀU CHƯA ĐƯỢC THỰC HIỆN TRONG CODE** — đã kiểm tra bằng `git status`, `grade_text.md` chưa hề bị sửa; đây là quyết định đã chốt, không phải đã làm xong. | Điều kiện R6 của CP5 (≥5 người ngoài nhóm dùng thử, ≥2 người từ CP1, ≥1 thay đổi thật từ feedback) — phần "chốt thay đổi" đã đủ, phần "thực hiện thay đổi" còn để trước demo; §7 quality bar không đổi, §1/§2 không đổi. |
+| 2026-09-18 (nhánh `khanhdq/cp5`) | Điền bảng phân công vai trò 4 thành viên vào `TEAMMATES.md` và `spec.md` §8 (trước đó cả hai đều để trống), đồng bộ theo phân công nhóm tự chốt | Đáp ứng mục tự kiểm trước CP6 (handbook trang 12: mỗi người nắm được phần có tên mình trong bảng phân công) và khối R7; §7 quality bar không đổi. |
+| 2026-09-18 (nhánh `khanhdq/cp5`) | Cập nhật lại bảng Phần A sau khi nhóm sửa danh sách người thử và cột "đã học AI20K"; tính lại thống kê: tổng vẫn n=5 trung bình 30,0 phút khoảng 20–40, nhưng tách nhóm đổi thành đã học (n=2) 30,0 phút và chưa học (n=3) 30,0 phút — bỏ nhận định "chênh lệch rõ" (25,0 vs 37,5) vì không còn đúng; cập nhật ngôn ngữ ở `spec.md` §2, `CP5_SLIDES_DRAFT.md` slide 2 để phản ánh đúng dữ liệu mới | Dữ liệu nguồn thay đổi nên mọi số ăn theo phải tính lại; §7 quality bar không đổi. |

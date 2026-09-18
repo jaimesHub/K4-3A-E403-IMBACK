@@ -3,20 +3,20 @@ Nhóm: I'M BACK
 ---
 
 - Dương Quốc Khánh - 03013 (Trưởng nhóm)
-  - Vai trò: 
+  - Vai trò: Tổng hợp thông tin, FE, BE
   - Github username: jaimesHub
   - Thông tin liên hệ: duongquockhanh230596@gmail.com
 
 - Lưu Mạnh Hùng - 02942
-  - Vai trò:
+  - Vai trò: Tổng hợp thông tin, BE
   - Github username: Kang8M
 
 - Nguyễn Công Minh - 02774
-  - Vai trò:
+  - Vai trò: Khảo sát, Làm FE
   - Github username: congminh1705
 
 - Nguyên Ngọc Minh - 02653
-  - Vai trò:
+  - Vai trò: Khảo sát, Làm FE, AI
   - Github username: NgNMinh
 
 ---
