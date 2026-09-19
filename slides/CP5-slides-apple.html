@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CP5 — I'M BACK</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    @page { size: A4 landscape; margin: 0; }
+
+    :root {
+        --bg: #000;
+        --bg2: #0a0a0c;
+        --fg: #f5f5f7;
+        --dim: #86868b;
+        --dim2: #6e6e73;
+        --accent: #2997ff;
+        --warn: #ff9f0a;
+        --rule: #1d1d1f;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        background: #000;
+        color: var(--fg);
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .slide {
+        page-break-after: always;
+        break-after: page;
+        width: 297mm;
+        height: 210mm;
+        padding: 54px 72px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        background: radial-gradient(circle at 15% 0%, var(--bg2) 0%, #000 55%);
+        overflow: hidden;
+    }
+    .slide:last-child { page-break-after: auto; break-after: auto; }
+
+    /* ---------- header ---------- */
+    .kicker {
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+    .title {
+        font-size: 40px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--fg);
+        margin-bottom: 6px;
+    }
+    .subtitle {
+        font-size: 17px;
+        color: var(--dim);
+        max-width: 780px;
+        line-height: 1.5;
+    }
+    .head-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 34px;
+    }
+    .duration {
+        font-size: 14px;
+        color: var(--dim2);
+        white-space: nowrap;
+        margin-top: 4px;
+    }
+
+    .body { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+
+    /* ---------- giant stat ---------- */
+    .stat-row { display: flex; gap: 70px; align-items: flex-end; }
+    .stat { display: flex; flex-direction: column; }
+    .stat-num {
+        font-size: 168px;
+        font-weight: 700;
+        letter-spacing: -0.04em;
+        line-height: 0.9;
+        background: linear-gradient(180deg, #ffffff 0%, #b6b6bb 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    .stat-num.accent {
+        background: linear-gradient(180deg, #5fb0ff 0%, var(--accent) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+    }
+    .stat-num.small { font-size: 96px; }
+    .stat-label {
+        font-size: 18px;
+        color: var(--dim);
+        max-width: 340px;
+        line-height: 1.45;
+        margin-top: 10px;
+    }
+    .stat-label b { color: var(--fg); font-weight: 600; }
+
+    /* ---------- statements / list ---------- */
+    .statement {
+        font-size: 44px;
+        font-weight: 700;
+        letter-spacing: -0.015em;
+        line-height: 1.25;
+        max-width: 980px;
+        color: var(--fg);
+    }
+    .statement .accent { color: var(--accent); }
+
+    .line { font-size: 20px; color: var(--dim); line-height: 1.6; max-width: 900px; }
+    .line b, .line strong { color: var(--fg); font-weight: 600; }
+    .line.gap-top { margin-top: 22px; }
+
+    .flow {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin: 30px 0 8px 0;
+        flex-wrap: wrap;
+    }
+    .flow-step {
+        font-size: 22px;
+        font-weight: 600;
+        color: var(--fg);
+        background: #141416;
+        border: 1px solid var(--rule);
+        border-radius: 14px;
+        padding: 14px 22px;
+    }
+    .flow-arrow { color: var(--dim2); font-size: 22px; }
+
+    .badges { display: flex; gap: 14px; margin-top: 26px; flex-wrap: wrap; }
+    .badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--fg);
+        background: #141416;
+        border: 1px solid var(--rule);
+        border-radius: 999px;
+        padding: 9px 18px;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #30d158; box-shadow: 0 0 10px #30d158; flex-shrink: 0; }
+    .badge.warn .dot { background: var(--warn); box-shadow: 0 0 10px var(--warn); }
+
+    .cases { margin-top: 22px; display: flex; flex-direction: column; gap: 10px; }
+    .case-row { font-size: 18px; color: var(--dim); line-height: 1.5; }
+    .case-row b { color: var(--fg); }
+
+    /* ---------- quotes ---------- */
+    .quote-grid { display: flex; gap: 40px; flex: 1; align-items: center; }
+    .quote-card { flex: 1; }
+    .quote-mark { font-size: 64px; color: var(--accent); font-weight: 700; line-height: 0.5; margin-bottom: 6px; display: block; }
+    .quote-text {
+        font-size: 26px;
+        font-weight: 500;
+        font-style: italic;
+        line-height: 1.4;
+        color: var(--fg);
+        margin-bottom: 18px;
+    }
+    .quote-who { font-size: 15px; color: var(--dim); }
+    .quote-who b { color: var(--fg); font-weight: 600; }
+
+    /* ---------- numbered priorities ---------- */
+    .priority-list { display: flex; flex-direction: column; gap: 22px; margin-top: 4px; }
+    .priority { display: flex; gap: 24px; align-items: flex-start; }
+    .priority-idx { font-size: 34px; font-weight: 700; color: var(--accent); width: 60px; flex-shrink: 0; letter-spacing: -0.02em; }
+    .priority-body { font-size: 19px; color: var(--dim); line-height: 1.5; max-width: 880px; }
+    .priority-body b { color: var(--fg); font-weight: 600; }
+
+    .closing {
+        margin-top: 30px;
+        font-size: 24px;
+        font-weight: 600;
+        font-style: italic;
+        color: var(--fg);
+        max-width: 950px;
+        line-height: 1.5;
+        border-left: 3px solid var(--accent);
+        padding-left: 22px;
+    }
+    .closing .dim { color: var(--dim); font-weight: 400; }
+
+    /* ---------- transparency / missing-data tag ---------- */
+    .gap {
+        margin-top: auto;
+        display: inline-flex;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--dim2);
+        border-top: 1px solid var(--rule);
+        padding-top: 12px;
+        max-width: 900px;
+        line-height: 1.5;
+    }
+    .gap .gap-tag {
+        flex-shrink: 0;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--warn);
+        border: 1px solid #4d3418;
+        background: #241a0a;
+        border-radius: 5px;
+        padding: 2px 7px;
+        text-transform: uppercase;
+    }
+
+    /* ---------- footer ---------- */
+    .footer {
+        position: absolute;
+        bottom: 26px;
+        left: 72px;
+        right: 72px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: var(--dim2);
+    }
+    .footer .n { font-weight: 700; color: var(--dim); }
+
+    /* ---------- workflow diagram (slide 4) ---------- */
+    .wf-stats { display: flex; gap: 12px; margin-bottom: 26px; flex-wrap: wrap; }
+    .wf-stat {
+        display: flex; flex-direction: column;
+        background: #141416; border: 1px solid var(--rule); border-radius: 12px;
+        padding: 10px 18px; min-width: 110px;
+    }
+    .wf-stat b { font-size: 28px; font-weight: 700; color: var(--fg); line-height: 1; letter-spacing: -0.02em; }
+    .wf-stat span { font-size: 11.5px; color: var(--dim); margin-top: 6px; }
+
+    .wf-row { display: flex; align-items: flex-start; gap: 10px; }
+    .wf-card {
+        background: #101012; border: 1px solid var(--rule); border-radius: 16px;
+        padding: 14px 15px; width: 210px; flex-shrink: 0;
+        display: flex; flex-direction: column; gap: 7px;
+    }
+    .wf-card-title { font-size: 13.5px; font-weight: 700; color: var(--fg); margin-bottom: 1px; }
+    .wf-step { font-size: 12px; color: var(--dim); line-height: 1.4; }
+    .wf-step b { color: var(--fg); font-weight: 600; }
+    .wf-step.soft { color: var(--dim2); font-size: 11px; margin-top: -3px; }
+    .wf-tag {
+        display: inline-flex; align-items: center; font-size: 9px; font-weight: 700;
+        letter-spacing: 0.05em; border-radius: 5px; padding: 2px 6px; margin-left: 4px;
+        vertical-align: middle;
+    }
+    .wf-tag.ai { color: var(--accent); background: rgba(41,151,255,0.12); border: 1px solid rgba(41,151,255,0.35); }
+    .wf-tag.rule { color: var(--warn); background: rgba(255,159,10,0.12); border: 1px solid rgba(255,159,10,0.35); }
+
+    .wf-arrow { color: var(--dim2); font-size: 20px; align-self: center; flex-shrink: 0; margin-top: 72px; }
+
+    .wf-branch { display: flex; gap: 7px; margin-top: 1px; }
+    .wf-mini { flex: 1; border-radius: 10px; padding: 7px 9px; font-size: 10.5px; line-height: 1.35; }
+    .wf-mini.rule { background: rgba(255,159,10,0.08); border: 1px solid rgba(255,159,10,0.3); color: var(--dim); }
+    .wf-mini.ai { background: rgba(41,151,255,0.08); border: 1px solid rgba(41,151,255,0.3); color: var(--dim); }
+    .wf-mini-title { font-weight: 700; color: var(--fg); margin-bottom: 3px; font-size: 11px; }
+
+    .wf-exit { display: flex; gap: 7px; margin-top: 1px; }
+    .wf-pill { flex: 1; border-radius: 10px; padding: 7px 9px; font-size: 10.5px; line-height: 1.35; border: 1px dashed var(--rule); color: var(--dim); }
+    .wf-pill.loop { border-style: solid; border-color: rgba(41,151,255,0.35); background: rgba(41,151,255,0.08); color: var(--fg); }
+
+    .wf-loop-note { margin-top: 18px; font-size: 12.5px; color: var(--dim2); }
+    .wf-loop-note b { color: var(--dim); font-weight: 600; }
+
+    /* ============================================================
+       PRESENTATION MODE — Apple/Keynote-style slide transitions
+       (screen only; print keeps the original static A4 stack so
+       PDF export is unaffected)
+       ============================================================ */
+    @media screen {
+        html, body { height: 100%; overflow: hidden; background: #000; }
+        .deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+
+        .slide {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1122px;
+            height: 794px;
+            transform-origin: center center;
+            transform: translate(-50%, -50%) scale(var(--fit-scale, 1)) scale(0.97);
+            opacity: 0;
+            filter: blur(6px);
+            transition: opacity 0.7s cubic-bezier(.65,0,.35,1),
+                        transform 0.7s cubic-bezier(.65,0,.35,1),
+                        filter 0.7s cubic-bezier(.65,0,.35,1);
+            pointer-events: none;
+            box-shadow: 0 40px 120px rgba(0,0,0,0.65);
+        }
+        .slide.active {
+            opacity: 1;
+            filter: blur(0);
+            transform: translate(-50%, -50%) scale(var(--fit-scale, 1)) scale(1);
+            pointer-events: auto;
+            z-index: 2;
+        }
+        .slide.prev {
+            opacity: 0;
+            filter: blur(6px);
+            transform: translate(-50%, -50%) scale(var(--fit-scale, 1)) scale(1.03);
+        }
+
+        .deck-dots {
+            position: fixed;
+            left: 50%;
+            bottom: 22px;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        .deck-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: #3a3a3d;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .deck-dot.active { background: var(--accent); transform: scale(1.35); }
+
+        .deck-hint {
+            position: fixed;
+            right: 26px;
+            bottom: 24px;
+            font-size: 12px;
+            color: var(--dim2);
+            z-index: 10;
+            opacity: 1;
+            transition: opacity 1s ease;
+            pointer-events: none;
+        }
+        .deck-hint.hidden { opacity: 0; }
+
+        .deck-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.06);
+            color: var(--dim);
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s, background 0.3s;
+        }
+        .deck:hover .deck-arrow { opacity: 1; }
+        .deck-arrow:hover { background: rgba(255,255,255,0.14); color: var(--fg); }
+        .deck-arrow.prev-btn { left: 22px; }
+        .deck-arrow.next-btn { right: 22px; }
+    }
+
+    @media print {
+        .deck-dots, .deck-hint, .deck-arrow { display: none !important; }
+        .slide, .slide.active, .slide.prev {
+            position: static !important;
+            transform: none !important;
+            opacity: 1 !important;
+            filter: none !important;
+            box-shadow: none !important;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+<!-- SLIDE 1 — User & Job -->
+<section class="slide">
+    <div class="head-row">
+        <div>
+            <div class="kicker">01 · Vấn đề</div>
+            <div class="title">Học xong một buổi.<br>Nhưng biết mình hổng chỗ nào?</div>
+        </div>
+        <div class="duration">45"</div>
+    </div>
+
+    <div class="body">
+        <div class="stat-row">
+            <div class="stat">
+                <div class="stat-num accent">5/5</div>
+                <div class="stat-label"><b>người</b> xác nhận gặp khó khăn với workflow "lý thuyết → ví dụ → bài tập" (n=5, khảo sát 16/09/2026)</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num small">3/5</div>
+                <div class="stat-label"><b>người</b> chỉ hiểu khái niệm khó nhất sau khi tự làm bài, mắc lỗi, rồi được giải thích</div>
+            </div>
+        </div>
+        <div class="line gap-top" style="font-style: italic; font-size: 19px; margin-top: 34px;">
+            "kiến thức quá nhiều và cảm giác dành cho người đã biết rồi :)))"<br>
+            "lí thuyết khó hiểu, dài dòng load chậm"
+        </div>
+    </div>
+
+    <div class="gap">
+        <span class="gap-tag">Còn thiếu</span>
+        <span>≥1 quote nguyên văn thêm + khảo sát quy mô lớn hơn n=5 để đại diện toàn khoá</span>
+    </div>
+
+    <div class="footer">
+        <span class="n">1/7</span>
+        <span>I'M BACK · Lớp 3A · Phòng E403</span>
+    </div>
+</section>
+
+<!-- SLIDE 2 — Vì sao chọn tính năng này -->
+<section class="slide">
+    <div class="head-row">
+        <div>
+            <div class="kicker">02 · Vì sao tính năng này</div>
+            <div class="title">30 phút, dù đã học hay chưa.</div>
+        </div>
+        <div class="duration">45"</div>
+    </div>
+
+    <div class="body">
+        <div class="stat-row">
+            <div class="stat">
+                <div class="stat-num accent">30,0<span style="font-size:56px;">′</span></div>
+                <div class="stat-label">thời gian trung bình tự chấm quiz cuối buổi — <b>đã học AI20K (n=2)</b> và <b>chưa học (n=3)</b> đều như nhau (n=5, bấm giờ, 18/09/2026)</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num small">10</div>
+                <div class="stat-label">câu quiz / buổi, hệ thống đã có sẵn — không cần soạn thêm</div>
+            </div>
+        </div>
+
+        <div class="line gap-top" style="margin-top: 36px;">
+            <b>2 ứng viên bị loại bằng lý lẽ, không bằng số:</b> tóm tắt tự động (không có đáp án đúng/sai rõ → khó xây golden set) · hỏi-đáp tự do (phạm vi quá rộng, rủi ro trả lời ngoài nguồn cao)
+        </div>
+    </div>
+
+    <div class="gap">
+        <span class="gap-tag">Còn thiếu</span>
+        <span>cột "bao nhiêu người" trong bảng 2 ứng viên bị loại</span>
+    </div>
+
+    <div class="footer">
+        <span class="n">2/7</span>
+        <span>I'M BACK · Lớp 3A · Phòng E403</span>
+    </div>
+</section>
+
+<!-- SLIDE 3 — Giải pháp & demo live -->
+<section class="slide">
+    <div class="head-row">
+        <div>
+            <div class="kicker">03 · Giải pháp</div>
+            <div class="title">AI gợi ý. Bạn đối chiếu.</div>
+        </div>
+        <div class="duration">2'</div>
+    </div>
+
+    <div class="body">
+        <div class="statement">Augment, <span class="accent">không automate.</span></div>
+        <div class="line gap-top">Chi phí bịa trích dẫn cao hơn lợi ích tự động hoá — nên AI luôn kèm trích dẫn để học viên tự đối chiếu, không tự chốt hay tự hành động.</div>
+
+        <div class="flow">
+            <div class="flow-step">Trả lời tự luận</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">AI đối chiếu transcript</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Verdict + trích dẫn</div>
+        </div>
+
+        <div class="badges">
+            <div class="badge"><span class="dot"></span> LIVE · openai:gpt-4o-mini</div>
+        </div>
+        <div class="cases">
+            <div class="case-row"><b>Case chuẩn</b> — trả lời đúng → verdict <code>dung</code> + trích dẫn từ transcript</div>
+            <div class="case-row"><b>Case chỗ khó</b> — prompt injection (yêu cầu bỏ qua hướng dẫn) → verdict <code>ngoai_pham_vi</code>, hệ thống từ chối</div>
+        </div>
+    </div>
+
+    <div class="gap">
+        <span class="gap-tag">Còn thiếu</span>
+        <span>video demo CP5 (quay mới hoặc tái dùng bản CP3 nếu UI vẫn khớp)</span>
+    </div>
+
+    <div class="footer">
+        <span class="n">3/7</span>
+        <span>I'M BACK · Lớp 3A · Phòng E403</span>
+    </div>
+</section>
+
+<!-- SLIDE 4 — Workflow hệ thống -->
+<section class="slide">
+    <div class="head-row">
+        <div>
+            <div class="kicker">04 · Workflow hệ thống</div>
+            <div class="title">4 màn hình nối tiếp. 2 điểm cần AI.</div>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="wf-stats">
+            <div class="wf-stat"><b>4</b><span>Màn hình</span></div>
+            <div class="wf-stat"><b>6</b><span>Tính năng chính</span></div>
+            <div class="wf-stat"><b>2</b><span>Điểm cần LLM</span></div>
+            <div class="wf-stat"><b>1</b><span>Vòng lặp Ôn tập</span></div>
+        </div>
+
+        <div class="wf-row">
+            <div class="wf-card">
+                <div class="wf-card-title">1 · Nhập liệu &amp; sinh câu hỏi</div>
+                <div class="wf-step">Upload tài liệu bài giảng → <code>/data</code></div>
+                <div class="wf-step">Sinh bộ câu hỏi <span class="wf-tag ai">AI</span></div>
+                <div class="wf-step soft">câu hỏi · đáp án · giải thích, trích [Txx-NNN] → ghi DB</div>
+                <div class="wf-step">Thông báo xong + nút Bắt đầu</div>
+            </div>
+
+            <div class="wf-arrow">→</div>
+
+            <div class="wf-card" style="width:180px;">
+                <div class="wf-card-title">2 · Bắt đầu Quiz</div>
+                <div class="wf-step">Tải câu hỏi từ DB</div>
+                <div class="wf-step">Hiển thị lên UI quiz</div>
+                <div class="wf-step soft">kèm giải thích &amp; trích dẫn có sẵn</div>
+            </div>
+
+            <div class="wf-arrow">→</div>
+
+            <div class="wf-card" style="width:255px;">
+                <div class="wf-card-title">3 · Chi tiết câu hỏi</div>
+                <div class="wf-step">Người dùng trả lời</div>
+                <div class="wf-branch">
+                    <div class="wf-mini rule">
+                        <div class="wf-mini-title">Trắc nghiệm <span class="wf-tag rule">RULE</span></div>
+                        so khớp mã [Txx-NNN]
+                    </div>
+                    <div class="wf-mini ai">
+                        <div class="wf-mini-title">Tự luận <span class="wf-tag ai">AI</span></div>
+                        LLM so khớp &amp; giải thích
+                    </div>
+                </div>
+                <div class="wf-step">→ verdict <b>đúng / sai</b> + giải thích + trích dẫn</div>
+            </div>
+
+            <div class="wf-arrow">→</div>
+
+            <div class="wf-card" style="width:225px;">
+                <div class="wf-card-title">4 · Kết quả</div>
+                <div class="wf-step">Tổng kết điểm số + danh sách đúng/sai + trích dẫn</div>
+                <div class="wf-exit">
+                    <div class="wf-pill">Xem bài giảng ↗</div>
+                    <div class="wf-pill loop">Ôn tập lại ↺</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wf-loop-note"><b>↺ Ôn tập lại</b> quay về Màn hình 2 — Bắt đầu Quiz, làm lại quiz từ đầu</div>
+    </div>
+
+    <div class="gap">
+        <span class="gap-tag">Nguồn</span>
+        <span>Sơ đồ luồng CP3 · Task 1 (tasks.md) — MVP lưu kết quả &amp; trạng thái "đã làm quiz" vào localStorage trình duyệt</span>
+    </div>
+
+    <div class="footer">
+        <span class="n">4/7</span>
+        <span>I'M BACK · Lớp 3A · Phòng E403</span>
+    </div>
+</section>
+
+<!-- SLIDE 5 — Kết quả đo -->
+<section class="slide">
+    <div class="head-row">
+        <div>
+            <div class="kicker">05 · Kết quả đo</div>
+            <div class="title">87,5% đúng. 0 bịa trích dẫn.</div>
+        </div>
+        <div class="duration">45"</div>
+    </div>
+
+    <div class="body">
+        <div class="stat-row">
+            <div class="stat">
+                <div class="stat-num accent">87,5<span style="font-size:72px;">%</span></div>
+                <div class="stat-label"><b>21/24 case</b> đúng — bộ CP3, LIVE gpt-4o-mini, 2 lượt chạy trùng khớp. Đây là bộ <b>khác</b>, không phải golden set.</div>
+            </div>
+            <div class="stat">
+                <div class="stat-num small">0</div>
+                <div class="stat-label">case bịa mã trích dẫn, trên toàn bộ 24 case đã chạy</div>
+            </div>
+        </div>
+
+        <div class="line gap-top" style="margin-top: 30px;">
+            Quality bar đã chốt <b>trước</b> khi biết kết quả: ≥80% (≥20/25 case) + 100% nhóm an toàn + 0 bịa trích dẫn.<br>
+            Failure đáng chú ý: <b>CP3-023 / CP3-024</b> — model nhầm <code>khong_du_thong_tin</code> ↔ <code>ngoai_nguon_du_lieu</code>.
+        </div>
+    </div>
+
+    <div class="gap">
+        <span class="gap-tag">Còn thiếu</span>
+        <span>golden set 25 case CHƯA CHẠY được lần nào — thiếu file transcript-04-clean.md, script đã sẵn sàng; % thật cho slide này vẫn chưa mở khoá</span>
+    </div>
+
+    <div class="footer">
+        <span class="n">5/7</span>
+        <span>I'M BACK · Lớp 3A · Phòng E403</span>
+    </div>
+</section>
+
+<!-- SLIDE 6 — User thật nói gì -->
+<section class="slide">
+    <div class="head-row">
+        <div>
+            <div class="kicker">06 · User thật nói gì</div>
+            <div class="title">5/5 người ngoài nhóm dùng thử.</div>
+        </div>
+        <div class="duration">45"</div>
+    </div>
+
+    <div class="body">
+        <div class="quote-grid">
+            <div class="quote-card">
+                <span class="quote-mark">"</span>
+                <div class="quote-text">Đứng hình mất 5s, tưởng web chết r chứ ko thấy chạy j sất, bổ sung thanh loading đi ông ơi</div>
+                <div class="quote-who"><b>Lại Bá Quân</b> — học viên K4, CP1</div>
+            </div>
+            <div class="quote-card">
+                <span class="quote-mark">"</span>
+                <div class="quote-text">Đọc cái giải thích này lú thế nhờ, chữ nghĩa cứ hàn lâm sao ấy, ko hiểu nó trừ điểm mình vì thiếu ý gì</div>
+                <div class="quote-who"><b>Lê Hoàng Anh</b> — sinh viên CNTT, người dùng mới</div>
+            </div>
+        </div>
+
+        <div class="badges" style="margin-top: 28px;">
+            <div class="badge"><span class="dot" style="background:var(--warn);box-shadow:0 0 10px var(--warn);"></span> Đã quyết định: thêm progress bar + viết lại prompt chấm tự luận — chưa thực hiện trong code</div>
+        </div>
+    </div>
+
+    <div class="gap">
+        <span class="gap-tag">Bối cảnh</span>
+        <span>Vòng dùng thử thật, Phần B / R6: 5/5 người ngoài nhóm, 2/2 người từ CP1</span>
+    </div>
+
+    <div class="footer">
+        <span class="n">6/7</span>
+        <span>I'M BACK · Lớp 3A · Phòng E403</span>
+    </div>
+</section>
+
+<!-- SLIDE 7 — Nếu có thêm 1 tuần -->
+<section class="slide">
+    <div class="head-row">
+        <div>
+            <div class="kicker">07 · Nếu có thêm 1 tuần</div>
+            <div class="title">3 việc, theo thứ tự.</div>
+        </div>
+        <div class="duration">30"</div>
+    </div>
+
+    <div class="body">
+        <div class="priority-list">
+            <div class="priority">
+                <div class="priority-idx">01</div>
+                <div class="priority-body"><b>Sửa ranh giới nhãn</b> <code>khong_du_thong_tin</code> ↔ <code>ngoai_nguon_du_lieu</code> trong prompt chấm — cùng 2 case trượt (CP3-023/024) lặp lại ở 2 lượt LIVE độc lập</div>
+            </div>
+            <div class="priority">
+                <div class="priority-idx">02</div>
+                <div class="priority-body"><b>Chạy golden set 25 case lần đầu</b> — xin file transcript-04-clean.md, mở khoá số đo chính thức cho slide 4</div>
+            </div>
+            <div class="priority">
+                <div class="priority-idx">03</div>
+                <div class="priority-body"><b>Thực hiện 4 thay đổi từ feedback user</b> — progress bar khi generate quiz, làm rõ câu trả lời AI, viết lại prompt chấm, ghim đề bài/tiêu chí split-view</div>
+            </div>
+        </div>
+
+        <div class="closing">
+            Chốt chuẩn đạt trước khi chạy. Khai thẳng phần chưa làm.<br>
+            <span class="dim">Quan trọng hơn số đẹp — vì lớp kiểm tra chống bịa trích dẫn xây từ trước, nên mới xác nhận được 0/24 case bịa mã, không phải vì may mắn.</span>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span class="n">7/7</span>
+        <span>I'M BACK · Lớp 3A · Phòng E403</span>
+    </div>
+</section>
+
+</div><!-- /.deck -->
+
+<div class="deck-dots" aria-hidden="true"></div>
+<button class="deck-arrow prev-btn" aria-label="Slide trước">‹</button>
+<button class="deck-arrow next-btn" aria-label="Slide sau">›</button>
+<div class="deck-hint">← → hoặc phím cách để chuyển slide</div>
+
+<script>
+(function () {
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    if (!slides.length) return;
+
+    var current = 0;
+    var dotsWrap = document.querySelector('.deck-dots');
+    var hint = document.querySelector('.deck-hint');
+
+    slides.forEach(function (_, i) {
+        var dot = document.createElement('button');
+        dot.className = 'deck-dot';
+        dot.setAttribute('aria-label', 'Đi tới slide ' + (i + 1));
+        dot.addEventListener('click', function (e) { e.stopPropagation(); go(i); });
+        dotsWrap.appendChild(dot);
+    });
+    var dots = Array.prototype.slice.call(dotsWrap.children);
+
+    function render() {
+        slides.forEach(function (s, i) {
+            s.classList.remove('active', 'prev');
+            if (i === current) s.classList.add('active');
+            else if (i < current) s.classList.add('prev');
+        });
+        dots.forEach(function (d, i) { d.classList.toggle('active', i === current); });
+    }
+
+    function go(i) {
+        current = (i + slides.length) % slides.length;
+        render();
+        dismissHint();
+    }
+    function next() { go(current + 1); }
+    function prev() { go(current - 1); }
+
+    function dismissHint() {
+        if (hint) hint.classList.add('hidden');
+    }
+
+    function fitScale() {
+        var scale = Math.min(window.innerWidth / 1122, window.innerHeight / 794);
+        document.documentElement.style.setProperty('--fit-scale', scale);
+    }
+    fitScale();
+    window.addEventListener('resize', fitScale);
+
+    document.addEventListener('keydown', function (e) {
+        if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].indexOf(e.key) !== -1) { e.preventDefault(); next(); }
+        else if (['ArrowLeft', 'ArrowUp', 'PageUp'].indexOf(e.key) !== -1) { e.preventDefault(); prev(); }
+    });
+
+    document.querySelector('.deck-arrow.next-btn').addEventListener('click', function (e) { e.stopPropagation(); next(); });
+    document.querySelector('.deck-arrow.prev-btn').addEventListener('click', function (e) { e.stopPropagation(); prev(); });
+
+    document.querySelector('.deck').addEventListener('click', function (e) {
+        var x = e.clientX / window.innerWidth;
+        if (x < 0.35) prev(); else next();
+    });
+
+    setTimeout(dismissHint, 5000);
+
+    if (window.matchMedia && window.matchMedia('print').matches) {
+        // Printing: skip presentation JS entirely, static CSS handles layout.
+        return;
+    }
+
+    render();
+})();
+</script>
+
+</body>
+</html>
