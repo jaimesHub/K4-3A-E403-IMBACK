@@ -9,10 +9,10 @@
 
 | Họ và Tên | Mã Học Viên | Vai trò chính | Phần việc đảm nhiệm trong dự án |
 |---|---|---|---|
-| Dương Quốc Khánh | 2A202603013 | Đội trưởng | TBD |
-| Lưu Mạnh Hùng | 2A202602942 | Thành viên | TBD |
-| Hoàng Công Minh | 2A202602774 | Thành viên | TBD |
-| Nguyễn Ngọc Minh | 2A202602653 | Thành viên | TBD |
+| Dương Quốc Khánh | 2A202603013 | Đội trưởng | Định hình chiến lược sản phẩm (chọn lát cắt, chọn mô hình AI, đặt quality bar); dựng base & triển khai Backend; tích hợp Frontend–Backend; định nghĩa golden set; chạy eval CP3 (24 case, 21/24 đạt, 0 case bịa mã) |
+| Lưu Mạnh Hùng | 2A202602942 | Thành viên | Tổng hợp ý tưởng nhóm thành `tasks.md` (workflow, số màn hình, kiến trúc dữ liệu); xây `eval/golden_set.json` (25 case) và `goldenSetReq.md`; dựng bản UI tĩnh ban đầu (`codebase/index.html`) làm khung tham chiếu cho FE |
+| Hoàng Công Minh | 2A202602774 | Thành viên | Khảo sát người dùng (n=5, 16/09) và thu thập quote nguyên văn; kiểm tra trải nghiệm luồng làm quiz trên frontend; tổng hợp phản hồi để đề xuất cải thiện UX |
+| Nguyễn Ngọc Minh | 2A202602653 | Thành viên | Xây toàn bộ Frontend (`codebase/index.html`, 6 màn hình, tích hợp API thật/mock); tự thiết kế và chạy bộ eval độc lập (`eval/independent_eval.py`, 23 case, 18/23 đạt) để kiểm chứng chéo với bộ test của nhóm |
 
 > Nhóm copy nguyên file README này về repo của mình, rồi điền bảng trên. Cột **Phần việc đảm nhiệm** ghi càng cụ thể càng tốt.
 
