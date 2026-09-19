@@ -17,43 +17,46 @@
 
 ## 2. Vai trò của tôi trong nhóm
 
-🔲 [CHÍNH CHỦ ĐIỀN] 
-- Bạn đã đảm nhiệm vị trí trưởng nhóm. Trong quá trình từ CP1 đến CP5 này, bạn đã phải:
-  - **Quyết định chiến lược nào** cho sản phẩm (ví dụ: chọn lát cắt, chọn mô hình AI, đặt bar chất lượng)?
-  - **Phân công việc** cho các thành viên như thế nào, và liệu có lúc nào cần điều chỉnh phân công?
-  - **Xử lý tình huống gì** đó là vấn đề lớn (ví dụ: người làm không xong, API key hết, golden set thiếu dữ liệu)?
+Là trưởng nhóm, tôi có trách nhiệm định hình chiến lược sản phẩm từ đầu. Cụ thể, tôi đã phải quyết định những tính năng nào sẽ làm dựa trên tasks.md, định nghĩa lát cắt cụ thể, chọn mô hình AI phù hợp, và đặt bar chất lượng cho sản phẩm (≥80% đúng và 0 case bịa mã).
+
+Về phân công, tôi đã giao cho một bạn trách nhiệm chi tiết sản phẩm và thuyết trình; hai bạn còn lại chịu trách nhiệm khảo sát người dùng, đồng thời thực hiện phần giao diện và AI integration. Riêng tôi chịu trách nhiệm chính cho việc dựng base infrastructure và triển khai backend.
+
+Ngoài ra, trong quá trình phát triển, tôi đã phải xử lý những vấn đề lớn như hỗ trợ API key cho các thành viên, định nghĩa golden set cụ thể để phục vụ việc đánh giá sản phẩm, và đảm bảo tích hợp suôn sẻ giữa Frontend và Backend.
 
 ## 3. Việc tôi trực tiếp làm
 
-🔲 [CHÍNH CHỦ ĐIỀN]
-- Cụ thể, bạn đã thực hiện những **nhiệm vụ hoặc đoạn mã nào** trong project này?
-- Bạn có phần nào của sản phẩm (backend/frontend/prompt/dataset/validation) mà bạn chịu trách nhiệm chính?
-- Bạn đã **tham gia test hoặc eval** sản phẩm bao nhiêu lần, với kết quả là gì?
+Về mặt kỹ thuật, tôi đã cộng tác với một thành viên khác để định nghĩa chi tiết các tính năng và phạm vi của sản phẩm, phát triển các tính năng trong backend, tích hợp với slides thuyết trình, và viết nội dung slides.
+
+Chịu trách nhiệm chính cho việc chia nhỏ các tính năng thành các task riêng biệt, dựng nền tảng cho Frontend, Backend, và phần AI integration. Đặc biệt, tôi đã triển khai bộ test đánh giá toàn diện dựa trên 24 test case, với kết quả báo cáo chi tiết tại tệp eval/EVAL_REPORT_v1.md. Cụ thể, 21 trên 24 case đạt tiêu chuẩn (87.5% đúng), trong đó: MCQ đạt 8/8, phần tự luận 13/16, không có case nào bịa mã trích dẫn. Ba case trượt là CP3-013, CP3-023, và CP3-024.
 
 ## 4. Điều khó nhất tôi gặp phải
 
-🔲 [CHÍNH CHỦ ĐIỀN]
-- Bạn có trường hợp nào mà **tự luận AI trả kết quả không như kỳ vọng** (sai nhãn, giải thích mập mờ, bịa mã), và bạn phải debug để phát hiện nguyên nhân?
-- **Vòng dùng thử Phần B** với 5 người ngoài nhóm đã cho bạn những **khó khăn hoặc phản hồi bất ngờ nào**?
-- Liệu có lúc nào **không đủ tài nguyên** (API key, dữ liệu, thời gian) khiến bạn phải tìm cách thay thế?
+Thách thức lớn nhất tôi gặp phải là vấn đề về độ chính xác của AI trong việc phân loại và giải thích. Ba case sai trong eval (CP3-013, CP3-023, CP3-024) phản ánh vấn đề model nhầm lẫn giữa các nhãn "khong_du_thong_tin" và "ngoai_nguon_du_lieu", cùng với một case bị hẹp ngữ cảnh khi trích dẫn. Để khắc phục, tôi cần phải cải thiện system prompt, tối ưu hóa tool calling, và cập nhật lại bộ test đánh giá.
+
+Ngoài ra, vòng dùng thử Phần B với 5 người ngoài nhóm đã tiêu tốn khá nhiều thời gian và công sức trong việc tìm kiếm và liên hệ những người phỏng vấn phù hợp.
+
+Cũng chính vì thời gian khá hạn chế, tôi nhận thấy cần phải phân công rõ ràng hơn cho các thành viên khác để cùng nhau thực hiện khảo sát và thu thập dữ liệu, thay vì để gánh nặng lên một vài người.
 
 ## 5. Tôi học được gì về làm sản phẩm AI
 
-🔲 [CHÍNH CHỦ ĐIỀN]
-- So với lần đầu làm sản phẩm AI (CP1), lần này bạn **thay đổi cách suy nghĩ hoặc cách làm việc** gì?
-- Việc **đặt quality bar từ sớm** (≥80% đúng, 0 case bịa) đã **ảnh hưởng như thế nào** đến cách bạn quản lý tiến độ và chất lượng?
-- Bạn có nhận xét gì về **sự khác biệt giữa test nội bộ (golden set) và thực tế người dùng** (5 người khảo sát, 5 người dùng thử)?
+Từ lần đầu tiên làm sản phẩm AI (CP1) đến lần này, tôi đã rút ra được nhiều bài học quý báu. Đầu tiên, tôi nên đầu tư nhiều công sức hơn vào khảo sát để thu thập dữ liệu đa dạng, phục vụ tốt hơn cho việc test và đánh giá sản phẩm. Cùng với đó, cần phải định hình rõ ràng các tính năng sẽ xây dựng, xác định các edge case, và nắm bắt những insight nổi bật ngay từ giai đoạn lên kế hoạch.
+
+Thứ hai, việc đặt quality bar từ sớm (≥80% đúng, 0 case bịa) đã giúp quá trình phát triển tính năng và tích hợp AI trở nên rõ ràng và có mục tiêu từ đầu, thay vì vừa phát triển vừa lại phải suy nghĩ về các tiêu chí test và ngưỡng chất lượng.
+
+Thứ ba, về phía golden set, tôi nhận thấy cần phải định nghĩa nhiều test case hơn, cụ thể hơn, và bao gồm nhiều edge case hơn. Tương tự, trong việc khảo sát thực tế người dùng, thay vì chỉ tập trung vào học sinh, sinh viên, và những người làm công nghệ, tôi nên mở rộng hơn để tiếp cận nhiều đối tượng người dùng từ các lĩnh vực khác nhau.
 
 ## 6. Nếu làm lại, tôi sẽ làm khác chỗ nào
 
-🔲 [CHÍNH CHỦ ĐIỀN]
-- Dự án này có **3 case bị sai** (CP3-013, CP3-023, CP3-024). Nếu bạn biết lý do sớm hơn, bạn sẽ **phối hợp với nhóm khác cách nào**?
-- **4 thay đổi đã quyết định, chưa thực hiện** — nếu làm lại, bạn sẽ **ưu tiên chúng kỳ vào CP4 hay để sau CP5**? Lý do?
-- Quy trình **điều phối/phân công/review** của nhóm có điểm nào **bạn muốn cải thiện** để lần sau hiệu quả hơn?
+Nếu được làm lại, tôi sẽ có những thay đổi quan trọng. Thứ nhất, với ba case sai (CP3-013, CP3-023, CP3-024), tôi sẽ chủ động phối hợp với nhóm sớm hơn để thảo luận và tìm ra giải pháp phù hợp, từ đó thể hiện rõ ràng hơn những cải thiện về trải nghiệm người dùng.
+
+Thứ hai, về bốn thay đổi đã quyết định nhưng chưa thực hiện, tôi sẽ để chúng sang CP5 vì thời gian phát triển trong CP3 và CP4 không đủ. Tuy nhiên, nếu có thêm nguồn lực, tôi sẽ ưu tiên chúng hơn.
+
+Thứ ba, về quy trình quản lý và điều phối của nhóm, tôi sẽ cải thiện bằng cách giao task và vai trò cho các thành viên một cách rõ ràng, cụ thể hơn. Đồng thời, tôi sẽ khuyến khích mỗi thành viên chủ động đóng góp ý kiến và tích cực nhận lấy các nhiệm vụ, thay vì chỉ chờ đợi.
 
 ## 7. Một điều tôi muốn nói thẳng (khó khăn, bất đồng, điều chưa hài lòng)
 
-🔲 [CHÍNH CHỦ ĐIỀN]
-- Trong quá trình trưởng nhóm, bạn có **gặp sự bất đồng ý kiến** với bất cứ thành viên nào không? Nó được xử lý như thế nào?
-- Bạn có **dành nhiều thời gian** cho việc quản lý/điều phối hơn là code/test/debug không? Bạn cảm thấy như thế nào?
-- Nếu có điều gì **bạn chưa hài lòng với kết quả cuối cùng**, đó là gì và tại sao?
+Nói một cách thẳng thắn, trong quá trình làm dự án này, không có sự bất đồng ý kiến lớn nào giữa các thành viên nhóm. Ngược lại, mọi người khá hỗ trợ lẫn nhau, và những cuộc thảo luận diễn ra khá sôi nổi và xây dựng.
+
+Về mặt thời gian, tôi dành khoảng 50% cho việc quản lý, điều phối nhóm, và 50% cho việc code, test, debug. Tỷ lệ này là hợp lý cho vị trí trưởng nhóm.
+
+Tuy nhiên, có một điều tôi chưa hoàn toàn hài lòng: mặc dù ý tưởng sản phẩm khá hay, nhưng các nhóm khác chưa thực sự nhìn ra hết tiềm năng của nó. Cụ thể, hệ thống này hoàn toàn có thể được tích hợp với các platform khác nhau và không phụ thuộc vào bất kỳ hệ thống cụ thể nào. Nguyên nhân chính là các nhóm khác chưa đặt ra nhiều câu hỏi; nhóm tôi chưa giải thích rõ ràng đủ lý do và mục đích để các nhóm khác có thể hiểu được tầm quan trọng; và các nhóm khác chưa có cơ hội tự trải nghiệm trực tiếp ứng dụng. Tôi hy vọng ở những dự án tiếp theo, có thể có cơ hội tốt hơn để thể hiện giá trị thực sự của sản phẩm.

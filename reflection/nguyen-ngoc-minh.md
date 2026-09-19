@@ -1,7 +1,6 @@
 # Reflection — Nguyên Ngọc Minh (02653)
 
 > Nhóm I'M BACK · Lớp 3A · Phòng E403 · CP5 · 18/09/2026
-> ⚠️ Phần cảm nhận cá nhân bên dưới đang để trống — chờ chính Nguyên Ngọc Minh tự viết. Không ai viết hộ.
 
 ## 1. Bối cảnh (dữ kiện chung, đã điền sẵn)
 
@@ -17,42 +16,46 @@
 
 ## 2. Vai trò của tôi trong nhóm
 
-🔲 [CHÍNH CHỦ ĐIỀN]
-- Bạn chủ yếu **phụ trách phần nào** của sản phẩm hoặc quá trình (ví dụ: spec, dataset, testing, deployment, documentation)?
-- Bạn có **hợp tác thường xuyên** với ai trong nhóm không? **Bạn học được gì** từ việc làm việc với họ?
-- Bạn có **gợi ý hoặc đề xuất** gì cho nhóm không (về kỹ thuật, quy trình, hoặc chiến lược)?
+Tôi phụ trách hai mảng chính: **FE** (`codebase/index.html`) và **eval độc lập** cho grader.
+
+Về FE, tôi làm việc sát với phần backend API — cần liên tục đối chiếu response schema để UI render đúng. Qua đó học được cách Khánh và Hùng thiết kế lớp validation mã `[Txx-NNN]` trong `grader._finalize_grade()` — kiến trúc đơn giản nhưng hiệu quả: đảm bảo bằng code thay vì chỉ tin LLM.
+
+Tôi đề xuất với nhóm nên chạy thêm một bộ eval **độc lập với testset có sẵn** để tránh thiên kiến xác nhận — đề xuất đó dẫn đến việc tôi tự thiết kế và chạy `eval/independent_eval.py` ở giai đoạn cuối.
 
 ## 3. Việc tôi trực tiếp làm
 
-🔲 [CHÍNH CHỦ ĐIỀN]
-- **Bạn viết/xây dựng những gì** cụ thể? (ví dụ: các hàm utility, validation logic, test case, documentation, script analysis)
-- Bạn **kiểm tra hoặc validate** sản phẩm **bao nhiêu lần**, và bạn **phát hiện được điều gì** đáng chú ý?
-- Bạn có **tham gia debug hoặc tối ưu** bất cứ phần nào không?
+**FE (`codebase/index.html`):** Xây toàn bộ UI dạng single-page 6 màn hình (import slide → nhập ngày → generate → quiz → phân tích câu → tổng kết). Dùng vanilla HTML/CSS/JS không framework. Tích hợp badge LIVE/OFFLINE theo `/api/health`, drag-and-drop upload PDF, và render mã `[Txx-NNN]` thành link click được để xem nguyên văn đoạn transcript qua `/api/transcript/{day}/{code}`.
+
+**Eval độc lập (`eval/independent_eval.py`):** Tự thiết kế 23 test case từ nội dung `transcript-01-clean.md` — không đọc `cp3_testset.json` khi viết để tránh thiên kiến. Phủ đủ 6 nhãn verdict + 4 dạng đặc biệt: câu trả lời nghe hợp lý nhưng nhầm fact, câu tự tin bịa thuật ngữ, prompt injection, hỏi thông tin hành chính. Mỗi case có trường `reasoning` ghi rõ tại sao kỳ vọng verdict đó — để người sau kiểm tra được logic của người viết test, không chỉ kiểm tra kết quả.
+
+Kết quả chạy LIVE: **18/23 PASS (78,3%)**. Phát hiện pattern thất bại ở nhóm `ngoai_nguon_du_lieu` — xem mục 4.
 
 ## 4. Điều khó nhất tôi gặp phải
 
-🔲 [CHÍNH CHỦ ĐIỀN]
-- Khi **chạy các test case**, bạn có gặp case nào **AI trả kết quả bất ngờ hoặc sai** không? Bạn đã **tìm hiểu nguyên nhân** không?
-- **3 case fail** (CP3-013, CP3-023, CP3-024) — bạn có **liên quan đến việc xác định hoặc phân tích** chúng không? Cái khó nhất là gì?
-- Bạn có **gặp khó khăn** nào với **tài nguyên, dữ liệu, hoặc công cụ** khi làm việc không?
+**IE-014 và IE-015** là hai case khó nhất: học viên trả lời đúng về chủ đề (multi-agent, RAG) nhưng dùng chi tiết kỹ thuật không có trong transcript — ví dụ "message queue", "vector database", "chunking". Grader trả `mot_phan` thay vì `ngoai_nguon_du_lieu` vì LLM dùng kiến thức nền của mình để xác nhận phần đúng.
+
+Tìm hiểu nguyên nhân: rule trong `grade_text.md` nói "Cấm khẳng định nội dung không có trong transcript" nhưng không có cơ chế kiểm tra tương đương với lớp validate mã `[Txx-NNN]`. Prompt constraint đơn thuần không ngăn được LLM dùng prior knowledge để suy luận — nó chỉ ngăn được hành động có dấu vết cụ thể (như trích một mã cụ thể).
+
+Với **3 case fail CP3** (CP3-013, CP3-023, CP3-024): tôi không phụ trách phân tích trực tiếp nhưng khi đọc lại thấy CP3-013 và IE-009/IE-010 của mình có cùng pattern — grader chấm rộng rãi hơn kỳ vọng khi câu trả lời đúng phần lớn nội dung nhưng thiếu một ý. Ranh giới `dung` vs `mot_phan` là điểm mà cả hai bộ test độc lập đều phát hiện ra cùng một vấn đề.
 
 ## 5. Tôi học được gì về làm sản phẩm AI
 
-🔲 [CHÍNH CHỦ ĐIỀN]
-- Bạn **khám phá ra điều gì** về cách **AI đánh giá tự luận** (nó có nhận biết được gì, nó hay sai ở đâu)?
-- Việc **phải test trên 24 case riêng lẻ** để đảm bảo **0 case bịa mã** đã dạy bạn gì về **chất lượng sản phẩm**?
-- Qua **5 người khảo sát + 5 người dùng thử**, bạn có **hiểu sâu hơn** về nhu cầu hoặc cách người học sử dụng sản phẩm không?
+AI chấm tự luận **giỏi ở cực, yếu ở vùng xám.** Các case rõ ràng (sai hoàn toàn, injection, câu quá ngắn) grader xử lý tốt — đạt 100% ở nhóm `dung`, `sai`, `ngoai_pham_vi`. Nhưng các ranh giới mờ như `mot_phan` vs `dung` hay `ngoai_nguon_du_lieu` vs `mot_phan` lại không ổn định.
+
+Điều quan trọng hơn về chất lượng sản phẩm: **0 case bịa mã** không phải vì LLM tuân thủ prompt — mà vì có lớp code chạy sau LLM để kiểm tra. Đây là bài học thực tế về việc không nên tin hoàn toàn vào LLM để tự enforce constraint của mình.
+
+Khảo sát 5 người + 5 người dùng thử cho thấy người học muốn biết **tại sao sai**, không chỉ **có sai hay không** — đó là lý do phần `explanation` và mã trích dẫn quan trọng hơn verdict_label đơn thuần.
 
 ## 6. Nếu làm lại, tôi sẽ làm khác chỗ nào
 
-🔲 [CHÍNH CHỦ ĐIỀN]
-- Nếu bạn có **cơ hội tham gia từ CP1 hoặc sớm hơn**, bạn sẽ **làm gì khác** so với lần này?
-- **4 thay đổi đã quyết định, chưa thực hiện** — nếu bạn thực hiện chúng, bạn sẽ **ưu tiên cái nào trước**?
-- Bạn có **quá trình test/eval/validation nào** cần **cải thiện để phát hiện vấn đề sớm hơn**?
+**Viết test case trước khi có grader**, không phải sau. Tôi thiết kế bộ eval độc lập khá muộn — sau khi pipeline đã ổn định. Nếu làm theo kiểu TDD cho LLM evaluation (viết expected behavior trước, rồi mới viết prompt), sẽ phát hiện vấn đề `ngoai_nguon_du_lieu` vs `mot_phan` từ sớm hơn thay vì chỉ thấy ở cuối.
+
+Với **4 thay đổi đã quyết định nhưng chưa làm**, tôi sẽ ưu tiên cái ảnh hưởng đến độ tin cậy của kết quả trước — cụ thể là thêm bước kiểm tra concept nằm ngoài transcript trước khi cho phép `mot_phan`, vì đây là lỗ hổng ảnh hưởng đến sự tin tưởng của học viên vào kết quả chấm.
+
+Về UI, nên cải thiện màn thông báo lỗi ingest khi PDF không có text layer — hiện tại chỉ có toast ngắn, user không biết bước tiếp theo.
 
 ## 7. Một điều tôi muốn nói thẳng (khó khăn, bất đồng, điều chưa hài lòng)
 
-🔲 [CHÍNH CHỦ ĐIỀN]
-- Bạn có **bất đồng ý kiến** với bất cứ ai trong nhóm không? Cách bạn **giải quyết** là gì?
-- Có lúc nào bạn **cảm thấy chưa được nghe/thấy hiểu** từ các thành viên khác không?
-- Nếu có điều gì **bạn chưa hài lòng** với **sản phẩm hoặc quá trình làm việc**, đó là gì?
+Tôi thấy chưa hài lòng với việc bộ eval CP3 được dùng quá sớm như "số đo chính thức" trong khi testset đó do nhóm tự thiết kế — không có isolation giữa người xây hệ thống và người đo hệ thống. Đây không phải bất đồng với ai cụ thể mà là vấn đề quy trình: khi cùng một nhóm vừa xây grader vừa thiết kế testset, có rủi ro thiên kiến xác nhận dù không cố tình.
+
+Tôi đề xuất chuyện này nhưng không có thời gian để nhóm thảo luận kỹ — cuối cùng tôi tự làm bộ eval độc lập để có thêm một điểm tham chiếu, dù muộn. Nếu làm lại, sẽ nêu vấn đề này sớm hơn và đưa vào quy trình từ đầu, không phải gần cuối.
